@@ -1,0 +1,48 @@
+# Configuration for Multimodal Human State Capture Application
+# This file contains default settings that can be overridden at runtime
+
+audio:
+  enabled: true
+  sample_rate: 16000
+  channels: 1
+  format: "wav"
+  chunk_duration_ms: 10000
+  device: null  # Use default device if null
+
+keyboard:
+  enabled: true
+  capture_modifiers: true
+  capture_context: true
+  exclude_sensitive: true
+
+camera:
+  enabled: true
+  fps: 15
+  resolution: [640, 480]
+  device: 0  # Camera index
+
+face:
+  enabled: true
+  detection_model: "mediapipe"
+  landmark_model: "mediapipe"
+  refine_landmarks: true  # Includes iris tracking
+  min_detection_confidence: 0.5
+  min_tracking_confidence: 0.5
+
+storage:
+  output_directory: "data/sessions"
+  audio_chunk_duration_ms: 10000
+  flush_interval_ms: 5000
+  max_file_size_mb: 100
+
+logging:
+  level: "INFO"
+  format: "json"
+  file: "logs/app.log"
+  max_size_mb: 10
+  backup_count: 5
+
+ui:
+  theme: "default"
+  update_interval_ms: 100
+  show_system_tray: true
