@@ -65,6 +65,13 @@ class KeyboardListener:
         
         # Platform-specific key code mapping
         self._key_code_map = self._build_key_code_map()
+        
+        # Storage callback
+        self._storage_callback: Optional[callable] = None
+
+    def set_storage_callback(self, callback: callable) -> None:
+        """Set callback for storing keyboard events."""
+        self._storage_callback = callback
 
     def _build_key_code_map(self) -> Dict[str, int]:
         """Build mapping from key names to virtual key codes."""
@@ -304,6 +311,19 @@ class KeyboardListener:
             )
             self.event_callback(event)
             
+            # Call storage callback with raw data for storage
+            if self._storage_callback:
+                storage_data = {
+                    "key": event_data["key"],
+                    "key_code": event_data["key_code"],
+                    "modifiers": event_data["modifiers"],
+                    "is_printable": event_data["is_printable"],
+                    "is_sensitive_context": event_data["is_sensitive_context"],
+                    "window_title": event_data.get("window_title"),
+                    "process_name": event_data.get("process_name"),
+                }
+                self._storage_callback(0, key, press_time, 0, 0)  # placeholder for chunk_index, data, start_time, duration, rms_db
+            
             self.logger.debug("key_pressed", key=key_name if not is_sensitive else "[REDACTED]")
 
     def _on_release(self, key: keyboard.Key) -> None:
@@ -341,6 +361,20 @@ class KeyboardListener:
                 timestamp_generator=self.timestamp_generator,
             )
             self.event_callback(event)
+            
+            # Call storage callback with raw data for storage
+            if self._storage_callback:
+                storage_data = {
+                    "key": event_data["key"],
+                    "key_code": event_data["key_code"],
+                    "modifiers": event_data["modifiers"],
+                    "duration_ms": event_data.get("duration_ms"),
+                    "is_printable": event_data["is_printable"],
+                    "is_sensitive_context": event_data["is_sensitive_context"],
+                    "window_title": event_data.get("window_title"),
+                    "process_name": event_data.get("process_name"),
+                }
+                self._storage_callback(0, key, press_time, duration_ms or 0, 0)
             
             self.logger.debug("key_released", key=key_name if not is_sensitive else "[REDACTED]")
 
@@ -404,3 +438,29 @@ class KeyboardListener:
     @property
     def is_paused(self) -> bool:
         return self._paused
+
+    @staticmethod
+    def check_device_availability(device: Optional[int] = None) -> bool:
+        """Check if a keyboard device is available."""
+        try:
+            import pynput
+            # pynput doesn't have a direct device check, but we can try to create a listener
+            # If it fails, no keyboard device is available
+            listener = pynput.keyboard.Listener(on_press=lambda k: None, on_release=lambda k: None)
+            listener.start()
+            listener.stop()
+            return True
+        except Exception:
+            return False
+
+    @staticmethod
+    def get_available_devices(max_devices: int = 10) -> list:
+        """Get list of available keyboard devices (always returns at least one if any)."""
+        try:
+            import pynput
+            listener = pynput.keyboard.Listener(on_press=lambda k: None, on_release=lambda k: None)
+            listener.start()
+            listener.stop()
+            return [{"index": 0, "name": "Default Keyboard"}]
+        except Exception:
+            return []

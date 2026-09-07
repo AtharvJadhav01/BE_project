@@ -49,6 +49,7 @@ class AudioProcessor:
         # Callbacks
         self._storage_callback: Optional[Callable] = None
         self._unified_event_callback: Optional[Callable] = None
+        self._analysis_callback: Optional[Callable] = None
         
         # Statistics
         self._chunks_processed = 0
@@ -61,6 +62,10 @@ class AudioProcessor:
     def set_unified_event_callback(self, callback: Callable) -> None:
         """Set callback for unified event pipeline."""
         self._unified_event_callback = callback
+
+    def set_analysis_callback(self, callback: Callable) -> None:
+        """Set callback for audio analysis."""
+        self._analysis_callback = callback
 
     def start(self) -> bool:
         """Start the processor."""
@@ -147,6 +152,18 @@ class AudioProcessor:
                     chunk.start_time_monotonic,
                     chunk.duration_seconds,
                     chunk.rms_db
+                )
+            
+            # Forward to analysis callback
+            if self._analysis_callback:
+                self._analysis_callback(
+                    chunk.chunk_index,
+                    chunk.data,
+                    chunk.start_time_monotonic,
+                    chunk.duration_seconds,
+                    chunk.rms_db,
+                    chunk.sample_rate,
+                    chunk.channels
                 )
             
             # Forward to unified event pipeline (for sync events)

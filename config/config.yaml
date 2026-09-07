@@ -46,3 +46,59 @@ ui:
   theme: "default"
   update_interval_ms: 100
   show_system_tray: true
+
+analysis:
+  enabled: true
+
+  # Temporal window settings
+  temporal_window_sec: 3.0
+  update_interval_ms: 500
+
+  # Baseline settings
+  baseline_warmup_sec: 10.0
+  baseline_min_samples: 50
+  ema_alpha: 0.1
+  min_std: 1e-6
+
+  # Face analysis
+  face:
+    enabled: true
+    window_size_sec: 2.0
+    update_interval_ms: 200
+    baseline_frames: 150
+    expression_threshold: 0.3
+    confidence_threshold: 0.5
+
+  # Audio analysis
+  audio:
+    enabled: true
+    window_size_sec: 1.0
+    hop_size_sec: 0.1
+    baseline_duration_sec: 10.0
+    pitch_min_hz: 80
+    pitch_max_hz: 400
+    pitch_threshold_semitones: 2.0
+    energy_threshold_db: -40
+    voice_activity_threshold: 0.01
+
+  # Keyboard analysis
+  keyboard:
+    enabled: true
+    window_size_sec: 5.0
+    baseline_events: 100
+    correction_threshold_ms: 2000
+    pause_threshold_sec: 2.0
+
+  # Multimodal fusion
+  fusion:
+    enabled: true
+    window_size_sec: 3.0
+    update_interval_ms: 500
+    min_modalities: 2
+    confidence_threshold: 0.6
+    uncertainty_threshold: 0.4
+
+  # Storage for analysis results
+  storage:
+    analysis_enabled: true
+    flush_interval_ms: 5000

@@ -6,7 +6,7 @@ Processes raw keyboard events and prepares them for storage.
 
 import threading
 from dataclasses import dataclass
-from typing import Any, Dict, List, Optional
+from typing import Any, Callable, Dict, List, Optional
 from queue import Queue, Empty
 
 from core.events import Event, EventType, ModalityType
@@ -64,6 +64,7 @@ class KeyboardProcessor:
         self._worker_thread: Optional[threading.Thread] = None
         self._storage_callback: Optional[callable] = None
         self._unified_event_callback: Optional[callable] = None
+        self._analysis_callback: Optional[callable] = None
         
         # Statistics
         self._events_processed = 0
@@ -76,6 +77,10 @@ class KeyboardProcessor:
     def set_unified_event_callback(self, callback: callable) -> None:
         """Set callback for unified event pipeline."""
         self._unified_event_callback = callback
+
+    def set_analysis_callback(self, callback: callable) -> None:
+        """Set callback for keyboard analysis."""
+        self._analysis_callback = callback
 
     def start(self) -> bool:
         """Start the processor."""
@@ -163,6 +168,10 @@ class KeyboardProcessor:
             # Forward to storage
             if self._storage_callback:
                 self._storage_callback(processed)
+            
+            # Forward to analysis callback
+            if self._analysis_callback:
+                self._analysis_callback(event)
             
             # Forward to unified event pipeline
             if self._unified_event_callback:

@@ -3,6 +3,7 @@ Main application window using PySide6.
 """
 
 import sys
+import time
 from pathlib import Path
 from typing import Optional
 
@@ -47,6 +48,283 @@ from face import FaceCapture
 
 
 logger = get_logger(__name__)
+
+
+class FaceAnalysisPanel(QWidget):
+    """Panel displaying real-time face analysis information."""
+    
+    def __init__(self, parent: Optional[QWidget] = None):
+        super().__init__(parent)
+        layout = QVBoxLayout(self)
+        layout.setContentsMargins(12, 12, 12, 12)
+        layout.setSpacing(8)
+        
+        # Title
+        title = QLabel("Face Analysis")
+        title.setFont(QFont("Segoe UI", 11, QFont.Weight.Bold))
+        title.setStyleSheet("color: #0078d4;")
+        layout.addWidget(title)
+        
+        # Face detected status
+        self.face_detected_label = QLabel("Face: Not Detected")
+        self.face_detected_label.setFont(QFont("Segoe UI", 9))
+        self.face_detected_label.setStyleSheet("color: #cc0000;")
+        layout.addWidget(self.face_detected_label)
+        
+        # Current facial state
+        self.state_label = QLabel("State: --")
+        self.state_label.setFont(QFont("Segoe UI", 10, QFont.Weight.Bold))
+        layout.addWidget(self.state_label)
+        
+        # Confidence
+        self.confidence_label = QLabel("Confidence: --")
+        self.confidence_label.setFont(QFont("Segoe UI", 9))
+        layout.addWidget(self.confidence_label)
+        
+        # Baseline status
+        self.baseline_label = QLabel("Baseline: Warming Up")
+        self.baseline_label.setFont(QFont("Segoe UI", 9))
+        self.baseline_label.setStyleSheet("color: #ffaa00;")
+        layout.addWidget(self.baseline_label)
+        
+        # Separator
+        sep = QFrame()
+        sep.setFrameShape(QFrame.Shape.HLine)
+        sep.setFrameShadow(QFrame.Shadow.Sunken)
+        sep.setStyleSheet("color: #dddddd;")
+        layout.addWidget(sep)
+        
+        # Real-time metrics
+        metrics_layout = QVBoxLayout()
+        metrics_layout.setSpacing(4)
+        
+        # Eye metrics
+        self.eye_openness_label = QLabel("Eye Openness: --")
+        self.eye_openness_label.setFont(QFont("Segoe UI", 8))
+        metrics_layout.addWidget(self.eye_openness_label)
+        
+        self.blink_rate_label = QLabel("Blink Rate: --")
+        self.blink_rate_label.setFont(QFont("Segoe UI", 8))
+        metrics_layout.addWidget(self.blink_rate_label)
+        
+        # Mouth metrics
+        self.mouth_openness_label = QLabel("Mouth Openness: --")
+        self.mouth_openness_label.setFont(QFont("Segoe UI", 8))
+        metrics_layout.addWidget(self.mouth_openness_label)
+        
+        self.mouth_width_label = QLabel("Smile Score: --")
+        self.mouth_width_label.setFont(QFont("Segoe UI", 8))
+        metrics_layout.addWidget(self.mouth_width_label)
+        
+        # Facial movement
+        self.movement_label = QLabel("Facial Movement: --")
+        self.movement_label.setFont(QFont("Segoe UI", 8))
+        metrics_layout.addWidget(self.movement_label)
+        
+        self.symmetry_label = QLabel("Symmetry: --")
+        self.symmetry_label.setFont(QFont("Segoe UI", 8))
+        metrics_layout.addWidget(self.symmetry_label)
+        
+        # Head pose
+        self.head_pose_label = QLabel("Head Pose: --")
+        self.head_pose_label.setFont(QFont("Segoe UI", 8))
+        metrics_layout.addWidget(self.head_pose_label)
+        
+        layout.addLayout(metrics_layout)
+        layout.addStretch()
+
+    def update_face_detected(self, detected: bool) -> None:
+        """Update face detected status."""
+        if detected:
+            self.face_detected_label.setText("Face: Detected")
+            self.face_detected_label.setStyleSheet("color: #00aa00;")
+        else:
+            self.face_detected_label.setText("Face: Not Detected")
+            self.face_detected_label.setStyleSheet("color: #cc0000;")
+
+    def update_state(self, state: str, confidence: float) -> None:
+        """Update facial state and confidence."""
+        self.state_label.setText(f"State: {state}")
+        self.confidence_label.setText(f"Confidence: {confidence:.0%}")
+
+    def update_baseline(self, ready: bool, progress: float = 0.0) -> None:
+        """Update baseline status."""
+        if ready:
+            self.baseline_label.setText("Baseline: Ready")
+            self.baseline_label.setStyleSheet("color: #00aa00;")
+        else:
+            self.baseline_label.setText(f"Baseline: Warming Up ({progress:.0%})")
+            self.baseline_label.setStyleSheet("color: #ffaa00;")
+
+    def update_metrics(self, metrics: dict) -> None:
+        """Update real-time facial metrics."""
+        if "eye_openness_avg" in metrics:
+            self.eye_openness_label.setText(f"Eye Openness: {metrics['eye_openness_avg']:.2f}")
+        if "blink_rate" in metrics:
+            self.blink_rate_label.setText(f"Blink Rate: {metrics['blink_rate']:.1f}/min")
+        if "mouth_openness" in metrics:
+            self.mouth_openness_label.setText(f"Mouth Openness: {metrics['mouth_openness']:.2f}")
+        if "mouth_width" in metrics:
+            self.mouth_width_label.setText(f"Smile Score: {metrics['mouth_width']:.2f}")
+        if "facial_movement_velocity" in metrics:
+            self.movement_label.setText(f"Facial Movement: {metrics['facial_movement_velocity']:.4f}")
+        if "facial_symmetry" in metrics:
+            self.symmetry_label.setText(f"Symmetry: {metrics['facial_symmetry']:.2f}")
+        if "head_pitch" in metrics and "head_yaw" in metrics and "head_roll" in metrics:
+            self.head_pose_label.setText(
+                f"Head Pose: Pitch={metrics['head_pitch']:.1f}° Yaw={metrics['head_yaw']:.1f}° Roll={metrics['head_roll']:.1f}°"
+            )
+
+    def clear(self) -> None:
+        """Reset all metrics."""
+        self.update_face_detected(False)
+        self.update_state("--", 0.0)
+        self.update_baseline(False)
+        self.eye_openness_label.setText("Eye Openness: --")
+        self.blink_rate_label.setText("Blink Rate: --")
+        self.mouth_openness_label.setText("Mouth Openness: --")
+        self.mouth_width_label.setText("Smile Score: --")
+        self.movement_label.setText("Facial Movement: --")
+        self.symmetry_label.setText("Symmetry: --")
+        self.head_pose_label.setText("Head Pose: --")
+
+
+class AudioAnalysisPanel(QWidget):
+    """Panel displaying real-time audio analysis information."""
+    
+    def __init__(self, parent: Optional[QWidget] = None):
+        super().__init__(parent)
+        layout = QVBoxLayout(self)
+        layout.setContentsMargins(12, 12, 12, 12)
+        layout.setSpacing(8)
+        
+        # Title
+        title = QLabel("Audio Analysis")
+        title.setFont(QFont("Segoe UI", 11, QFont.Weight.Bold))
+        title.setStyleSheet("color: #0078d4;")
+        layout.addWidget(title)
+        
+        # Voice activity status
+        self.voice_activity_label = QLabel("Voice: Silent")
+        self.voice_activity_label.setFont(QFont("Segoe UI", 9))
+        self.voice_activity_label.setStyleSheet("color: #cc0000;")
+        layout.addWidget(self.voice_activity_label)
+        
+        # Current vocal state
+        self.state_label = QLabel("State: --")
+        self.state_label.setFont(QFont("Segoe UI", 10, QFont.Weight.Bold))
+        layout.addWidget(self.state_label)
+        
+        # Confidence
+        self.confidence_label = QLabel("Confidence: --")
+        self.confidence_label.setFont(QFont("Segoe UI", 9))
+        layout.addWidget(self.confidence_label)
+        
+        # Baseline status
+        self.baseline_label = QLabel("Baseline: Warming Up")
+        self.baseline_label.setFont(QFont("Segoe UI", 9))
+        self.baseline_label.setStyleSheet("color: #ffaa00;")
+        layout.addWidget(self.baseline_label)
+        
+        # Separator
+        sep = QFrame()
+        sep.setFrameShape(QFrame.Shape.HLine)
+        sep.setFrameShadow(QFrame.Shadow.Sunken)
+        sep.setStyleSheet("color: #dddddd;")
+        layout.addWidget(sep)
+        
+        # Real-time metrics
+        metrics_layout = QVBoxLayout()
+        metrics_layout.setSpacing(4)
+        
+        # Pitch
+        self.pitch_label = QLabel("Pitch: --")
+        self.pitch_label.setFont(QFont("Segoe UI", 8))
+        metrics_layout.addWidget(self.pitch_label)
+        
+        self.pitch_var_label = QLabel("Pitch Variation: --")
+        self.pitch_var_label.setFont(QFont("Segoe UI", 8))
+        metrics_layout.addWidget(self.pitch_var_label)
+        
+        # Energy
+        self.energy_label = QLabel("Energy: --")
+        self.energy_label.setFont(QFont("Segoe UI", 8))
+        metrics_layout.addWidget(self.energy_label)
+        
+        self.energy_var_label = QLabel("Energy Variation: --")
+        self.energy_var_label.setFont(QFont("Segoe UI", 8))
+        metrics_layout.addWidget(self.energy_var_label)
+        
+        # ZCR
+        self.zcr_label = QLabel("ZCR: --")
+        self.zcr_label.setFont(QFont("Segoe UI", 8))
+        metrics_layout.addWidget(self.zcr_label)
+        
+        # Voice activity
+        self.voiced_ratio_label = QLabel("Voiced Ratio: --")
+        self.voiced_ratio_label.setFont(QFont("Segoe UI", 8))
+        metrics_layout.addWidget(self.voiced_ratio_label)
+        
+        # Spectral
+        self.spectral_centroid_label = QLabel("Spectral Centroid: --")
+        self.spectral_centroid_label.setFont(QFont("Segoe UI", 8))
+        metrics_layout.addWidget(self.spectral_centroid_label)
+        
+        layout.addLayout(metrics_layout)
+        layout.addStretch()
+
+    def update_voice_activity(self, active: bool) -> None:
+        """Update voice activity status."""
+        if active:
+            self.voice_activity_label.setText("Voice: Active")
+            self.voice_activity_label.setStyleSheet("color: #00aa00;")
+        else:
+            self.voice_activity_label.setText("Voice: Silent")
+            self.voice_activity_label.setStyleSheet("color: #cc0000;")
+
+    def update_state(self, state: str, confidence: float) -> None:
+        """Update vocal state and confidence."""
+        self.state_label.setText(f"State: {state}")
+        self.confidence_label.setText(f"Confidence: {confidence:.0%}")
+
+    def update_baseline(self, ready: bool, progress: float = 0.0) -> None:
+        """Update baseline status."""
+        if ready:
+            self.baseline_label.setText("Baseline: Ready")
+            self.baseline_label.setStyleSheet("color: #00aa00;")
+        else:
+            self.baseline_label.setText(f"Baseline: Warming Up ({progress:.0%})")
+            self.baseline_label.setStyleSheet("color: #ffaa00;")
+
+    def update_metrics(self, metrics: dict) -> None:
+        """Update real-time audio metrics."""
+        if "pitch_hz" in metrics:
+            self.pitch_label.setText(f"Pitch: {metrics['pitch_hz']:.1f} Hz")
+        if "pitch_std" in metrics:
+            self.pitch_var_label.setText(f"Pitch Variation: {metrics['pitch_std']:.1f} Hz")
+        if "rms_energy_db" in metrics:
+            self.energy_label.setText(f"Energy: {metrics['rms_energy_db']:.1f} dB")
+        if "energy_std" in metrics:
+            self.energy_var_label.setText(f"Energy Variation: {metrics['energy_std']:.1f} dB")
+        if "zcr" in metrics:
+            self.zcr_label.setText(f"ZCR: {metrics['zcr']:.3f}")
+        if "voiced_ratio" in metrics:
+            self.voiced_ratio_label.setText(f"Voiced Ratio: {metrics['voiced_ratio']:.2f}")
+        if "spectral_centroid" in metrics:
+            self.spectral_centroid_label.setText(f"Spectral Centroid: {metrics['spectral_centroid']:.0f} Hz")
+
+    def clear(self) -> None:
+        """Reset all metrics."""
+        self.update_voice_activity(False)
+        self.update_state("--", 0.0)
+        self.update_baseline(False)
+        self.pitch_label.setText("Pitch: --")
+        self.pitch_var_label.setText("Pitch Variation: --")
+        self.energy_label.setText("Energy: --")
+        self.energy_var_label.setText("Energy Variation: --")
+        self.zcr_label.setText("ZCR: --")
+        self.voiced_ratio_label.setText("Voiced Ratio: --")
+        self.spectral_centroid_label.setText("Spectral Centroid: --")
 
 
 class StatusIndicator(QWidget):
@@ -426,15 +704,21 @@ class MainWindow(QMainWindow):
         splitter = QSplitter(Qt.Orientation.Vertical)
         main_layout.addWidget(splitter, 1)
 
-        # Top panel: Session info and controls
+        # Top panel: Session info, controls, face analysis, and audio analysis
         top_widget = QWidget()
-        top_layout = QVBoxLayout(top_widget)
+        top_layout = QHBoxLayout(top_widget)
         top_layout.setContentsMargins(12, 12, 12, 12)
         top_layout.setSpacing(12)
 
+        # Left column: Session info and controls
+        left_widget = QWidget()
+        left_layout = QVBoxLayout(left_widget)
+        left_layout.setContentsMargins(0, 0, 0, 0)
+        left_layout.setSpacing(12)
+
         # Session info panel
         self.session_info = SessionInfoPanel()
-        top_layout.addWidget(self.session_info)
+        left_layout.addWidget(self.session_info)
 
         # Session controls
         self.session_controls = SessionControls()
@@ -442,7 +726,29 @@ class MainWindow(QMainWindow):
         self.session_controls.pause_requested.connect(self._on_pause_session)
         self.session_controls.resume_requested.connect(self._on_resume_session)
         self.session_controls.stop_requested.connect(self._on_stop_session)
-        top_layout.addWidget(self.session_controls)
+        left_layout.addWidget(self.session_controls)
+
+        left_layout.addStretch()
+
+        # Middle column: Face analysis panel
+        self.face_analysis = FaceAnalysisPanel()
+        middle_widget = QWidget()
+        middle_layout = QVBoxLayout(middle_widget)
+        middle_layout.setContentsMargins(0, 0, 0, 0)
+        middle_layout.addWidget(self.face_analysis)
+        middle_layout.addStretch()
+
+        # Right column: Audio analysis panel
+        self.audio_analysis = AudioAnalysisPanel()
+        right_widget = QWidget()
+        right_layout = QVBoxLayout(right_widget)
+        right_layout.setContentsMargins(0, 0, 0, 0)
+        right_layout.addWidget(self.audio_analysis)
+        right_layout.addStretch()
+
+        top_layout.addWidget(left_widget, 1)
+        top_layout.addWidget(middle_widget, 1)
+        top_layout.addWidget(right_widget, 1)
 
         splitter.addWidget(top_widget)
 
@@ -456,6 +762,16 @@ class MainWindow(QMainWindow):
         # Status bar at bottom
         self.statusBar().showMessage("Ready")
         self.statusBar().setStyleSheet("QStatusBar { background-color: #f0f0f0; }")
+
+        # Face analysis polling timer
+        self._face_analysis_timer = QTimer()
+        self._face_analysis_timer.setInterval(200)  # Update every 200ms
+        self._face_analysis_timer.timeout.connect(self._poll_face_analysis)
+
+        # Audio analysis polling timer
+        self._audio_analysis_timer = QTimer()
+        self._audio_analysis_timer.setInterval(200)  # Update every 200ms
+        self._audio_analysis_timer.timeout.connect(self._poll_audio_analysis)
 
     def _create_status_bar(self, layout: QVBoxLayout) -> None:
         """Create the top status bar with application state."""
@@ -555,12 +871,124 @@ class MainWindow(QMainWindow):
                 self.session_manager.metadata.enabled_modalities
             )
 
+    def _poll_face_analysis(self) -> None:
+        """Poll face analysis data from the face capture modality."""
+        if not self.session_manager or self.session_manager.state.value != "recording":
+            return
+        
+        face_capture = self.session_manager.modalities.get("face")
+        if not face_capture:
+            return
+        
+        try:
+            stats = face_capture.get_stats()
+            analysis = stats.get("analysis", {})
+            
+            if not analysis:
+                # No analysis data yet
+                self.face_analysis.update_face_detected(False)
+                return
+            
+            # Update face detected status
+            # We can infer from analysis data
+            last_ts = analysis.get("last_analysis_timestamp")
+            if last_ts:
+                # Check if recent (within 1 second)
+                current_time = time.monotonic()
+                if current_time - last_ts < 1.0:
+                    self.face_analysis.update_face_detected(True)
+                else:
+                    self.face_analysis.update_face_detected(False)
+            
+            # Get baseline status
+            # We need to access the baseline manager directly
+            # For now, use the stats
+            baseline_ready = analysis.get("frames_processed", 0) > 0
+            # We can't easily get baseline progress from stats, so we'll estimate
+            frames = analysis.get("frames_processed", 0)
+            baseline_progress = min(1.0, frames / 150.0)  # 150 frames for baseline
+            self.face_analysis.update_baseline(baseline_ready, baseline_progress)
+            
+            # The face capture stores the last analysis result
+            # We need to access it directly
+            if hasattr(face_capture, '_last_analysis_result') and face_capture._last_analysis_result:
+                result = face_capture._last_analysis_result
+                
+                # Update state
+                state_est = result.get("state_estimate")
+                if state_est:
+                    self.face_analysis.update_state(
+                        state_est.get("state", "--"),
+                        state_est.get("confidence", 0.0)
+                    )
+                
+                # Update metrics
+                norm_features = result.get("normalized_features", {})
+                self.face_analysis.update_metrics(norm_features)
+                
+        except Exception as e:
+            logger.error("face_analysis_poll_failed", error=str(e))
+
+    def _poll_audio_analysis(self) -> None:
+        """Poll audio analysis data from the audio capture modality."""
+        if not self.session_manager or self.session_manager.state.value != "recording":
+            return
+        
+        audio_capture = self.session_manager.modalities.get("audio")
+        if not audio_capture:
+            return
+        
+        try:
+            stats = audio_capture.get_stats()
+            analysis = stats.get("analysis", {})
+            
+            if not analysis:
+                # No analysis data yet
+                self.audio_analysis.update_voice_activity(False)
+                return
+            
+            # Update voice activity status
+            last_ts = analysis.get("last_analysis_timestamp")
+            if last_ts:
+                current_time = time.monotonic()
+                if current_time - last_ts < 1.0:
+                    self.audio_analysis.update_voice_activity(True)
+                else:
+                    self.audio_analysis.update_voice_activity(False)
+            
+            # Get baseline status
+            baseline_ready = analysis.get("frames_processed", 0) > 0
+            frames = analysis.get("frames_processed", 0)
+            baseline_progress = min(1.0, frames / 150.0)  # 150 frames for baseline
+            self.audio_analysis.update_baseline(baseline_ready, baseline_progress)
+            
+            # The audio capture stores the last analysis result
+            if hasattr(audio_capture, '_last_analysis_result') and audio_capture._last_analysis_result:
+                result = audio_capture._last_analysis_result
+                
+                # Update state
+                state_est = result.get("state_estimate")
+                if state_est:
+                    self.audio_analysis.update_state(
+                        state_est.get("state", "--"),
+                        state_est.get("confidence", 0.0)
+                    )
+                
+                # Update metrics
+                norm_features = result.get("normalized_features", {})
+                self.audio_analysis.update_metrics(norm_features)
+                
+        except Exception as e:
+            logger.error("audio_analysis_poll_failed", error=str(e))
+
     def _on_start_session(self) -> None:
         """Handle start session button."""
         result = self.session_manager.start_session()
         if result:
             self._state_worker.start()
             self._duration_timer.start()
+            self._face_analysis_timer.start()
+            self._audio_analysis_timer.start()
             self.log_panel.append_log("INFO", "UI", "Session started")
 
     def _on_pause_session(self) -> None:
@@ -581,6 +1009,10 @@ class MainWindow(QMainWindow):
         if result:
             self._state_worker.stop()
             self._duration_timer.stop()
+            self._face_analysis_timer.stop()
+            self._audio_analysis_timer.stop()
+            self.face_analysis.clear()
+            self.audio_analysis.clear()
             self.log_panel.append_log("INFO", "UI", "Session stopped")
 
     def closeEvent(self, event) -> None:

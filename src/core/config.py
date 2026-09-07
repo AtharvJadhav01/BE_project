@@ -69,6 +69,70 @@ class UIConfig:
 
 
 @dataclass
+class AnalysisFaceConfig:
+    enabled: bool = True
+    window_size_sec: float = 2.0
+    update_interval_ms: int = 200
+    baseline_frames: int = 150
+    expression_threshold: float = 0.3
+    confidence_threshold: float = 0.5
+
+
+@dataclass
+class AnalysisAudioConfig:
+    enabled: bool = True
+    window_size_sec: float = 1.0
+    hop_size_sec: float = 0.1
+    baseline_duration_sec: float = 10.0
+    pitch_min_hz: float = 80.0
+    pitch_max_hz: float = 400.0
+    pitch_threshold_semitones: float = 2.0
+    energy_threshold_db: float = -40.0
+    voice_activity_threshold: float = 0.01
+
+
+@dataclass
+class AnalysisKeyboardConfig:
+    enabled: bool = True
+    window_size_sec: float = 5.0
+    baseline_events: int = 100
+    correction_threshold_ms: int = 2000
+    pause_threshold_sec: float = 2.0
+
+
+@dataclass
+class AnalysisFusionConfig:
+    enabled: bool = True
+    window_size_sec: float = 3.0
+    update_interval_ms: int = 500
+    min_modalities: int = 2
+    confidence_threshold: float = 0.6
+    uncertainty_threshold: float = 0.4
+
+
+@dataclass
+class AnalysisStorageConfig:
+    analysis_enabled: bool = True
+    flush_interval_ms: int = 5000
+
+
+@dataclass
+class AnalysisConfig:
+    enabled: bool = True
+    temporal_window_sec: float = 3.0
+    update_interval_ms: int = 500
+    baseline_warmup_sec: float = 10.0
+    baseline_min_samples: int = 50
+    ema_alpha: float = 0.1
+    min_std: float = 1e-6
+    face: AnalysisFaceConfig = field(default_factory=AnalysisFaceConfig)
+    audio: AnalysisAudioConfig = field(default_factory=AnalysisAudioConfig)
+    keyboard: AnalysisKeyboardConfig = field(default_factory=AnalysisKeyboardConfig)
+    fusion: AnalysisFusionConfig = field(default_factory=AnalysisFusionConfig)
+    storage: AnalysisStorageConfig = field(default_factory=AnalysisStorageConfig)
+
+
+@dataclass
 class AppConfig:
     audio: AudioConfig = field(default_factory=AudioConfig)
     keyboard: KeyboardConfig = field(default_factory=KeyboardConfig)
@@ -77,6 +141,7 @@ class AppConfig:
     storage: StorageConfig = field(default_factory=StorageConfig)
     logging: LoggingConfig = field(default_factory=LoggingConfig)
     ui: UIConfig = field(default_factory=UIConfig)
+    analysis: AnalysisConfig = field(default_factory=AnalysisConfig)
 
     @classmethod
     def from_dict(cls, data: dict[str, Any]) -> "AppConfig":
@@ -89,6 +154,15 @@ class AppConfig:
             storage=StorageConfig(**data.get("storage", {})),
             logging=LoggingConfig(**data.get("logging", {})),
             ui=UIConfig(**data.get("ui", {})),
+            analysis=AnalysisConfig(
+                **{k: v for k, v in data.get("analysis", {}).items() 
+                   if k not in ["face", "audio", "keyboard", "fusion", "storage"]},
+                face=AnalysisFaceConfig(**data.get("analysis", {}).get("face", {})),
+                audio=AnalysisAudioConfig(**data.get("analysis", {}).get("audio", {})),
+                keyboard=AnalysisKeyboardConfig(**data.get("analysis", {}).get("keyboard", {})),
+                fusion=AnalysisFusionConfig(**data.get("analysis", {}).get("fusion", {})),
+                storage=AnalysisStorageConfig(**data.get("analysis", {}).get("storage", {})),
+            ),
         )
 
     def to_dict(self) -> dict[str, Any]:
@@ -101,6 +175,20 @@ class AppConfig:
             "storage": self.storage.__dict__,
             "logging": self.logging.__dict__,
             "ui": self.ui.__dict__,
+            "analysis": {
+                "enabled": self.analysis.enabled,
+                "temporal_window_sec": self.analysis.temporal_window_sec,
+                "update_interval_ms": self.analysis.update_interval_ms,
+                "baseline_warmup_sec": self.analysis.baseline_warmup_sec,
+                "baseline_min_samples": self.analysis.baseline_min_samples,
+                "ema_alpha": self.analysis.ema_alpha,
+                "min_std": self.analysis.min_std,
+                "face": self.analysis.face.__dict__,
+                "audio": self.analysis.audio.__dict__,
+                "keyboard": self.analysis.keyboard.__dict__,
+                "fusion": self.analysis.fusion.__dict__,
+                "storage": self.analysis.storage.__dict__,
+            },
         }
 
 
