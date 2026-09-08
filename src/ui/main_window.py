@@ -21,6 +21,7 @@ from PySide6.QtWidgets import (
     QSplitter,
     QSizePolicy,
     QMessageBox,
+    QHBoxLayout,
 )
 from PySide6.QtCore import (
     Qt,
@@ -46,6 +47,12 @@ from keyboard import KeyboardCapture
 from audio import AudioCapture
 from face import FaceCapture
 
+from ui.keyboard_analysis_panel import KeyboardAnalysisPanel
+from ui.panels import (
+    OverallHumanStatePanel,
+    ExplanationPanel,
+    MultimodalContributionPanel,
+)
 
 logger = get_logger(__name__)
 
@@ -750,14 +757,43 @@ class MainWindow(QMainWindow):
         top_layout.addWidget(middle_widget, 1)
         top_layout.addWidget(right_widget, 1)
 
+        # Add keyboard analysis panel
+        self.keyboard_analysis = KeyboardAnalysisPanel()
+        keyboard_widget = QWidget()
+        keyboard_layout = QVBoxLayout(keyboard_widget)
+        keyboard_layout.setContentsMargins(0, 0, 0, 0)
+        keyboard_layout.addWidget(self.keyboard_analysis)
+        keyboard_layout.addStretch()
+        top_layout.addWidget(keyboard_widget, 1)
+
         splitter.addWidget(top_widget)
+
+        # Middle panel: Overall human state, explanation, and multimodal contribution
+        middle_panel = QWidget()
+        middle_layout = QHBoxLayout(middle_panel)
+        middle_layout.setContentsMargins(12, 12, 12, 12)
+        middle_layout.setSpacing(12)
+
+        # Overall human state panel
+        self.overall_human_state = OverallHumanStatePanel()
+        middle_layout.addWidget(self.overall_human_state, 1)
+
+        # Explanation panel
+        self.explanation_panel = ExplanationPanel()
+        middle_layout.addWidget(self.explanation_panel, 1)
+
+        # Multimodal contribution panel
+        self.multimodal_contribution = MultimodalContributionPanel()
+        middle_layout.addWidget(self.multimodal_contribution, 1)
+
+        splitter.addWidget(middle_panel)
 
         # Bottom panel: Log panel
         self.log_panel = LogPanel()
         splitter.addWidget(self.log_panel)
 
         # Set splitter sizes
-        splitter.setSizes([400, 300])
+        splitter.setSizes([400, 250, 300])
 
         # Status bar at bottom
         self.statusBar().showMessage("Ready")
@@ -772,6 +808,11 @@ class MainWindow(QMainWindow):
         self._audio_analysis_timer = QTimer()
         self._audio_analysis_timer.setInterval(200)  # Update every 200ms
         self._audio_analysis_timer.timeout.connect(self._poll_audio_analysis)
+
+        # Keyboard analysis polling timer
+        self._keyboard_analysis_timer = QTimer()
+        self._keyboard_analysis_timer.setInterval(200)  # Update every 200ms
+        self._keyboard_analysis_timer.timeout.connect(self._poll_keyboard_analysis)
 
     def _create_status_bar(self, layout: QVBoxLayout) -> None:
         """Create the top status bar with application state."""
@@ -981,6 +1022,58 @@ class MainWindow(QMainWindow):
         except Exception as e:
             logger.error("audio_analysis_poll_failed", error=str(e))
 
+    def _poll_keyboard_analysis(self) -> None:
+        """Poll keyboard analysis data from the keyboard capture modality."""
+        if not self.session_manager or self.session_manager.state.value != "recording":
+            return
+        
+        keyboard_capture = self.session_manager.modalities.get("keyboard")
+        if not keyboard_capture:
+            return
+        
+        try:
+            stats = keyboard_capture.get_stats()
+            analysis = stats.get("analysis", {})
+            
+            if not analysis:
+                # No analysis data yet
+                self.keyboard_analysis.update_keyboard_detected(False)
+                return
+            
+            # Update keyboard detected status
+            last_ts = analysis.get("last_analysis_timestamp")
+            if last_ts:
+                current_time = time.monotonic()
+                if current_time - last_ts < 1.0:
+                    self.keyboard_analysis.update_keyboard_detected(True)
+                else:
+                    self.keyboard_analysis.update_keyboard_detected(False)
+            
+            # Get baseline status
+            baseline_ready = analysis.get("frames_processed", 0) > 0
+            frames = analysis.get("frames_processed", 0)
+            baseline_progress = min(1.0, frames / 150.0)  # 150 frames for baseline
+            self.keyboard_analysis.update_baseline(baseline_ready, baseline_progress)
+            
+            # The keyboard capture stores the last analysis result
+            if hasattr(keyboard_capture, '_last_analysis_result') and keyboard_capture._last_analysis_result:
+                result = keyboard_capture._last_analysis_result
+                
+                # Update state
+                state_est = result.get("state_estimate")
+                if state_est:
+                    self.keyboard_analysis.update_state(
+                        state_est.get("state", "--"),
+                        state_est.get("confidence", 0.0)
+                    )
+                
+                # Update metrics
+                norm_features = result.get("normalized_features", {})
+                self.keyboard_analysis.update_metrics(norm_features)
+                
+        except Exception as e:
+            logger.error("keyboard_analysis_poll_failed", error=str(e))
+
     def _on_start_session(self) -> None:
         """Handle start session button."""
         result = self.session_manager.start_session()
@@ -989,6 +1082,7 @@ class MainWindow(QMainWindow):
             self._duration_timer.start()
             self._face_analysis_timer.start()
             self._audio_analysis_timer.start()
+            self._keyboard_analysis_timer.start()
             self.log_panel.append_log("INFO", "UI", "Session started")
 
     def _on_pause_session(self) -> None:
@@ -1011,8 +1105,13 @@ class MainWindow(QMainWindow):
             self._duration_timer.stop()
             self._face_analysis_timer.stop()
             self._audio_analysis_timer.stop()
+            self._keyboard_analysis_timer.stop()
             self.face_analysis.clear()
             self.audio_analysis.clear()
+            self.keyboard_analysis.clear()
+            self.overall_human_state.clear()
+            self.explanation_panel.update_explanation("")
+            self.multimodal_contribution.clear()
             self.log_panel.append_log("INFO", "UI", "Session stopped")
 
     def closeEvent(self, event) -> None:

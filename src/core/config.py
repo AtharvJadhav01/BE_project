@@ -108,6 +108,23 @@ class AnalysisFusionConfig:
     min_modalities: int = 2
     confidence_threshold: float = 0.6
     uncertainty_threshold: float = 0.4
+    modality_weights: dict[str, float] = field(default_factory=lambda: {
+        "face": 1.0,
+        "audio": 1.0,
+        "keyboard": 1.0,
+    })
+    min_modalities_for_fusion: int = 2
+    confidence_threshold: float = 0.6
+    uncertainty_threshold: float = 0.4
+    face_freshness_sec: float = 1.0
+    audio_freshness_sec: float = 1.0
+    keyboard_freshness_sec: float = 5.0
+    face_stale_sec: float = 3.0
+    audio_stale_sec: float = 3.0
+    keyboard_stale_sec: float = 15.0
+    smoothing_alpha: float = 0.3
+    min_persistence_frames: int = 3
+    debounce_sec: float = 2.0
 
 
 @dataclass
@@ -186,7 +203,27 @@ class AppConfig:
                 "face": self.analysis.face.__dict__,
                 "audio": self.analysis.audio.__dict__,
                 "keyboard": self.analysis.keyboard.__dict__,
-                "fusion": self.analysis.fusion.__dict__,
+                "fusion": {
+                    "enabled": self.analysis.fusion.enabled,
+                    "window_size_sec": self.analysis.fusion.window_size_sec,
+                    "update_interval_ms": self.analysis.fusion.update_interval_ms,
+                    "min_modalities": self.analysis.fusion.min_modalities,
+                    "confidence_threshold": self.analysis.fusion.confidence_threshold,
+                    "uncertainty_threshold": self.analysis.fusion.uncertainty_threshold,
+                    "modality_weights": self.analysis.fusion.modality_weights,
+                    "min_modalities_for_fusion": self.analysis.fusion.min_modalities_for_fusion,
+                    "confidence_threshold": self.analysis.fusion.confidence_threshold,
+                    "uncertainty_threshold": self.analysis.fusion.uncertainty_threshold,
+                    "face_freshness_sec": self.analysis.fusion.face_freshness_sec,
+                    "audio_freshness_sec": self.analysis.fusion.audio_freshness_sec,
+                    "keyboard_freshness_sec": self.analysis.fusion.keyboard_freshness_sec,
+                    "face_stale_sec": self.analysis.fusion.face_stale_sec,
+                    "audio_stale_sec": self.analysis.fusion.audio_stale_sec,
+                    "keyboard_stale_sec": self.analysis.fusion.keyboard_stale_sec,
+                    "smoothing_alpha": self.analysis.fusion.smoothing_alpha,
+                    "min_persistence_frames": self.analysis.fusion.min_persistence_frames,
+                    "debounce_sec": self.analysis.fusion.debounce_sec,
+                },
                 "storage": self.analysis.storage.__dict__,
             },
         }

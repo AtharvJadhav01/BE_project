@@ -97,6 +97,23 @@ analysis:
     min_modalities: 2
     confidence_threshold: 0.6
     uncertainty_threshold: 0.4
+    modality_weights:
+      face: 1.0
+      audio: 1.0
+      keyboard: 1.0
+    min_modalities_for_fusion: 2
+    confidence_threshold: 0.6
+    uncertainty_threshold: 0.4
+    face_freshness_sec: 1.0
+    audio_freshness_sec: 1.0
+    keyboard_freshness_sec: 5.0
+    face_stale_sec: 3.0
+    audio_stale_sec: 3.0
+    keyboard_stale_sec: 15.0
+    smoothing_alpha: 0.3
+    min_persistence_frames: 3
+    debounce_sec: 2.0
+    debounce_sec: 2.0
 
   # Storage for analysis results
   storage:

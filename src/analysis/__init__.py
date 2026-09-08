@@ -7,6 +7,7 @@ Provides reusable components for real-time human-state analysis:
 - Feature extraction interfaces
 - State estimation interfaces
 - Analysis result schema
+- Multimodal fusion for human-state estimation
 """
 
 from analysis.baseline import BaseBaselineManager
@@ -26,6 +27,13 @@ from analysis.results import (
     StateEstimate,
 )
 from analysis.temporal import TemporalWindow
+from analysis.multimodal import (
+    MultimodalFusion,
+    HumanStateEstimator,
+    TemporalAligner,
+    ModalitySnapshot,
+    FusionEngine,
+)
 
 __all__ = [
     "AnalysisResult",
@@ -39,4 +47,9 @@ __all__ = [
     "StateEstimate",
     "StateEstimator",
     "TemporalWindow",
+    "MultimodalFusion",
+    "HumanStateEstimator",
+    "TemporalAligner",
+    "ModalitySnapshot",
+    "FusionEngine",
 ]
