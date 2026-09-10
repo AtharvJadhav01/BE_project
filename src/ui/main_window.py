@@ -101,6 +101,36 @@ class FaceAnalysisPanel(QWidget):
         sep.setStyleSheet("color: #dddddd;")
         layout.addWidget(sep)
         
+        # Estimated Expression
+        expr_title = QLabel("Estimated Expression")
+        expr_title.setFont(QFont("Segoe UI", 10, QFont.Weight.Bold))
+        expr_title.setStyleSheet("color: #0078d4;")
+        layout.addWidget(expr_title)
+        
+        self.expr_label = QLabel("Estimated Expression: --")
+        self.expr_label.setFont(QFont("Segoe UI", 10, QFont.Weight.Bold))
+        self.expr_label.setAlignment(Qt.AlignmentFlag.AlignCenter)
+        layout.addWidget(self.expr_label)
+        
+        self.expr_conf_label = QLabel("Expression Confidence: --")
+        self.expr_conf_label.setFont(QFont("Segoe UI", 9))
+        self.expr_conf_label.setAlignment(Qt.AlignmentFlag.AlignCenter)
+        layout.addWidget(self.expr_conf_label)
+        
+        # Separator
+        sep2 = QFrame()
+        sep2.setFrameShape(QFrame.Shape.HLine)
+        sep2.setFrameShadow(QFrame.Shadow.Sunken)
+        sep2.setStyleSheet("color: #dddddd;")
+        layout.addWidget(sep2)
+        
+        # Separator
+        sep = QFrame()
+        sep.setFrameShape(QFrame.Shape.HLine)
+        sep.setFrameShadow(QFrame.Shadow.Sunken)
+        sep.setStyleSheet("color: #dddddd;")
+        layout.addWidget(sep)
+        
         # Real-time metrics
         metrics_layout = QVBoxLayout()
         metrics_layout.setSpacing(4)
@@ -140,7 +170,7 @@ class FaceAnalysisPanel(QWidget):
         layout.addLayout(metrics_layout)
         layout.addStretch()
 
-    def update_face_detected(self, detected: bool) -> None:
+def update_face_detected(self, detected: bool) -> None:
         """Update face detected status."""
         if detected:
             self.face_detected_label.setText("Face: Detected")
@@ -149,21 +179,16 @@ class FaceAnalysisPanel(QWidget):
             self.face_detected_label.setText("Face: Not Detected")
             self.face_detected_label.setStyleSheet("color: #cc0000;")
 
-    def update_state(self, state: str, confidence: float) -> None:
         """Update facial state and confidence."""
         self.state_label.setText(f"State: {state}")
         self.confidence_label.setText(f"Confidence: {confidence:.0%}")
 
-    def update_baseline(self, ready: bool, progress: float = 0.0) -> None:
-        """Update baseline status."""
-        if ready:
-            self.baseline_label.setText("Baseline: Ready")
-            self.baseline_label.setStyleSheet("color: #00aa00;")
-        else:
-            self.baseline_label.setText(f"Baseline: Warming Up ({progress:.0%})")
-            self.baseline_label.setStyleSheet("color: #ffaa00;")
 
-    def update_metrics(self, metrics: dict) -> None:
+        """Update estimated expression and confidence."""
+        self.expr_label.setText(f"Estimated Expression: {expression}")
+        self.expr_conf_label.setText(f"Expression Confidence: {confidence:.0%}")
+
+
         """Update real-time facial metrics."""
         if "eye_openness_avg" in metrics:
             self.eye_openness_label.setText(f"Eye Openness: {metrics['eye_openness_avg']:.2f}")
@@ -288,7 +313,6 @@ class AudioAnalysisPanel(QWidget):
         else:
             self.voice_activity_label.setText("Voice: Silent")
             self.voice_activity_label.setStyleSheet("color: #cc0000;")
-
     def update_state(self, state: str, confidence: float) -> None:
         """Update vocal state and confidence."""
         self.state_label.setText(f"State: {state}")
@@ -961,6 +985,14 @@ class MainWindow(QMainWindow):
                     self.face_analysis.update_state(
                         state_est.get("state", "--"),
                         state_est.get("confidence", 0.0)
+                    )
+                
+                # Update estimated expression
+                expr_est = result.get("expression_estimate")
+                if expr_est:
+                    self.face_analysis.update_expression(
+                        expr_est.get("expression", "--"),
+                        expr_est.get("confidence", 0.0)
                     )
                 
                 # Update metrics

@@ -8,7 +8,8 @@ positive expression, negative expression, surprise, and tension.
 
 import math
 import time
-from typing import Dict, List, Optional, Any
+from typing import Dict, List, Optional, Any, Tuple
+import numpy as np
 from analysis.interfaces import StateEstimator, StateEstimate, BaselineManager
 from analysis.results import StateEstimate as StateEstimateModel
 
@@ -396,3 +397,133 @@ class FaceStateEstimator(StateEstimator):
     def reset(self) -> None:
         """Reset internal state."""
         pass  # No internal state to reset in this implementation
+
+
+class EmotionSmoother:
+    """
+    Temporal smoother for emotion/expression predictions.
+    
+    Uses exponential moving average on class probabilities to smooth
+    frame-by-frame predictions and reduce jitter.
+    """
+    
+    def __init__(self, window_size: int = 5, min_confidence: float = 0.4, alpha: float = 0.3, enabled: bool = True):
+        """
+        Initialize the emotion smoother.
+        
+        Args:
+            window_size: Maximum number of frames to keep in smoothing window
+            min_confidence: Minimum smoothed confidence to emit an expression
+            alpha: EMA alpha factor (0-1), higher = more responsive
+            enabled: Whether smoothing is enabled
+        """
+        self.window_size = max(1, window_size)
+        self.min_confidence = min_confidence
+        self.alpha = max(0.0, min(1.0, alpha))
+        self.enabled = enabled
+        
+        self._probs_buffer: List[np.ndarray] = []
+        self._labels: Optional[List[str]] = None
+        
+        self.logger = get_logger(__name__)
+    
+    def set_labels(self, labels: List[str]) -> None:
+        """Set the label names corresponding to probability array indices."""
+        self._labels = list(labels)
+    
+    def set_enabled(self, enabled: bool) -> None:
+        """Enable or disable smoothing."""
+        self.enabled = enabled
+        if not enabled:
+            self.reset()
+    
+    def is_enabled(self) -> bool:
+        """Check if smoothing is enabled."""
+        return self.enabled
+    
+    def add_prediction(self, probs: np.ndarray, confidence: float) -> None:
+        """
+        Add a frame prediction to the smoothing buffer.
+        
+        Args:
+            probs: Class probabilities from classifier (must sum to ~1.0)
+            confidence: Raw confidence from classifier (used for debugging)
+        """
+        if not self.enabled:
+            return
+            
+        if probs is None or len(probs) == 0:
+            return
+            
+        # Ensure probabilities are valid
+        probs = np.asarray(probs, dtype=np.float64)
+        probs = np.clip(probs, 0.0, 1.0)
+        total = np.sum(probs)
+        if total > 0:
+            probs = probs / total
+        else:
+            return
+        
+        self._probs_buffer.append(probs)
+        if len(self._probs_buffer) > self.window_size:
+            self._probs_buffer.pop(0)
+    
+    def get_smoothed(self) -> tuple:
+        """
+        Get the smoothed emotion prediction.
+        
+        Returns:
+            Tuple of (expression_name, confidence) or (None, 0.0) if no valid prediction
+        """
+        if not self.enabled or not self._probs_buffer or self._labels is None:
+            return None, 0.0
+        
+        # Exponential moving average on probabilities
+        ema = self._probs_buffer[0].copy()
+        for probs in self._probs_buffer[1:]:
+            ema = self.alpha * probs + (1.0 - self.alpha) * ema
+        
+        max_idx = int(np.argmax(ema))
+        max_conf = float(ema[max_idx])
+        
+        if max_conf >= self.min_confidence and self._labels:
+            return self._labels[max_idx], max_conf
+        
+        return None, 0.0
+    
+    def reset(self) -> None:
+        """Clear the smoothing buffer."""
+        self._probs_buffer.clear()
+    
+    def set_labels(self, labels: List[str]) -> None:
+        """Set the label names corresponding to probability array indices."""
+        self._labels = list(labels)
+    
+    def is_ready(self) -> bool:
+        """Check if smoother has enough frames for reliable smoothing."""
+        return len(self._probs_buffer) >= min(2, self.window_size)
+    
+    def get_buffer_size(self) -> int:
+        """Get current buffer size."""
+        return len(self._probs_buffer)
+    
+    def set_enabled(self, enabled: bool) -> None:
+        """Enable or disable smoothing."""
+        self.enabled = enabled
+        if not enabled:
+            self.reset()
+
+    def get_possible_states(self) -> List[str]:
+        """Return list of possible emotion labels."""
+        if self._labels:
+            return list(self._labels)
+        return [
+            "angry",
+            "disgust",
+            "fear",
+            "happy",
+            "sad",
+            "surprised",
+            "neutral",
+            "uncertain"
+        ]

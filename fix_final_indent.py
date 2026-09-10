@@ -1,18 +1,13 @@
-with open(r'C:\Users\theat\OneDrive\Desktop\BE_Project\my_app\app_work\tests\unit\test_audio_analysis.py', 'rb') as f:
-    content = f.read()
+with open('C:/Users/theat/OneDrive/Desktop/BE_Project/my_app/app_work/src/ui/main_window.py', 'r', encoding='utf-8') as f:
+    lines = f.readlines()
 
-# Fix the for loop structure:
-# - for loop at 12 spaces (4 more than method body at 8)
-# - if/else at 16 spaces (4 more than for at 12)
-# - continue at 12 spaces (for loop body level, after if-else)
-# - empty line after for loop at 8 spaces (method body level)
-# - next method at 4 spaces
+# Fix line 181 (index 180): blank line after update_state method - should have 0 indent
+lines[180] = '\n'
 
-old = b'            else:\n                assert v == 0.0, f"Expected 0.0 for {k}, got {v}"\n                \n                continue\n            \n    def test_extract_sine_wave'
-new = b'            else:\n                assert v == 0.0, f"Expected 0.0 for {k}, got {v}"\n            continue\n        \n        \n    def test_extract_sine_wave'
+# Fix line 191 (index 190) - blank line after update_expression
+lines[190] = '\n'
 
-content = content.replace(old, new)
+with open('C:/Users/theat/OneDrive/Desktop/BE_Project/my_app/app_work/src/ui/main_window.py', 'w', encoding='utf-8') as f:
+    f.writelines(lines)
 
-with open(r'C:\Users\theat\OneDrive\Desktop\BE_Project\my_app\app_work\tests\unit\test_audio_analysis.py', 'wb') as f:
-    f.write(content)
-print('Fixed')
+print('Fixed!')

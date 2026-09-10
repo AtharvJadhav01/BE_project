@@ -72,6 +72,49 @@ class FacialFeatures:
     nose_sneer_left: float = 0.0
     nose_sneer_right: float = 0.0
     
+    # Phase 3 additions - new discriminative features
+    # Eye features
+    eye_white_exposure_ratio: float = 0.0
+    eye_white_exposure_left: float = 0.0
+    eye_white_exposure_right: float = 0.0
+    upper_lid_raise: float = 0.0
+    
+    # Mouth features
+    mouth_corner_depression: float = 0.0
+    lower_lip_depressor: float = 0.0
+    chin_boss_activation: float = 0.0
+    
+    # Eyebrow features
+    brow_furrow_depth: float = 0.0
+    brow_raise_ratio: float = 0.0
+    
+    # Nose features
+    nostril_flare: float = 0.0
+    
+    # Chin features
+    chin_boss_activation: float = 0.0
+    
+    # Eye features
+    upper_lid_raise: float = 0.0
+    eye_white_exposure_left: float = 0.0
+    eye_white_exposure_right: float = 0.0
+    eye_white_exposure_ratio: float = 0.0
+    
+    # Mouth features
+    mouth_corner_depression: float = 0.0
+    lower_lip_depressor: float = 0.0
+    chin_boss_activation: float = 0.0
+    
+    # Eyebrow features
+    brow_furrow_depth: float = 0.0
+    brow_raise_ratio: float = 0.0
+    
+    # Nose features
+    nostril_flare: float = 0.0
+    
+    # Chin features
+    chin_boss_activation: float = 0.0
+    
     def to_dict(self) -> Dict[str, float]:
         return asdict(self)
     
@@ -90,7 +133,16 @@ class FacialFeatures:
             "head_pitch", "head_yaw", "head_roll",
             "facial_movement_velocity", "facial_symmetry",
             "overall_expressivity",
-            "nose_sneer_left", "nose_sneer_right"
+            "nose_sneer_left", "nose_sneer_right",
+            "eye_white_exposure_ratio", "eye_white_exposure_left", "eye_white_exposure_right",
+            "mouth_corner_depression", "lower_lip_depressor", "chin_boss_activation",
+            "brow_furrow_depth", "brow_raise_ratio",
+            "nostril_flare",
+            "upper_lid_raise", "eye_white_exposure_left", "eye_white_exposure_right", "eye_white_exposure_ratio",
+            "mouth_corner_depression", "lower_lip_depressor", "chin_boss_activation",
+            "brow_furrow_depth", "brow_raise_ratio",
+            "nostril_flare",
+            "chin_boss_activation"
         ]
 
 
@@ -277,6 +329,9 @@ class MediaPipeFaceFeatureExtractor:
         if not landmarks_3d:
             return features
         
+        # Store landmarks for advanced features
+        self._last_landmarks = landmarks_3d
+        
         # Extract eye features
         self._extract_eye_features(landmarks_3d, blendshapes, features)
         
@@ -285,6 +340,18 @@ class MediaPipeFaceFeatureExtractor:
         
         # Extract eyebrow features
         self._extract_eyebrow_features(blendshapes, features)
+        
+        # Extract nose features
+        self._extract_nose_features(blendshapes, features)
+        
+        # Extract advanced eye features (Phase 3)
+        self._extract_advanced_eye_features(landmarks_3d, blendshapes, features)
+        
+        # Extract advanced mouth features (Phase 3)
+        self._extract_advanced_mouth_features(landmarks_3d, blendshapes, features)
+        
+        # Extract advanced brow features (Phase 3)
+        self._extract_advanced_brow_features(blendshapes, features)
         
         # Extract nose features
         self._extract_nose_features(blendshapes, features)
@@ -439,6 +506,107 @@ class MediaPipeFaceFeatureExtractor:
         except Exception:
             features.nose_sneer_left = 0.0
             features.nose_sneer_right = 0.0
+    
+    def _extract_advanced_eye_features(self, landmarks_3d: List[Dict[str, float]], 
+                                       blendshapes: Dict[str, float], 
+                                       features: FacialFeatures) -> None:
+        """Extract advanced eye features for emotion discrimination."""
+        try:
+            # Eye white exposure (sclera visibility) - Fear vs Surprise
+            # Using iris landmarks (468-477) and eyelid landmarks
+            if len(self._last_landmarks) > 473:
+                # Get iris positions
+                left_iris = self._last_landmarks[468]
+                right_iris = self._last_landmarks[473]
+                
+                # Upper eyelid landmarks (approximate)
+                left_upper_lid = self._last_landmarks[159]  # upper lid
+                right_upper_lid = self._last_landmarks[386]
+                
+                # Lower eyelid landmarks
+                left_lower_lid = self._last_landmarks[145]
+                right_lower_lid = self._last_landmarks[374]
+                
+                # Eye white exposure ratio (sclera visibility)
+                left_eye_height = abs(left_iris["y"] - left_upper_lid["y"]) + abs(left_iris["y"] - left_lower_lid["y"])
+                right_eye_height = abs(right_iris["y"] - right_upper_lid["y"]) + abs(right_iris["y"] - right_lower_lid["y"])
+                
+                # Sclera visibility (simplified - using iris position relative to lids)
+                features.eye_white_exposure_left = blendshapes.get("eyeWideLeft", 0.0)
+                features.eye_white_exposure_right = blendshapes.get("eyeWideRight", 0.0)
+                features.eye_white_exposure_ratio = (features.eye_white_exposure_left + features.eye_white_exposure_right) / 2.0
+                
+                # Upper lid raise (from blendshapes)
+                features.upper_lid_raise = (blendshapes.get("eyeWideLeft", 0.0) + blendshapes.get("eyeWideRight", 0.0)) / 2.0
+                features.eye_white_exposure_left = blendshapes.get("eyeWideLeft", 0.0)
+                features.eye_white_exposure_right = blendshapes.get("eyeWideRight", 0.0)
+                features.eye_white_exposure_ratio = (features.eye_white_exposure_left + features.eye_white_exposure_right) / 2.0
+        except Exception:
+            features.eye_white_exposure_left = 0.0
+            features.eye_white_exposure_right = 0.0
+            features.eye_white_exposure_ratio = 0.0
+            features.upper_lid_raise = 0.0
+            features.eye_white_exposure_left = 0.0
+            features.eye_white_exposure_right = 0.0
+            features.eye_white_exposure_ratio = 0.0
+    
+    def _extract_advanced_mouth_features(self, landmarks_3d: List[Dict[str, float]], 
+                                        blendshapes: Dict[str, float], 
+                                        features: FacialFeatures) -> None:
+        """Extract advanced mouth features for emotion discrimination."""
+        try:
+            # Mouth corner depression (Sad vs Neutral)
+            # Mouth corners: 61 (left), 291 (right), center: 13, 14
+            if len(self._last_landmarks) > 291:
+                left_corner = self._last_landmarks[61]
+                right_corner = self._last_landmarks[291]
+                mouth_center = self._last_landmarks[13]  # approximate mouth center
+                
+                # Mouth corner depression (Sad vs Neutral)
+                corner_y = (self._last_landmarks[61]["y"] + self._last_landmarks[291]["y"]) / 2.0
+                mouth_center_y = self._last_landmarks[13]["y"]
+                features.mouth_corner_depression = max(0.0, mouth_center_y - (self._last_landmarks[61]["y"] + self._last_landmarks[291]["y"]) / 2.0)
+                
+                # Lower lip depressor
+                features.lower_lip_depressor = blendshapes.get("mouthLowerDownLeft", 0.0) + blendshapes.get("mouthLowerDownRight", 0.0)
+                
+                # Chin boss activation (mentalis)
+                features.chin_boss_activation = blendshapes.get("mouthShrugLower", 0.0) + blendshapes.get("mouthShrugUpper", 0.0)
+                
+                # Mouth corner depression (normalized)
+                mouth_center_y = self._last_landmarks[13]["y"]
+                corner_y = (self._last_landmarks[61]["y"] + self._last_landmarks[291]["y"]) / 2.0
+                features.mouth_corner_depression = max(0.0, mouth_center_y - (self._last_landmarks[61]["y"] + self._last_landmarks[291]["y"]) / 2.0)
+        except Exception:
+            features.mouth_corner_depression = 0.0
+            features.lower_lip_depressor = 0.0
+            features.chin_boss_activation = 0.0
+    
+    def _extract_advanced_brow_features(self, blendshapes: Dict[str, float], 
+                                        features: FacialFeatures) -> None:
+        """Extract advanced eyebrow features for emotion discrimination."""
+        try:
+            # Brow furrow depth (Angry vs Disgust)
+            features.brow_furrow_depth = (blendshapes.get("browDownLeft", 0.0) + blendshapes.get("browDownRight", 0.0)) / 2.0
+            
+            # Brow raise ratio (inner up vs down) - Surprise vs Angry
+            brow_up = blendshapes.get("browInnerUp", 0.0)
+            brow_down = (blendshapes.get("browDownLeft", 0.0) + blendshapes.get("browDownRight", 0.0)) / 2.0
+            if brow_down > 0.01:
+                features.brow_raise_ratio = brow_up / brow_down
+            else:
+                features.brow_raise_ratio = brow_up * 10.0
+                
+            # Nostril flare (Disgust vs Angry)
+            features.nostril_flare = (blendshapes.get("noseSneerLeft", 0.0) + blendshapes.get("noseSneerRight", 0.0)) / 2.0
+            
+            # Chin boss activation (Sad)
+            features.chin_boss_activation = blendshapes.get("mouthShrugLower", 0.0) + blendshapes.get("mouthShrugUpper", 0.0)
+        except Exception:
+            features.brow_furrow_depth = 0.0
+            features.brow_raise_ratio = 0.0
+            features.nostril_flare = 0.0
+            features.chin_boss_activation = 0.0
     
     def _calculate_head_pose(self, face_landmarks, w: int, h: int) -> Dict[str, float]:
         try:
