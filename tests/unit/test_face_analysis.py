@@ -132,6 +132,13 @@ class TestFaceFeatureExtractor:
         assert "facial_movement_velocity" in names
         assert "facial_symmetry" in names
         assert "overall_expressivity" in names
+        # New emotion estimation features
+        assert "mouth_funnel" in names
+        assert "mouth_pucker" in names
+        assert "mouth_stretch_left" in names
+        assert "mouth_stretch_right" in names
+        assert "nose_sneer_left" in names
+        assert "nose_sneer_right" in names
 
     def test_extract_no_face(self, extractor):
         """Test extraction when no face is detected."""
@@ -198,9 +205,18 @@ class TestFaceFeatureExtractor:
         assert "mouth_width" in features
         assert "lip_press" in features
         assert "smile_asymmetry" in features
+        # New mouth features for emotion estimation
+        assert "mouth_funnel" in features
+        assert "mouth_pucker" in features
+        assert "mouth_stretch_left" in features
+        assert "mouth_stretch_right" in features
         # Values should be non-negative
         assert features.get("mouth_openness", 0) >= 0
         assert features.get("lip_press", 0) >= 0
+        assert features.get("mouth_funnel", 0) >= 0
+        assert features.get("mouth_pucker", 0) >= 0
+        assert features.get("mouth_stretch_left", 0) >= 0
+        assert features.get("mouth_stretch_right", 0) >= 0
 
     def test_eyebrow_features(self, extractor):
         """Test eyebrow feature extraction."""
@@ -212,6 +228,19 @@ class TestFaceFeatureExtractor:
         assert "brow_inner_up" in features
         assert "brow_down_left" in features
         assert "brow_down_right" in features
+
+    def test_nose_features(self, extractor):
+        """Test nose feature extraction for emotion estimation."""
+        raw_data = self._create_mock_detection_result()
+        
+        result = extractor.extract(raw_data, timestamp=1.0, wallclock="2024-01-01T00:00:00.000Z")
+        
+        features = result.features
+        assert "nose_sneer_left" in features
+        assert "nose_sneer_right" in features
+        # Values should be non-negative
+        assert features.get("nose_sneer_left", 0) >= 0
+        assert features.get("nose_sneer_right", 0) >= 0
 
     def test_head_pose_features(self, extractor):
         """Test head pose feature extraction."""

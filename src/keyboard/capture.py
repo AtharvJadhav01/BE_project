@@ -467,6 +467,7 @@ class KeyboardCapture(KeyboardModalityInterface):
                 self._processor = KeyboardProcessor(self.config)
                 self._processor.set_storage_callback(self._on_storage_write)
                 self._processor.set_unified_event_callback(self._on_keyboard_event)
+                self._processor.set_analysis_callback(self._on_analysis_event)
                 
                 self._storage = KeyboardStorage(self._session_dir, self.config)
                 

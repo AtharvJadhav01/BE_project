@@ -194,9 +194,9 @@ class FaceDetector:
         landmarks_2d = []
         for lm in face_landmarks:
             landmarks_3d.append({
-                "x": lm.x,
-                "y": lm.y,
-                "z": lm.z
+                "x": float(lm.x),
+                "y": float(lm.y),
+                "z": float(lm.z)
             })
             landmarks_2d.append({
                 "x": int(lm.x * w),
@@ -231,8 +231,8 @@ class FaceDetector:
                 left_iris = face_landmarks[468]
                 right_iris = face_landmarks[473]
                 iris = {
-                    "left": {"x": left_iris.x, "y": left_iris.y, "z": left_iris.z},
-                    "right": {"x": right_iris.x, "y": right_iris.y, "z": right_iris.z}
+                    "left": {"x": float(left_iris.x), "y": float(left_iris.y), "z": float(left_iris.z)},
+                    "right": {"x": float(right_iris.x), "y": float(right_iris.y), "z": float(right_iris.z)}
                 }
         except Exception:
             pass

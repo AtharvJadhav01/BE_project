@@ -29,6 +29,11 @@ class FacialFeatures:
     mouth_width: float = 0.0  # smile indicator
     lip_press: float = 0.0
     smile_asymmetry: float = 0.0
+    # Phase 1 additions
+    mouth_funnel: float = 0.0
+    mouth_pucker: float = 0.0
+    mouth_stretch_left: float = 0.0
+    mouth_stretch_right: float = 0.0
     
     # Eyebrow features
     brow_inner_up: float = 0.0  # surprise
@@ -48,6 +53,10 @@ class FacialFeatures:
     
     # Overall expressivity
     overall_expressivity: float = 0.0
+    
+    # Nose features for emotion estimation
+    nose_sneer_left: float = 0.0
+    nose_sneer_right: float = 0.0
 
 
 class FaceFeatureExtractor(BaseFeatureExtractor):
@@ -246,6 +255,11 @@ class FaceFeatureExtractor(BaseFeatureExtractor):
             "mouth_width": features.mouth_width,
             "lip_press": features.lip_press,
             "smile_asymmetry": features.smile_asymmetry,
+            # Phase 1 additions
+            "mouth_funnel": features.mouth_funnel,
+            "mouth_pucker": features.mouth_pucker,
+            "mouth_stretch_left": features.mouth_stretch_left,
+            "mouth_stretch_right": features.mouth_stretch_right,
             
             # Eyebrow features
             "brow_inner_up": features.brow_inner_up,
@@ -264,7 +278,11 @@ class FaceFeatureExtractor(BaseFeatureExtractor):
             "facial_symmetry": features.facial_symmetry,
             
             # Overall
-            "overall_expressivity": features.overall_expressivity
+            "overall_expressivity": features.overall_expressivity,
+            
+            # Nose features
+            "nose_sneer_left": features.nose_sneer_left,
+            "nose_sneer_right": features.nose_sneer_right
         }
     
     def _extract_eye_features(self, landmarks_3d: List[Dict[str, float]], 
@@ -372,8 +390,8 @@ class FaceFeatureExtractor(BaseFeatureExtractor):
         )
     
     def _extract_mouth_features(self, landmarks_3d: List[Dict[str, float]], 
-                              blendshapes: Dict[str, float], 
-                              features: FacialFeatures) -> None:
+                               blendshapes: Dict[str, float], 
+                               features: FacialFeatures) -> None:
         """Extract mouth-related features."""
         try:
             # Mouth openness from blendshapes
@@ -389,12 +407,22 @@ class FaceFeatureExtractor(BaseFeatureExtractor):
             
             # Smile asymmetry (difference between left and right smile)
             features.smile_asymmetry = abs(smile_left - smile_right)
+            
+            # Phase 1 additions
+            features.mouth_funnel = blendshapes.get("mouthFunnel", 0.0)
+            features.mouth_pucker = blendshapes.get("mouthPucker", 0.0)
+            features.mouth_stretch_left = blendshapes.get("mouthStretchLeft", 0.0)
+            features.mouth_stretch_right = blendshapes.get("mouthStretchRight", 0.0)
         except Exception:
             features.mouth_openness = 0.0
             features.mouth_width = 0.0
             features.lip_press = 0.0
             features.smile_asymmetry = 0.0
-    
+            features.mouth_funnel = 0.0
+            features.mouth_pucker = 0.0
+            features.mouth_stretch_left = 0.0
+            features.mouth_stretch_right = 0.0
+        
     def _extract_eyebrow_features(self, blendshapes: Dict[str, float], 
                                 features: FacialFeatures) -> None:
         """Extract eyebrow-related features."""
@@ -571,6 +599,8 @@ class FaceFeatureExtractor(BaseFeatureExtractor):
             
             # Mouth features
             "mouth_openness", "mouth_width", "lip_press", "smile_asymmetry",
+            # Phase 1 additions
+            "mouth_funnel", "mouth_pucker", "mouth_stretch_left", "mouth_stretch_right",
             
             # Eyebrow features
             "brow_inner_up", "brow_down_left", "brow_down_right",
@@ -583,7 +613,10 @@ class FaceFeatureExtractor(BaseFeatureExtractor):
             "facial_movement_velocity", "facial_symmetry",
             
             # Overall
-            "overall_expressivity"
+            "overall_expressivity",
+            
+            # Nose features
+            "nose_sneer_left", "nose_sneer_right"
         ]
     
     def reset(self) -> None:

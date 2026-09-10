@@ -421,7 +421,7 @@ class FaceCapture(FaceModalityInterface):
         """
         try:
             # Extract features from detection result
-            raw_features = self._extract_raw_features_from_detection(detection_result)
+            raw_features = self._extract_raw_features_from_detection(detection_result, timestamp_monotonic, timestamp_wallclock)
             
             if not raw_features:
                 return None
@@ -460,7 +460,7 @@ class FaceCapture(FaceModalityInterface):
             self.logger.error("face_analysis_pipeline_failed", error=str(e))
             return None
 
-    def _extract_raw_features_from_detection(self, detection_result: FaceDetectionResult) -> Dict[str, float]:
+    def _extract_raw_features_from_detection(self, detection_result: FaceDetectionResult, timestamp_monotonic: float, timestamp_wallclock: str) -> Dict[str, float]:
         """Extract raw facial features from FaceDetectionResult."""
         try:
             # Convert detection result to format expected by feature extractor
@@ -606,6 +606,8 @@ class FaceCapture(FaceModalityInterface):
             
             self._analysis_frame_count += 1
             self._last_analysis_timestamp = analysis_result["timestamp_monotonic"]
+            # Store last analysis result for UI polling
+            self._last_analysis_result = analysis_result
             
         except Exception as e:
             self.logger.error("face_analysis_storage_failed", error=str(e))
