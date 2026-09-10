@@ -63,6 +63,7 @@ analysis:
   # Face analysis
   face:
     enabled: true
+    emotion_enabled: true
     window_size_sec: 2.0
     update_interval_ms: 200
     baseline_frames: 150

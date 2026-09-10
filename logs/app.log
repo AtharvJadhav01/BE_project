@@ -5603,3 +5603,471 @@ TypeError: KeyboardProcessor.process_event() takes 2 positional arguments but 6 
 {"session_id": "test-session", "error_count": 3, "event": "session_failed", "level": "error", "timestamp": "2026-09-10T06:05:37.254353Z"}
 {"session_id": "test-session", "error_count": 3, "event": "session_failed", "level": "error", "timestamp": "2026-09-10T06:05:37.254353Z"}
 {"session_id": "test-session", "error_count": 3, "event": "session_failed", "level": "error", "timestamp": "2026-09-10T06:05:37.254353Z"}
+{"reason": "invalid_state", "current_state": "recording", "event": "session_start_failed", "level": "warning", "timestamp": "2026-09-10T17:24:38.792152Z"}
+{"reason": "invalid_state", "current_state": "recording", "event": "session_start_failed", "level": "warning", "timestamp": "2026-09-10T17:24:38.792152Z"}
+{"reason": "invalid_state", "current_state": "recording", "event": "session_start_failed", "level": "warning", "timestamp": "2026-09-10T17:24:38.792152Z"}
+{"reason": "invalid_state", "current_state": "recording", "event": "session_start_failed", "level": "warning", "timestamp": "2026-09-10T17:24:38.792152Z"}
+{"reason": "invalid_state", "current_state": "recording", "event": "session_start_failed", "level": "warning", "timestamp": "2026-09-10T17:24:38.792152Z"}
+{"reason": "invalid_state", "current_state": "recording", "event": "session_start_failed", "level": "warning", "timestamp": "2026-09-10T17:24:38.792152Z"}
+{"reason": "invalid_state", "current_state": "recording", "event": "session_start_failed", "level": "warning", "timestamp": "2026-09-10T17:24:38.792152Z"}
+{"reason": "invalid_state", "current_state": "recording", "event": "session_start_failed", "level": "warning", "timestamp": "2026-09-10T17:24:38.792152Z"}
+{"reason": "invalid_state", "current_state": "ready", "event": "session_stop_failed", "level": "warning", "timestamp": "2026-09-10T17:24:39.400430Z"}
+{"reason": "invalid_state", "current_state": "ready", "event": "session_stop_failed", "level": "warning", "timestamp": "2026-09-10T17:24:39.400430Z"}
+{"reason": "invalid_state", "current_state": "ready", "event": "session_stop_failed", "level": "warning", "timestamp": "2026-09-10T17:24:39.400430Z"}
+{"reason": "invalid_state", "current_state": "ready", "event": "session_stop_failed", "level": "warning", "timestamp": "2026-09-10T17:24:39.400430Z"}
+{"reason": "invalid_state", "current_state": "ready", "event": "session_stop_failed", "level": "warning", "timestamp": "2026-09-10T17:24:39.400430Z"}
+{"reason": "invalid_state", "current_state": "ready", "event": "session_stop_failed", "level": "warning", "timestamp": "2026-09-10T17:24:39.400430Z"}
+{"reason": "invalid_state", "current_state": "ready", "event": "session_stop_failed", "level": "warning", "timestamp": "2026-09-10T17:24:39.400430Z"}
+{"reason": "invalid_state", "current_state": "ready", "event": "session_stop_failed", "level": "warning", "timestamp": "2026-09-10T17:24:39.400430Z"}
+{"reason": "invalid_state", "current_state": "ready", "event": "session_stop_failed", "level": "warning", "timestamp": "2026-09-10T17:24:39.400430Z"}
+{"reason": "invalid_state", "current_state": "ready", "event": "session_stop_failed", "level": "warning", "timestamp": "2026-09-10T17:24:39.400430Z"}
+{"reason": "invalid_state", "current_state": "ready", "event": "session_pause_failed", "level": "warning", "timestamp": "2026-09-10T17:24:39.707670Z"}
+{"reason": "invalid_state", "current_state": "ready", "event": "session_pause_failed", "level": "warning", "timestamp": "2026-09-10T17:24:39.707670Z"}
+{"reason": "invalid_state", "current_state": "ready", "event": "session_pause_failed", "level": "warning", "timestamp": "2026-09-10T17:24:39.707670Z"}
+{"reason": "invalid_state", "current_state": "ready", "event": "session_pause_failed", "level": "warning", "timestamp": "2026-09-10T17:24:39.707670Z"}
+{"reason": "invalid_state", "current_state": "ready", "event": "session_pause_failed", "level": "warning", "timestamp": "2026-09-10T17:24:39.707670Z"}
+{"reason": "invalid_state", "current_state": "ready", "event": "session_pause_failed", "level": "warning", "timestamp": "2026-09-10T17:24:39.707670Z"}
+{"reason": "invalid_state", "current_state": "ready", "event": "session_pause_failed", "level": "warning", "timestamp": "2026-09-10T17:24:39.707670Z"}
+{"reason": "invalid_state", "current_state": "ready", "event": "session_pause_failed", "level": "warning", "timestamp": "2026-09-10T17:24:39.707670Z"}
+{"reason": "invalid_state", "current_state": "ready", "event": "session_pause_failed", "level": "warning", "timestamp": "2026-09-10T17:24:39.707670Z"}
+{"reason": "invalid_state", "current_state": "ready", "event": "session_pause_failed", "level": "warning", "timestamp": "2026-09-10T17:24:39.707670Z"}
+{"reason": "invalid_state", "current_state": "ready", "event": "session_pause_failed", "level": "warning", "timestamp": "2026-09-10T17:24:39.707670Z"}
+{"reason": "invalid_state", "current_state": "ready", "event": "session_pause_failed", "level": "warning", "timestamp": "2026-09-10T17:24:39.707670Z"}
+{"reason": "invalid_state", "current_state": "ready", "event": "session_resume_failed", "level": "warning", "timestamp": "2026-09-10T17:24:40.015305Z"}
+{"reason": "invalid_state", "current_state": "ready", "event": "session_resume_failed", "level": "warning", "timestamp": "2026-09-10T17:24:40.015305Z"}
+{"reason": "invalid_state", "current_state": "ready", "event": "session_resume_failed", "level": "warning", "timestamp": "2026-09-10T17:24:40.015305Z"}
+{"reason": "invalid_state", "current_state": "ready", "event": "session_resume_failed", "level": "warning", "timestamp": "2026-09-10T17:24:40.015305Z"}
+{"reason": "invalid_state", "current_state": "ready", "event": "session_resume_failed", "level": "warning", "timestamp": "2026-09-10T17:24:40.015305Z"}
+{"reason": "invalid_state", "current_state": "ready", "event": "session_resume_failed", "level": "warning", "timestamp": "2026-09-10T17:24:40.015305Z"}
+{"reason": "invalid_state", "current_state": "ready", "event": "session_resume_failed", "level": "warning", "timestamp": "2026-09-10T17:24:40.015305Z"}
+{"reason": "invalid_state", "current_state": "ready", "event": "session_resume_failed", "level": "warning", "timestamp": "2026-09-10T17:24:40.015305Z"}
+{"reason": "invalid_state", "current_state": "ready", "event": "session_resume_failed", "level": "warning", "timestamp": "2026-09-10T17:24:40.015305Z"}
+{"reason": "invalid_state", "current_state": "ready", "event": "session_resume_failed", "level": "warning", "timestamp": "2026-09-10T17:24:40.015305Z"}
+{"reason": "invalid_state", "current_state": "ready", "event": "session_resume_failed", "level": "warning", "timestamp": "2026-09-10T17:24:40.015305Z"}
+{"reason": "invalid_state", "current_state": "ready", "event": "session_resume_failed", "level": "warning", "timestamp": "2026-09-10T17:24:40.015305Z"}
+{"reason": "invalid_state", "current_state": "ready", "event": "session_resume_failed", "level": "warning", "timestamp": "2026-09-10T17:24:40.015305Z"}
+{"reason": "invalid_state", "current_state": "ready", "event": "session_resume_failed", "level": "warning", "timestamp": "2026-09-10T17:24:40.015305Z"}
+{"modality": "audio", "event": "modality_start_failed", "level": "error", "timestamp": "2026-09-10T17:24:40.019349Z"}
+{"modality": "audio", "event": "modality_start_failed", "level": "error", "timestamp": "2026-09-10T17:24:40.019349Z"}
+{"modality": "audio", "event": "modality_start_failed", "level": "error", "timestamp": "2026-09-10T17:24:40.019349Z"}
+{"modality": "audio", "event": "modality_start_failed", "level": "error", "timestamp": "2026-09-10T17:24:40.019349Z"}
+{"modality": "audio", "event": "modality_start_failed", "level": "error", "timestamp": "2026-09-10T17:24:40.019349Z"}
+{"modality": "audio", "event": "modality_start_failed", "level": "error", "timestamp": "2026-09-10T17:24:40.019349Z"}
+{"modality": "audio", "event": "modality_start_failed", "level": "error", "timestamp": "2026-09-10T17:24:40.019349Z"}
+{"modality": "audio", "event": "modality_start_failed", "level": "error", "timestamp": "2026-09-10T17:24:40.019349Z"}
+{"modality": "audio", "event": "modality_start_failed", "level": "error", "timestamp": "2026-09-10T17:24:40.019349Z"}
+{"modality": "audio", "event": "modality_start_failed", "level": "error", "timestamp": "2026-09-10T17:24:40.019349Z"}
+{"modality": "audio", "event": "modality_start_failed", "level": "error", "timestamp": "2026-09-10T17:24:40.019349Z"}
+{"modality": "audio", "event": "modality_start_failed", "level": "error", "timestamp": "2026-09-10T17:24:40.019349Z"}
+{"modality": "audio", "event": "modality_start_failed", "level": "error", "timestamp": "2026-09-10T17:24:40.019349Z"}
+{"modality": "audio", "event": "modality_start_failed", "level": "error", "timestamp": "2026-09-10T17:24:40.019349Z"}
+{"modality": "audio", "event": "modality_start_failed", "level": "error", "timestamp": "2026-09-10T17:24:40.019349Z"}
+{"session_id": "test-session", "error_count": 3, "event": "session_failed", "level": "error", "timestamp": "2026-09-10T17:24:40.975674Z"}
+{"session_id": "test-session", "error_count": 3, "event": "session_failed", "level": "error", "timestamp": "2026-09-10T17:24:40.975674Z"}
+{"session_id": "test-session", "error_count": 3, "event": "session_failed", "level": "error", "timestamp": "2026-09-10T17:24:40.975674Z"}
+{"session_id": "test-session", "error_count": 3, "event": "session_failed", "level": "error", "timestamp": "2026-09-10T17:24:40.975674Z"}
+{"session_id": "test-session", "error_count": 3, "event": "session_failed", "level": "error", "timestamp": "2026-09-10T17:24:40.975674Z"}
+{"session_id": "test-session", "error_count": 3, "event": "session_failed", "level": "error", "timestamp": "2026-09-10T17:24:40.975674Z"}
+{"session_id": "test-session", "error_count": 3, "event": "session_failed", "level": "error", "timestamp": "2026-09-10T17:24:40.975674Z"}
+{"session_id": "test-session", "error_count": 3, "event": "session_failed", "level": "error", "timestamp": "2026-09-10T17:24:40.975674Z"}
+{"session_id": "test-session", "error_count": 3, "event": "session_failed", "level": "error", "timestamp": "2026-09-10T17:24:40.975674Z"}
+{"session_id": "test-session", "error_count": 3, "event": "session_failed", "level": "error", "timestamp": "2026-09-10T17:24:40.975674Z"}
+{"session_id": "test-session", "error_count": 3, "event": "session_failed", "level": "error", "timestamp": "2026-09-10T17:24:40.975674Z"}
+{"session_id": "test-session", "error_count": 3, "event": "session_failed", "level": "error", "timestamp": "2026-09-10T17:24:40.975674Z"}
+{"session_id": "test-session", "error_count": 3, "event": "session_failed", "level": "error", "timestamp": "2026-09-10T17:24:40.975674Z"}
+{"session_id": "test-session", "error_count": 3, "event": "session_failed", "level": "error", "timestamp": "2026-09-10T17:24:40.975674Z"}
+{"session_id": "test-session", "error_count": 3, "event": "session_failed", "level": "error", "timestamp": "2026-09-10T17:24:40.975674Z"}
+{"session_id": "test-session", "error_count": 3, "event": "session_failed", "level": "error", "timestamp": "2026-09-10T17:24:40.975674Z"}
+{"session_id": "test-session", "error_count": 3, "event": "session_failed", "level": "error", "timestamp": "2026-09-10T17:24:40.975674Z"}
+{"reason": "invalid_state", "current_state": "recording", "event": "session_start_failed", "level": "warning", "timestamp": "2026-09-10T17:31:45.341316Z"}
+{"reason": "invalid_state", "current_state": "recording", "event": "session_start_failed", "level": "warning", "timestamp": "2026-09-10T17:31:45.341316Z"}
+{"reason": "invalid_state", "current_state": "recording", "event": "session_start_failed", "level": "warning", "timestamp": "2026-09-10T17:31:45.341316Z"}
+{"reason": "invalid_state", "current_state": "recording", "event": "session_start_failed", "level": "warning", "timestamp": "2026-09-10T17:31:45.341316Z"}
+{"reason": "invalid_state", "current_state": "recording", "event": "session_start_failed", "level": "warning", "timestamp": "2026-09-10T17:31:45.341316Z"}
+{"reason": "invalid_state", "current_state": "recording", "event": "session_start_failed", "level": "warning", "timestamp": "2026-09-10T17:31:45.341316Z"}
+{"reason": "invalid_state", "current_state": "recording", "event": "session_start_failed", "level": "warning", "timestamp": "2026-09-10T17:31:45.341316Z"}
+{"reason": "invalid_state", "current_state": "recording", "event": "session_start_failed", "level": "warning", "timestamp": "2026-09-10T17:31:45.341316Z"}
+{"reason": "invalid_state", "current_state": "ready", "event": "session_stop_failed", "level": "warning", "timestamp": "2026-09-10T17:31:45.949817Z"}
+{"reason": "invalid_state", "current_state": "ready", "event": "session_stop_failed", "level": "warning", "timestamp": "2026-09-10T17:31:45.949817Z"}
+{"reason": "invalid_state", "current_state": "ready", "event": "session_stop_failed", "level": "warning", "timestamp": "2026-09-10T17:31:45.949817Z"}
+{"reason": "invalid_state", "current_state": "ready", "event": "session_stop_failed", "level": "warning", "timestamp": "2026-09-10T17:31:45.949817Z"}
+{"reason": "invalid_state", "current_state": "ready", "event": "session_stop_failed", "level": "warning", "timestamp": "2026-09-10T17:31:45.949817Z"}
+{"reason": "invalid_state", "current_state": "ready", "event": "session_stop_failed", "level": "warning", "timestamp": "2026-09-10T17:31:45.949817Z"}
+{"reason": "invalid_state", "current_state": "ready", "event": "session_stop_failed", "level": "warning", "timestamp": "2026-09-10T17:31:45.949817Z"}
+{"reason": "invalid_state", "current_state": "ready", "event": "session_stop_failed", "level": "warning", "timestamp": "2026-09-10T17:31:45.949817Z"}
+{"reason": "invalid_state", "current_state": "ready", "event": "session_stop_failed", "level": "warning", "timestamp": "2026-09-10T17:31:45.949817Z"}
+{"reason": "invalid_state", "current_state": "ready", "event": "session_stop_failed", "level": "warning", "timestamp": "2026-09-10T17:31:45.949817Z"}
+{"reason": "invalid_state", "current_state": "ready", "event": "session_pause_failed", "level": "warning", "timestamp": "2026-09-10T17:31:46.257778Z"}
+{"reason": "invalid_state", "current_state": "ready", "event": "session_pause_failed", "level": "warning", "timestamp": "2026-09-10T17:31:46.257778Z"}
+{"reason": "invalid_state", "current_state": "ready", "event": "session_pause_failed", "level": "warning", "timestamp": "2026-09-10T17:31:46.257778Z"}
+{"reason": "invalid_state", "current_state": "ready", "event": "session_pause_failed", "level": "warning", "timestamp": "2026-09-10T17:31:46.257778Z"}
+{"reason": "invalid_state", "current_state": "ready", "event": "session_pause_failed", "level": "warning", "timestamp": "2026-09-10T17:31:46.257778Z"}
+{"reason": "invalid_state", "current_state": "ready", "event": "session_pause_failed", "level": "warning", "timestamp": "2026-09-10T17:31:46.257778Z"}
+{"reason": "invalid_state", "current_state": "ready", "event": "session_pause_failed", "level": "warning", "timestamp": "2026-09-10T17:31:46.257778Z"}
+{"reason": "invalid_state", "current_state": "ready", "event": "session_pause_failed", "level": "warning", "timestamp": "2026-09-10T17:31:46.257778Z"}
+{"reason": "invalid_state", "current_state": "ready", "event": "session_pause_failed", "level": "warning", "timestamp": "2026-09-10T17:31:46.257778Z"}
+{"reason": "invalid_state", "current_state": "ready", "event": "session_pause_failed", "level": "warning", "timestamp": "2026-09-10T17:31:46.257778Z"}
+{"reason": "invalid_state", "current_state": "ready", "event": "session_pause_failed", "level": "warning", "timestamp": "2026-09-10T17:31:46.257778Z"}
+{"reason": "invalid_state", "current_state": "ready", "event": "session_pause_failed", "level": "warning", "timestamp": "2026-09-10T17:31:46.257778Z"}
+{"reason": "invalid_state", "current_state": "ready", "event": "session_resume_failed", "level": "warning", "timestamp": "2026-09-10T17:31:46.565123Z"}
+{"reason": "invalid_state", "current_state": "ready", "event": "session_resume_failed", "level": "warning", "timestamp": "2026-09-10T17:31:46.565123Z"}
+{"reason": "invalid_state", "current_state": "ready", "event": "session_resume_failed", "level": "warning", "timestamp": "2026-09-10T17:31:46.565123Z"}
+{"reason": "invalid_state", "current_state": "ready", "event": "session_resume_failed", "level": "warning", "timestamp": "2026-09-10T17:31:46.565123Z"}
+{"reason": "invalid_state", "current_state": "ready", "event": "session_resume_failed", "level": "warning", "timestamp": "2026-09-10T17:31:46.565123Z"}
+{"reason": "invalid_state", "current_state": "ready", "event": "session_resume_failed", "level": "warning", "timestamp": "2026-09-10T17:31:46.565123Z"}
+{"reason": "invalid_state", "current_state": "ready", "event": "session_resume_failed", "level": "warning", "timestamp": "2026-09-10T17:31:46.565123Z"}
+{"reason": "invalid_state", "current_state": "ready", "event": "session_resume_failed", "level": "warning", "timestamp": "2026-09-10T17:31:46.565123Z"}
+{"reason": "invalid_state", "current_state": "ready", "event": "session_resume_failed", "level": "warning", "timestamp": "2026-09-10T17:31:46.565123Z"}
+{"reason": "invalid_state", "current_state": "ready", "event": "session_resume_failed", "level": "warning", "timestamp": "2026-09-10T17:31:46.565123Z"}
+{"reason": "invalid_state", "current_state": "ready", "event": "session_resume_failed", "level": "warning", "timestamp": "2026-09-10T17:31:46.565123Z"}
+{"reason": "invalid_state", "current_state": "ready", "event": "session_resume_failed", "level": "warning", "timestamp": "2026-09-10T17:31:46.565123Z"}
+{"reason": "invalid_state", "current_state": "ready", "event": "session_resume_failed", "level": "warning", "timestamp": "2026-09-10T17:31:46.565123Z"}
+{"reason": "invalid_state", "current_state": "ready", "event": "session_resume_failed", "level": "warning", "timestamp": "2026-09-10T17:31:46.565123Z"}
+{"modality": "audio", "event": "modality_start_failed", "level": "error", "timestamp": "2026-09-10T17:31:46.568881Z"}
+{"modality": "audio", "event": "modality_start_failed", "level": "error", "timestamp": "2026-09-10T17:31:46.568881Z"}
+{"modality": "audio", "event": "modality_start_failed", "level": "error", "timestamp": "2026-09-10T17:31:46.568881Z"}
+{"modality": "audio", "event": "modality_start_failed", "level": "error", "timestamp": "2026-09-10T17:31:46.568881Z"}
+{"modality": "audio", "event": "modality_start_failed", "level": "error", "timestamp": "2026-09-10T17:31:46.568881Z"}
+{"modality": "audio", "event": "modality_start_failed", "level": "error", "timestamp": "2026-09-10T17:31:46.568881Z"}
+{"modality": "audio", "event": "modality_start_failed", "level": "error", "timestamp": "2026-09-10T17:31:46.568881Z"}
+{"modality": "audio", "event": "modality_start_failed", "level": "error", "timestamp": "2026-09-10T17:31:46.568881Z"}
+{"modality": "audio", "event": "modality_start_failed", "level": "error", "timestamp": "2026-09-10T17:31:46.568881Z"}
+{"modality": "audio", "event": "modality_start_failed", "level": "error", "timestamp": "2026-09-10T17:31:46.568881Z"}
+{"modality": "audio", "event": "modality_start_failed", "level": "error", "timestamp": "2026-09-10T17:31:46.568881Z"}
+{"modality": "audio", "event": "modality_start_failed", "level": "error", "timestamp": "2026-09-10T17:31:46.568881Z"}
+{"modality": "audio", "event": "modality_start_failed", "level": "error", "timestamp": "2026-09-10T17:31:46.568881Z"}
+{"modality": "audio", "event": "modality_start_failed", "level": "error", "timestamp": "2026-09-10T17:31:46.568881Z"}
+{"modality": "audio", "event": "modality_start_failed", "level": "error", "timestamp": "2026-09-10T17:31:46.568881Z"}
+{"session_id": "test-session", "error_count": 3, "event": "session_failed", "level": "error", "timestamp": "2026-09-10T17:31:47.525297Z"}
+{"session_id": "test-session", "error_count": 3, "event": "session_failed", "level": "error", "timestamp": "2026-09-10T17:31:47.525297Z"}
+{"session_id": "test-session", "error_count": 3, "event": "session_failed", "level": "error", "timestamp": "2026-09-10T17:31:47.525297Z"}
+{"session_id": "test-session", "error_count": 3, "event": "session_failed", "level": "error", "timestamp": "2026-09-10T17:31:47.525297Z"}
+{"session_id": "test-session", "error_count": 3, "event": "session_failed", "level": "error", "timestamp": "2026-09-10T17:31:47.525297Z"}
+{"session_id": "test-session", "error_count": 3, "event": "session_failed", "level": "error", "timestamp": "2026-09-10T17:31:47.525297Z"}
+{"session_id": "test-session", "error_count": 3, "event": "session_failed", "level": "error", "timestamp": "2026-09-10T17:31:47.525297Z"}
+{"session_id": "test-session", "error_count": 3, "event": "session_failed", "level": "error", "timestamp": "2026-09-10T17:31:47.525297Z"}
+{"session_id": "test-session", "error_count": 3, "event": "session_failed", "level": "error", "timestamp": "2026-09-10T17:31:47.525297Z"}
+{"session_id": "test-session", "error_count": 3, "event": "session_failed", "level": "error", "timestamp": "2026-09-10T17:31:47.525297Z"}
+{"session_id": "test-session", "error_count": 3, "event": "session_failed", "level": "error", "timestamp": "2026-09-10T17:31:47.525297Z"}
+{"session_id": "test-session", "error_count": 3, "event": "session_failed", "level": "error", "timestamp": "2026-09-10T17:31:47.525297Z"}
+{"session_id": "test-session", "error_count": 3, "event": "session_failed", "level": "error", "timestamp": "2026-09-10T17:31:47.525297Z"}
+{"session_id": "test-session", "error_count": 3, "event": "session_failed", "level": "error", "timestamp": "2026-09-10T17:31:47.525297Z"}
+{"session_id": "test-session", "error_count": 3, "event": "session_failed", "level": "error", "timestamp": "2026-09-10T17:31:47.525297Z"}
+{"session_id": "test-session", "error_count": 3, "event": "session_failed", "level": "error", "timestamp": "2026-09-10T17:31:47.525297Z"}
+{"session_id": "test-session", "error_count": 3, "event": "session_failed", "level": "error", "timestamp": "2026-09-10T17:31:47.525297Z"}
+{"reason": "invalid_state", "current_state": "recording", "event": "session_start_failed", "level": "warning", "timestamp": "2026-09-10T17:54:20.749244Z"}
+{"reason": "invalid_state", "current_state": "recording", "event": "session_start_failed", "level": "warning", "timestamp": "2026-09-10T17:54:20.749244Z"}
+{"reason": "invalid_state", "current_state": "recording", "event": "session_start_failed", "level": "warning", "timestamp": "2026-09-10T17:54:20.749244Z"}
+{"reason": "invalid_state", "current_state": "recording", "event": "session_start_failed", "level": "warning", "timestamp": "2026-09-10T17:54:20.749244Z"}
+{"reason": "invalid_state", "current_state": "recording", "event": "session_start_failed", "level": "warning", "timestamp": "2026-09-10T17:54:20.749244Z"}
+{"reason": "invalid_state", "current_state": "recording", "event": "session_start_failed", "level": "warning", "timestamp": "2026-09-10T17:54:20.749244Z"}
+{"reason": "invalid_state", "current_state": "recording", "event": "session_start_failed", "level": "warning", "timestamp": "2026-09-10T17:54:20.749244Z"}
+{"reason": "invalid_state", "current_state": "recording", "event": "session_start_failed", "level": "warning", "timestamp": "2026-09-10T17:54:20.749244Z"}
+{"reason": "invalid_state", "current_state": "ready", "event": "session_stop_failed", "level": "warning", "timestamp": "2026-09-10T17:54:21.357733Z"}
+{"reason": "invalid_state", "current_state": "ready", "event": "session_stop_failed", "level": "warning", "timestamp": "2026-09-10T17:54:21.357733Z"}
+{"reason": "invalid_state", "current_state": "ready", "event": "session_stop_failed", "level": "warning", "timestamp": "2026-09-10T17:54:21.357733Z"}
+{"reason": "invalid_state", "current_state": "ready", "event": "session_stop_failed", "level": "warning", "timestamp": "2026-09-10T17:54:21.357733Z"}
+{"reason": "invalid_state", "current_state": "ready", "event": "session_stop_failed", "level": "warning", "timestamp": "2026-09-10T17:54:21.357733Z"}
+{"reason": "invalid_state", "current_state": "ready", "event": "session_stop_failed", "level": "warning", "timestamp": "2026-09-10T17:54:21.357733Z"}
+{"reason": "invalid_state", "current_state": "ready", "event": "session_stop_failed", "level": "warning", "timestamp": "2026-09-10T17:54:21.357733Z"}
+{"reason": "invalid_state", "current_state": "ready", "event": "session_stop_failed", "level": "warning", "timestamp": "2026-09-10T17:54:21.357733Z"}
+{"reason": "invalid_state", "current_state": "ready", "event": "session_stop_failed", "level": "warning", "timestamp": "2026-09-10T17:54:21.357733Z"}
+{"reason": "invalid_state", "current_state": "ready", "event": "session_stop_failed", "level": "warning", "timestamp": "2026-09-10T17:54:21.357733Z"}
+{"reason": "invalid_state", "current_state": "ready", "event": "session_pause_failed", "level": "warning", "timestamp": "2026-09-10T17:54:21.664415Z"}
+{"reason": "invalid_state", "current_state": "ready", "event": "session_pause_failed", "level": "warning", "timestamp": "2026-09-10T17:54:21.664415Z"}
+{"reason": "invalid_state", "current_state": "ready", "event": "session_pause_failed", "level": "warning", "timestamp": "2026-09-10T17:54:21.664415Z"}
+{"reason": "invalid_state", "current_state": "ready", "event": "session_pause_failed", "level": "warning", "timestamp": "2026-09-10T17:54:21.664415Z"}
+{"reason": "invalid_state", "current_state": "ready", "event": "session_pause_failed", "level": "warning", "timestamp": "2026-09-10T17:54:21.664415Z"}
+{"reason": "invalid_state", "current_state": "ready", "event": "session_pause_failed", "level": "warning", "timestamp": "2026-09-10T17:54:21.664415Z"}
+{"reason": "invalid_state", "current_state": "ready", "event": "session_pause_failed", "level": "warning", "timestamp": "2026-09-10T17:54:21.664415Z"}
+{"reason": "invalid_state", "current_state": "ready", "event": "session_pause_failed", "level": "warning", "timestamp": "2026-09-10T17:54:21.664415Z"}
+{"reason": "invalid_state", "current_state": "ready", "event": "session_pause_failed", "level": "warning", "timestamp": "2026-09-10T17:54:21.664415Z"}
+{"reason": "invalid_state", "current_state": "ready", "event": "session_pause_failed", "level": "warning", "timestamp": "2026-09-10T17:54:21.664415Z"}
+{"reason": "invalid_state", "current_state": "ready", "event": "session_pause_failed", "level": "warning", "timestamp": "2026-09-10T17:54:21.664415Z"}
+{"reason": "invalid_state", "current_state": "ready", "event": "session_pause_failed", "level": "warning", "timestamp": "2026-09-10T17:54:21.664415Z"}
+{"reason": "invalid_state", "current_state": "ready", "event": "session_resume_failed", "level": "warning", "timestamp": "2026-09-10T17:54:21.971696Z"}
+{"reason": "invalid_state", "current_state": "ready", "event": "session_resume_failed", "level": "warning", "timestamp": "2026-09-10T17:54:21.971696Z"}
+{"reason": "invalid_state", "current_state": "ready", "event": "session_resume_failed", "level": "warning", "timestamp": "2026-09-10T17:54:21.971696Z"}
+{"reason": "invalid_state", "current_state": "ready", "event": "session_resume_failed", "level": "warning", "timestamp": "2026-09-10T17:54:21.971696Z"}
+{"reason": "invalid_state", "current_state": "ready", "event": "session_resume_failed", "level": "warning", "timestamp": "2026-09-10T17:54:21.971696Z"}
+{"reason": "invalid_state", "current_state": "ready", "event": "session_resume_failed", "level": "warning", "timestamp": "2026-09-10T17:54:21.971696Z"}
+{"reason": "invalid_state", "current_state": "ready", "event": "session_resume_failed", "level": "warning", "timestamp": "2026-09-10T17:54:21.971696Z"}
+{"reason": "invalid_state", "current_state": "ready", "event": "session_resume_failed", "level": "warning", "timestamp": "2026-09-10T17:54:21.971696Z"}
+{"reason": "invalid_state", "current_state": "ready", "event": "session_resume_failed", "level": "warning", "timestamp": "2026-09-10T17:54:21.971696Z"}
+{"reason": "invalid_state", "current_state": "ready", "event": "session_resume_failed", "level": "warning", "timestamp": "2026-09-10T17:54:21.971696Z"}
+{"reason": "invalid_state", "current_state": "ready", "event": "session_resume_failed", "level": "warning", "timestamp": "2026-09-10T17:54:21.971696Z"}
+{"reason": "invalid_state", "current_state": "ready", "event": "session_resume_failed", "level": "warning", "timestamp": "2026-09-10T17:54:21.971696Z"}
+{"reason": "invalid_state", "current_state": "ready", "event": "session_resume_failed", "level": "warning", "timestamp": "2026-09-10T17:54:21.971696Z"}
+{"reason": "invalid_state", "current_state": "ready", "event": "session_resume_failed", "level": "warning", "timestamp": "2026-09-10T17:54:21.971696Z"}
+{"modality": "audio", "event": "modality_start_failed", "level": "error", "timestamp": "2026-09-10T17:54:21.975737Z"}
+{"modality": "audio", "event": "modality_start_failed", "level": "error", "timestamp": "2026-09-10T17:54:21.975737Z"}
+{"modality": "audio", "event": "modality_start_failed", "level": "error", "timestamp": "2026-09-10T17:54:21.975737Z"}
+{"modality": "audio", "event": "modality_start_failed", "level": "error", "timestamp": "2026-09-10T17:54:21.975737Z"}
+{"modality": "audio", "event": "modality_start_failed", "level": "error", "timestamp": "2026-09-10T17:54:21.975737Z"}
+{"modality": "audio", "event": "modality_start_failed", "level": "error", "timestamp": "2026-09-10T17:54:21.975737Z"}
+{"modality": "audio", "event": "modality_start_failed", "level": "error", "timestamp": "2026-09-10T17:54:21.975737Z"}
+{"modality": "audio", "event": "modality_start_failed", "level": "error", "timestamp": "2026-09-10T17:54:21.975737Z"}
+{"modality": "audio", "event": "modality_start_failed", "level": "error", "timestamp": "2026-09-10T17:54:21.975737Z"}
+{"modality": "audio", "event": "modality_start_failed", "level": "error", "timestamp": "2026-09-10T17:54:21.975737Z"}
+{"modality": "audio", "event": "modality_start_failed", "level": "error", "timestamp": "2026-09-10T17:54:21.975737Z"}
+{"modality": "audio", "event": "modality_start_failed", "level": "error", "timestamp": "2026-09-10T17:54:21.975737Z"}
+{"modality": "audio", "event": "modality_start_failed", "level": "error", "timestamp": "2026-09-10T17:54:21.975737Z"}
+{"modality": "audio", "event": "modality_start_failed", "level": "error", "timestamp": "2026-09-10T17:54:21.975737Z"}
+{"modality": "audio", "event": "modality_start_failed", "level": "error", "timestamp": "2026-09-10T17:54:21.975737Z"}
+{"session_id": "test-session", "error_count": 3, "event": "session_failed", "level": "error", "timestamp": "2026-09-10T17:54:22.910797Z"}
+{"session_id": "test-session", "error_count": 3, "event": "session_failed", "level": "error", "timestamp": "2026-09-10T17:54:22.910797Z"}
+{"session_id": "test-session", "error_count": 3, "event": "session_failed", "level": "error", "timestamp": "2026-09-10T17:54:22.910797Z"}
+{"session_id": "test-session", "error_count": 3, "event": "session_failed", "level": "error", "timestamp": "2026-09-10T17:54:22.910797Z"}
+{"session_id": "test-session", "error_count": 3, "event": "session_failed", "level": "error", "timestamp": "2026-09-10T17:54:22.910797Z"}
+{"session_id": "test-session", "error_count": 3, "event": "session_failed", "level": "error", "timestamp": "2026-09-10T17:54:22.910797Z"}
+{"session_id": "test-session", "error_count": 3, "event": "session_failed", "level": "error", "timestamp": "2026-09-10T17:54:22.910797Z"}
+{"session_id": "test-session", "error_count": 3, "event": "session_failed", "level": "error", "timestamp": "2026-09-10T17:54:22.910797Z"}
+{"session_id": "test-session", "error_count": 3, "event": "session_failed", "level": "error", "timestamp": "2026-09-10T17:54:22.910797Z"}
+{"session_id": "test-session", "error_count": 3, "event": "session_failed", "level": "error", "timestamp": "2026-09-10T17:54:22.910797Z"}
+{"session_id": "test-session", "error_count": 3, "event": "session_failed", "level": "error", "timestamp": "2026-09-10T17:54:22.910797Z"}
+{"session_id": "test-session", "error_count": 3, "event": "session_failed", "level": "error", "timestamp": "2026-09-10T17:54:22.910797Z"}
+{"session_id": "test-session", "error_count": 3, "event": "session_failed", "level": "error", "timestamp": "2026-09-10T17:54:22.910797Z"}
+{"session_id": "test-session", "error_count": 3, "event": "session_failed", "level": "error", "timestamp": "2026-09-10T17:54:22.910797Z"}
+{"session_id": "test-session", "error_count": 3, "event": "session_failed", "level": "error", "timestamp": "2026-09-10T17:54:22.910797Z"}
+{"session_id": "test-session", "error_count": 3, "event": "session_failed", "level": "error", "timestamp": "2026-09-10T17:54:22.910797Z"}
+{"session_id": "test-session", "error_count": 3, "event": "session_failed", "level": "error", "timestamp": "2026-09-10T17:54:22.910797Z"}
+{"reason": "invalid_state", "current_state": "recording", "event": "session_start_failed", "level": "warning", "timestamp": "2026-09-10T18:51:07.027475Z"}
+{"reason": "invalid_state", "current_state": "recording", "event": "session_start_failed", "level": "warning", "timestamp": "2026-09-10T18:51:07.027475Z"}
+{"reason": "invalid_state", "current_state": "recording", "event": "session_start_failed", "level": "warning", "timestamp": "2026-09-10T18:51:07.027475Z"}
+{"reason": "invalid_state", "current_state": "recording", "event": "session_start_failed", "level": "warning", "timestamp": "2026-09-10T18:51:07.027475Z"}
+{"reason": "invalid_state", "current_state": "recording", "event": "session_start_failed", "level": "warning", "timestamp": "2026-09-10T18:51:07.027475Z"}
+{"reason": "invalid_state", "current_state": "recording", "event": "session_start_failed", "level": "warning", "timestamp": "2026-09-10T18:51:07.027475Z"}
+{"reason": "invalid_state", "current_state": "recording", "event": "session_start_failed", "level": "warning", "timestamp": "2026-09-10T18:51:07.027475Z"}
+{"reason": "invalid_state", "current_state": "recording", "event": "session_start_failed", "level": "warning", "timestamp": "2026-09-10T18:51:07.027475Z"}
+{"reason": "invalid_state", "current_state": "ready", "event": "session_stop_failed", "level": "warning", "timestamp": "2026-09-10T18:51:07.635159Z"}
+{"reason": "invalid_state", "current_state": "ready", "event": "session_stop_failed", "level": "warning", "timestamp": "2026-09-10T18:51:07.635159Z"}
+{"reason": "invalid_state", "current_state": "ready", "event": "session_stop_failed", "level": "warning", "timestamp": "2026-09-10T18:51:07.635159Z"}
+{"reason": "invalid_state", "current_state": "ready", "event": "session_stop_failed", "level": "warning", "timestamp": "2026-09-10T18:51:07.635159Z"}
+{"reason": "invalid_state", "current_state": "ready", "event": "session_stop_failed", "level": "warning", "timestamp": "2026-09-10T18:51:07.635159Z"}
+{"reason": "invalid_state", "current_state": "ready", "event": "session_stop_failed", "level": "warning", "timestamp": "2026-09-10T18:51:07.635159Z"}
+{"reason": "invalid_state", "current_state": "ready", "event": "session_stop_failed", "level": "warning", "timestamp": "2026-09-10T18:51:07.635159Z"}
+{"reason": "invalid_state", "current_state": "ready", "event": "session_stop_failed", "level": "warning", "timestamp": "2026-09-10T18:51:07.635159Z"}
+{"reason": "invalid_state", "current_state": "ready", "event": "session_stop_failed", "level": "warning", "timestamp": "2026-09-10T18:51:07.635159Z"}
+{"reason": "invalid_state", "current_state": "ready", "event": "session_stop_failed", "level": "warning", "timestamp": "2026-09-10T18:51:07.635159Z"}
+{"reason": "invalid_state", "current_state": "ready", "event": "session_pause_failed", "level": "warning", "timestamp": "2026-09-10T18:51:07.941836Z"}
+{"reason": "invalid_state", "current_state": "ready", "event": "session_pause_failed", "level": "warning", "timestamp": "2026-09-10T18:51:07.941836Z"}
+{"reason": "invalid_state", "current_state": "ready", "event": "session_pause_failed", "level": "warning", "timestamp": "2026-09-10T18:51:07.941836Z"}
+{"reason": "invalid_state", "current_state": "ready", "event": "session_pause_failed", "level": "warning", "timestamp": "2026-09-10T18:51:07.941836Z"}
+{"reason": "invalid_state", "current_state": "ready", "event": "session_pause_failed", "level": "warning", "timestamp": "2026-09-10T18:51:07.941836Z"}
+{"reason": "invalid_state", "current_state": "ready", "event": "session_pause_failed", "level": "warning", "timestamp": "2026-09-10T18:51:07.941836Z"}
+{"reason": "invalid_state", "current_state": "ready", "event": "session_pause_failed", "level": "warning", "timestamp": "2026-09-10T18:51:07.941836Z"}
+{"reason": "invalid_state", "current_state": "ready", "event": "session_pause_failed", "level": "warning", "timestamp": "2026-09-10T18:51:07.941836Z"}
+{"reason": "invalid_state", "current_state": "ready", "event": "session_pause_failed", "level": "warning", "timestamp": "2026-09-10T18:51:07.941836Z"}
+{"reason": "invalid_state", "current_state": "ready", "event": "session_pause_failed", "level": "warning", "timestamp": "2026-09-10T18:51:07.941836Z"}
+{"reason": "invalid_state", "current_state": "ready", "event": "session_pause_failed", "level": "warning", "timestamp": "2026-09-10T18:51:07.941836Z"}
+{"reason": "invalid_state", "current_state": "ready", "event": "session_pause_failed", "level": "warning", "timestamp": "2026-09-10T18:51:07.941836Z"}
+{"reason": "invalid_state", "current_state": "ready", "event": "session_resume_failed", "level": "warning", "timestamp": "2026-09-10T18:51:08.250676Z"}
+{"reason": "invalid_state", "current_state": "ready", "event": "session_resume_failed", "level": "warning", "timestamp": "2026-09-10T18:51:08.250676Z"}
+{"reason": "invalid_state", "current_state": "ready", "event": "session_resume_failed", "level": "warning", "timestamp": "2026-09-10T18:51:08.250676Z"}
+{"reason": "invalid_state", "current_state": "ready", "event": "session_resume_failed", "level": "warning", "timestamp": "2026-09-10T18:51:08.250676Z"}
+{"reason": "invalid_state", "current_state": "ready", "event": "session_resume_failed", "level": "warning", "timestamp": "2026-09-10T18:51:08.250676Z"}
+{"reason": "invalid_state", "current_state": "ready", "event": "session_resume_failed", "level": "warning", "timestamp": "2026-09-10T18:51:08.250676Z"}
+{"reason": "invalid_state", "current_state": "ready", "event": "session_resume_failed", "level": "warning", "timestamp": "2026-09-10T18:51:08.250676Z"}
+{"reason": "invalid_state", "current_state": "ready", "event": "session_resume_failed", "level": "warning", "timestamp": "2026-09-10T18:51:08.250676Z"}
+{"reason": "invalid_state", "current_state": "ready", "event": "session_resume_failed", "level": "warning", "timestamp": "2026-09-10T18:51:08.250676Z"}
+{"reason": "invalid_state", "current_state": "ready", "event": "session_resume_failed", "level": "warning", "timestamp": "2026-09-10T18:51:08.250676Z"}
+{"reason": "invalid_state", "current_state": "ready", "event": "session_resume_failed", "level": "warning", "timestamp": "2026-09-10T18:51:08.250676Z"}
+{"reason": "invalid_state", "current_state": "ready", "event": "session_resume_failed", "level": "warning", "timestamp": "2026-09-10T18:51:08.250676Z"}
+{"reason": "invalid_state", "current_state": "ready", "event": "session_resume_failed", "level": "warning", "timestamp": "2026-09-10T18:51:08.250676Z"}
+{"reason": "invalid_state", "current_state": "ready", "event": "session_resume_failed", "level": "warning", "timestamp": "2026-09-10T18:51:08.250676Z"}
+{"modality": "audio", "event": "modality_start_failed", "level": "error", "timestamp": "2026-09-10T18:51:08.255481Z"}
+{"modality": "audio", "event": "modality_start_failed", "level": "error", "timestamp": "2026-09-10T18:51:08.255481Z"}
+{"modality": "audio", "event": "modality_start_failed", "level": "error", "timestamp": "2026-09-10T18:51:08.255481Z"}
+{"modality": "audio", "event": "modality_start_failed", "level": "error", "timestamp": "2026-09-10T18:51:08.255481Z"}
+{"modality": "audio", "event": "modality_start_failed", "level": "error", "timestamp": "2026-09-10T18:51:08.255481Z"}
+{"modality": "audio", "event": "modality_start_failed", "level": "error", "timestamp": "2026-09-10T18:51:08.255481Z"}
+{"modality": "audio", "event": "modality_start_failed", "level": "error", "timestamp": "2026-09-10T18:51:08.255481Z"}
+{"modality": "audio", "event": "modality_start_failed", "level": "error", "timestamp": "2026-09-10T18:51:08.255481Z"}
+{"modality": "audio", "event": "modality_start_failed", "level": "error", "timestamp": "2026-09-10T18:51:08.255481Z"}
+{"modality": "audio", "event": "modality_start_failed", "level": "error", "timestamp": "2026-09-10T18:51:08.255481Z"}
+{"modality": "audio", "event": "modality_start_failed", "level": "error", "timestamp": "2026-09-10T18:51:08.255481Z"}
+{"modality": "audio", "event": "modality_start_failed", "level": "error", "timestamp": "2026-09-10T18:51:08.255481Z"}
+{"modality": "audio", "event": "modality_start_failed", "level": "error", "timestamp": "2026-09-10T18:51:08.255481Z"}
+{"modality": "audio", "event": "modality_start_failed", "level": "error", "timestamp": "2026-09-10T18:51:08.255481Z"}
+{"modality": "audio", "event": "modality_start_failed", "level": "error", "timestamp": "2026-09-10T18:51:08.255481Z"}
+{"session_id": "test-session", "error_count": 3, "event": "session_failed", "level": "error", "timestamp": "2026-09-10T18:51:09.199806Z"}
+{"session_id": "test-session", "error_count": 3, "event": "session_failed", "level": "error", "timestamp": "2026-09-10T18:51:09.199806Z"}
+{"session_id": "test-session", "error_count": 3, "event": "session_failed", "level": "error", "timestamp": "2026-09-10T18:51:09.199806Z"}
+{"session_id": "test-session", "error_count": 3, "event": "session_failed", "level": "error", "timestamp": "2026-09-10T18:51:09.199806Z"}
+{"session_id": "test-session", "error_count": 3, "event": "session_failed", "level": "error", "timestamp": "2026-09-10T18:51:09.199806Z"}
+{"session_id": "test-session", "error_count": 3, "event": "session_failed", "level": "error", "timestamp": "2026-09-10T18:51:09.199806Z"}
+{"session_id": "test-session", "error_count": 3, "event": "session_failed", "level": "error", "timestamp": "2026-09-10T18:51:09.199806Z"}
+{"session_id": "test-session", "error_count": 3, "event": "session_failed", "level": "error", "timestamp": "2026-09-10T18:51:09.199806Z"}
+{"session_id": "test-session", "error_count": 3, "event": "session_failed", "level": "error", "timestamp": "2026-09-10T18:51:09.199806Z"}
+{"session_id": "test-session", "error_count": 3, "event": "session_failed", "level": "error", "timestamp": "2026-09-10T18:51:09.199806Z"}
+{"session_id": "test-session", "error_count": 3, "event": "session_failed", "level": "error", "timestamp": "2026-09-10T18:51:09.199806Z"}
+{"session_id": "test-session", "error_count": 3, "event": "session_failed", "level": "error", "timestamp": "2026-09-10T18:51:09.199806Z"}
+{"session_id": "test-session", "error_count": 3, "event": "session_failed", "level": "error", "timestamp": "2026-09-10T18:51:09.199806Z"}
+{"session_id": "test-session", "error_count": 3, "event": "session_failed", "level": "error", "timestamp": "2026-09-10T18:51:09.199806Z"}
+{"session_id": "test-session", "error_count": 3, "event": "session_failed", "level": "error", "timestamp": "2026-09-10T18:51:09.199806Z"}
+{"session_id": "test-session", "error_count": 3, "event": "session_failed", "level": "error", "timestamp": "2026-09-10T18:51:09.199806Z"}
+{"session_id": "test-session", "error_count": 3, "event": "session_failed", "level": "error", "timestamp": "2026-09-10T18:51:09.199806Z"}
+{"reason": "invalid_state", "current_state": "recording", "event": "session_start_failed", "level": "warning", "timestamp": "2026-09-10T20:19:03.610822Z"}
+{"reason": "invalid_state", "current_state": "recording", "event": "session_start_failed", "level": "warning", "timestamp": "2026-09-10T20:19:03.610822Z"}
+{"reason": "invalid_state", "current_state": "recording", "event": "session_start_failed", "level": "warning", "timestamp": "2026-09-10T20:19:03.610822Z"}
+{"reason": "invalid_state", "current_state": "recording", "event": "session_start_failed", "level": "warning", "timestamp": "2026-09-10T20:19:03.610822Z"}
+{"reason": "invalid_state", "current_state": "recording", "event": "session_start_failed", "level": "warning", "timestamp": "2026-09-10T20:19:03.610822Z"}
+{"reason": "invalid_state", "current_state": "recording", "event": "session_start_failed", "level": "warning", "timestamp": "2026-09-10T20:19:03.610822Z"}
+{"reason": "invalid_state", "current_state": "recording", "event": "session_start_failed", "level": "warning", "timestamp": "2026-09-10T20:19:03.610822Z"}
+{"reason": "invalid_state", "current_state": "recording", "event": "session_start_failed", "level": "warning", "timestamp": "2026-09-10T20:19:03.610822Z"}
+{"reason": "invalid_state", "current_state": "ready", "event": "session_stop_failed", "level": "warning", "timestamp": "2026-09-10T20:19:04.224369Z"}
+{"reason": "invalid_state", "current_state": "ready", "event": "session_stop_failed", "level": "warning", "timestamp": "2026-09-10T20:19:04.224369Z"}
+{"reason": "invalid_state", "current_state": "ready", "event": "session_stop_failed", "level": "warning", "timestamp": "2026-09-10T20:19:04.224369Z"}
+{"reason": "invalid_state", "current_state": "ready", "event": "session_stop_failed", "level": "warning", "timestamp": "2026-09-10T20:19:04.224369Z"}
+{"reason": "invalid_state", "current_state": "ready", "event": "session_stop_failed", "level": "warning", "timestamp": "2026-09-10T20:19:04.224369Z"}
+{"reason": "invalid_state", "current_state": "ready", "event": "session_stop_failed", "level": "warning", "timestamp": "2026-09-10T20:19:04.224369Z"}
+{"reason": "invalid_state", "current_state": "ready", "event": "session_stop_failed", "level": "warning", "timestamp": "2026-09-10T20:19:04.224369Z"}
+{"reason": "invalid_state", "current_state": "ready", "event": "session_stop_failed", "level": "warning", "timestamp": "2026-09-10T20:19:04.224369Z"}
+{"reason": "invalid_state", "current_state": "ready", "event": "session_stop_failed", "level": "warning", "timestamp": "2026-09-10T20:19:04.224369Z"}
+{"reason": "invalid_state", "current_state": "ready", "event": "session_stop_failed", "level": "warning", "timestamp": "2026-09-10T20:19:04.224369Z"}
+{"reason": "invalid_state", "current_state": "ready", "event": "session_pause_failed", "level": "warning", "timestamp": "2026-09-10T20:19:04.537013Z"}
+{"reason": "invalid_state", "current_state": "ready", "event": "session_pause_failed", "level": "warning", "timestamp": "2026-09-10T20:19:04.537013Z"}
+{"reason": "invalid_state", "current_state": "ready", "event": "session_pause_failed", "level": "warning", "timestamp": "2026-09-10T20:19:04.537013Z"}
+{"reason": "invalid_state", "current_state": "ready", "event": "session_pause_failed", "level": "warning", "timestamp": "2026-09-10T20:19:04.537013Z"}
+{"reason": "invalid_state", "current_state": "ready", "event": "session_pause_failed", "level": "warning", "timestamp": "2026-09-10T20:19:04.537013Z"}
+{"reason": "invalid_state", "current_state": "ready", "event": "session_pause_failed", "level": "warning", "timestamp": "2026-09-10T20:19:04.537013Z"}
+{"reason": "invalid_state", "current_state": "ready", "event": "session_pause_failed", "level": "warning", "timestamp": "2026-09-10T20:19:04.537013Z"}
+{"reason": "invalid_state", "current_state": "ready", "event": "session_pause_failed", "level": "warning", "timestamp": "2026-09-10T20:19:04.537013Z"}
+{"reason": "invalid_state", "current_state": "ready", "event": "session_pause_failed", "level": "warning", "timestamp": "2026-09-10T20:19:04.537013Z"}
+{"reason": "invalid_state", "current_state": "ready", "event": "session_pause_failed", "level": "warning", "timestamp": "2026-09-10T20:19:04.537013Z"}
+{"reason": "invalid_state", "current_state": "ready", "event": "session_pause_failed", "level": "warning", "timestamp": "2026-09-10T20:19:04.537013Z"}
+{"reason": "invalid_state", "current_state": "ready", "event": "session_pause_failed", "level": "warning", "timestamp": "2026-09-10T20:19:04.537013Z"}
+{"reason": "invalid_state", "current_state": "ready", "event": "session_resume_failed", "level": "warning", "timestamp": "2026-09-10T20:19:04.844865Z"}
+{"reason": "invalid_state", "current_state": "ready", "event": "session_resume_failed", "level": "warning", "timestamp": "2026-09-10T20:19:04.844865Z"}
+{"reason": "invalid_state", "current_state": "ready", "event": "session_resume_failed", "level": "warning", "timestamp": "2026-09-10T20:19:04.844865Z"}
+{"reason": "invalid_state", "current_state": "ready", "event": "session_resume_failed", "level": "warning", "timestamp": "2026-09-10T20:19:04.844865Z"}
+{"reason": "invalid_state", "current_state": "ready", "event": "session_resume_failed", "level": "warning", "timestamp": "2026-09-10T20:19:04.844865Z"}
+{"reason": "invalid_state", "current_state": "ready", "event": "session_resume_failed", "level": "warning", "timestamp": "2026-09-10T20:19:04.844865Z"}
+{"reason": "invalid_state", "current_state": "ready", "event": "session_resume_failed", "level": "warning", "timestamp": "2026-09-10T20:19:04.844865Z"}
+{"reason": "invalid_state", "current_state": "ready", "event": "session_resume_failed", "level": "warning", "timestamp": "2026-09-10T20:19:04.844865Z"}
+{"reason": "invalid_state", "current_state": "ready", "event": "session_resume_failed", "level": "warning", "timestamp": "2026-09-10T20:19:04.844865Z"}
+{"reason": "invalid_state", "current_state": "ready", "event": "session_resume_failed", "level": "warning", "timestamp": "2026-09-10T20:19:04.844865Z"}
+{"reason": "invalid_state", "current_state": "ready", "event": "session_resume_failed", "level": "warning", "timestamp": "2026-09-10T20:19:04.844865Z"}
+{"reason": "invalid_state", "current_state": "ready", "event": "session_resume_failed", "level": "warning", "timestamp": "2026-09-10T20:19:04.844865Z"}
+{"reason": "invalid_state", "current_state": "ready", "event": "session_resume_failed", "level": "warning", "timestamp": "2026-09-10T20:19:04.844865Z"}
+{"reason": "invalid_state", "current_state": "ready", "event": "session_resume_failed", "level": "warning", "timestamp": "2026-09-10T20:19:04.844865Z"}
+{"modality": "audio", "event": "modality_start_failed", "level": "error", "timestamp": "2026-09-10T20:19:04.849906Z"}
+{"modality": "audio", "event": "modality_start_failed", "level": "error", "timestamp": "2026-09-10T20:19:04.849906Z"}
+{"modality": "audio", "event": "modality_start_failed", "level": "error", "timestamp": "2026-09-10T20:19:04.849906Z"}
+{"modality": "audio", "event": "modality_start_failed", "level": "error", "timestamp": "2026-09-10T20:19:04.849906Z"}
+{"modality": "audio", "event": "modality_start_failed", "level": "error", "timestamp": "2026-09-10T20:19:04.849906Z"}
+{"modality": "audio", "event": "modality_start_failed", "level": "error", "timestamp": "2026-09-10T20:19:04.849906Z"}
+{"modality": "audio", "event": "modality_start_failed", "level": "error", "timestamp": "2026-09-10T20:19:04.849906Z"}
+{"modality": "audio", "event": "modality_start_failed", "level": "error", "timestamp": "2026-09-10T20:19:04.849906Z"}
+{"modality": "audio", "event": "modality_start_failed", "level": "error", "timestamp": "2026-09-10T20:19:04.849906Z"}
+{"modality": "audio", "event": "modality_start_failed", "level": "error", "timestamp": "2026-09-10T20:19:04.849906Z"}
+{"modality": "audio", "event": "modality_start_failed", "level": "error", "timestamp": "2026-09-10T20:19:04.849906Z"}
+{"modality": "audio", "event": "modality_start_failed", "level": "error", "timestamp": "2026-09-10T20:19:04.849906Z"}
+{"modality": "audio", "event": "modality_start_failed", "level": "error", "timestamp": "2026-09-10T20:19:04.849906Z"}
+{"modality": "audio", "event": "modality_start_failed", "level": "error", "timestamp": "2026-09-10T20:19:04.849906Z"}
+{"modality": "audio", "event": "modality_start_failed", "level": "error", "timestamp": "2026-09-10T20:19:04.849906Z"}
+{"session_id": "test-session", "error_count": 3, "event": "session_failed", "level": "error", "timestamp": "2026-09-10T20:19:05.792970Z"}
+{"session_id": "test-session", "error_count": 3, "event": "session_failed", "level": "error", "timestamp": "2026-09-10T20:19:05.792970Z"}
+{"session_id": "test-session", "error_count": 3, "event": "session_failed", "level": "error", "timestamp": "2026-09-10T20:19:05.792970Z"}
+{"session_id": "test-session", "error_count": 3, "event": "session_failed", "level": "error", "timestamp": "2026-09-10T20:19:05.792970Z"}
+{"session_id": "test-session", "error_count": 3, "event": "session_failed", "level": "error", "timestamp": "2026-09-10T20:19:05.792970Z"}
+{"session_id": "test-session", "error_count": 3, "event": "session_failed", "level": "error", "timestamp": "2026-09-10T20:19:05.792970Z"}
+{"session_id": "test-session", "error_count": 3, "event": "session_failed", "level": "error", "timestamp": "2026-09-10T20:19:05.792970Z"}
+{"session_id": "test-session", "error_count": 3, "event": "session_failed", "level": "error", "timestamp": "2026-09-10T20:19:05.792970Z"}
+{"session_id": "test-session", "error_count": 3, "event": "session_failed", "level": "error", "timestamp": "2026-09-10T20:19:05.792970Z"}
+{"session_id": "test-session", "error_count": 3, "event": "session_failed", "level": "error", "timestamp": "2026-09-10T20:19:05.792970Z"}
+{"session_id": "test-session", "error_count": 3, "event": "session_failed", "level": "error", "timestamp": "2026-09-10T20:19:05.792970Z"}
+{"session_id": "test-session", "error_count": 3, "event": "session_failed", "level": "error", "timestamp": "2026-09-10T20:19:05.792970Z"}
+{"session_id": "test-session", "error_count": 3, "event": "session_failed", "level": "error", "timestamp": "2026-09-10T20:19:05.792970Z"}
+{"session_id": "test-session", "error_count": 3, "event": "session_failed", "level": "error", "timestamp": "2026-09-10T20:19:05.792970Z"}
+{"session_id": "test-session", "error_count": 3, "event": "session_failed", "level": "error", "timestamp": "2026-09-10T20:19:05.792970Z"}
+{"session_id": "test-session", "error_count": 3, "event": "session_failed", "level": "error", "timestamp": "2026-09-10T20:19:05.792970Z"}
+{"session_id": "test-session", "error_count": 3, "event": "session_failed", "level": "error", "timestamp": "2026-09-10T20:19:05.792970Z"}
+{"modality": "keyboard", "event": "modality_registered", "level": "info", "timestamp": "2026-09-10T20:32:17.326917Z"}
+{"modality": "keyboard", "event": "modality_registered", "level": "info", "timestamp": "2026-09-10T20:32:17.326917Z"}
+{"event": "keyboard_modality_registered", "level": "info", "timestamp": "2026-09-10T20:32:17.327715Z"}
+{"event": "keyboard_modality_registered", "level": "info", "timestamp": "2026-09-10T20:32:17.327715Z"}
+{"modality": "audio", "event": "modality_registered", "level": "info", "timestamp": "2026-09-10T20:32:17.327809Z"}
+{"modality": "audio", "event": "modality_registered", "level": "info", "timestamp": "2026-09-10T20:32:17.327809Z"}
+{"event": "audio_modality_registered", "level": "info", "timestamp": "2026-09-10T20:32:17.327854Z"}
+{"event": "audio_modality_registered", "level": "info", "timestamp": "2026-09-10T20:32:17.327854Z"}
+{"modality": "face", "event": "modality_registered", "level": "info", "timestamp": "2026-09-10T20:32:17.327900Z"}
+{"modality": "face", "event": "modality_registered", "level": "info", "timestamp": "2026-09-10T20:32:17.327900Z"}
+{"event": "face_modality_registered", "level": "info", "timestamp": "2026-09-10T20:32:17.327936Z"}
+{"event": "face_modality_registered", "level": "info", "timestamp": "2026-09-10T20:32:17.327936Z"}
+{"reason": "invalid_state", "current_state": "recording", "event": "session_start_failed", "level": "warning", "timestamp": "2026-09-10T20:33:37.376488Z"}
+{"reason": "invalid_state", "current_state": "recording", "event": "session_start_failed", "level": "warning", "timestamp": "2026-09-10T20:33:37.376488Z"}
+{"reason": "invalid_state", "current_state": "recording", "event": "session_start_failed", "level": "warning", "timestamp": "2026-09-10T20:33:37.376488Z"}
+{"reason": "invalid_state", "current_state": "recording", "event": "session_start_failed", "level": "warning", "timestamp": "2026-09-10T20:33:37.376488Z"}
+{"reason": "invalid_state", "current_state": "recording", "event": "session_start_failed", "level": "warning", "timestamp": "2026-09-10T20:33:37.376488Z"}
+{"reason": "invalid_state", "current_state": "recording", "event": "session_start_failed", "level": "warning", "timestamp": "2026-09-10T20:33:37.376488Z"}
+{"reason": "invalid_state", "current_state": "recording", "event": "session_start_failed", "level": "warning", "timestamp": "2026-09-10T20:33:37.376488Z"}
+{"reason": "invalid_state", "current_state": "recording", "event": "session_start_failed", "level": "warning", "timestamp": "2026-09-10T20:33:37.376488Z"}
+{"reason": "invalid_state", "current_state": "ready", "event": "session_stop_failed", "level": "warning", "timestamp": "2026-09-10T20:33:37.986487Z"}
+{"reason": "invalid_state", "current_state": "ready", "event": "session_stop_failed", "level": "warning", "timestamp": "2026-09-10T20:33:37.986487Z"}
+{"reason": "invalid_state", "current_state": "ready", "event": "session_stop_failed", "level": "warning", "timestamp": "2026-09-10T20:33:37.986487Z"}
+{"reason": "invalid_state", "current_state": "ready", "event": "session_stop_failed", "level": "warning", "timestamp": "2026-09-10T20:33:37.986487Z"}
+{"reason": "invalid_state", "current_state": "ready", "event": "session_stop_failed", "level": "warning", "timestamp": "2026-09-10T20:33:37.986487Z"}
+{"reason": "invalid_state", "current_state": "ready", "event": "session_stop_failed", "level": "warning", "timestamp": "2026-09-10T20:33:37.986487Z"}
+{"reason": "invalid_state", "current_state": "ready", "event": "session_stop_failed", "level": "warning", "timestamp": "2026-09-10T20:33:37.986487Z"}
+{"reason": "invalid_state", "current_state": "ready", "event": "session_stop_failed", "level": "warning", "timestamp": "2026-09-10T20:33:37.986487Z"}
+{"reason": "invalid_state", "current_state": "ready", "event": "session_stop_failed", "level": "warning", "timestamp": "2026-09-10T20:33:37.986487Z"}
+{"reason": "invalid_state", "current_state": "ready", "event": "session_stop_failed", "level": "warning", "timestamp": "2026-09-10T20:33:37.986487Z"}
+{"reason": "invalid_state", "current_state": "ready", "event": "session_pause_failed", "level": "warning", "timestamp": "2026-09-10T20:33:38.294394Z"}
+{"reason": "invalid_state", "current_state": "ready", "event": "session_pause_failed", "level": "warning", "timestamp": "2026-09-10T20:33:38.294394Z"}
+{"reason": "invalid_state", "current_state": "ready", "event": "session_pause_failed", "level": "warning", "timestamp": "2026-09-10T20:33:38.294394Z"}
+{"reason": "invalid_state", "current_state": "ready", "event": "session_pause_failed", "level": "warning", "timestamp": "2026-09-10T20:33:38.294394Z"}
+{"reason": "invalid_state", "current_state": "ready", "event": "session_pause_failed", "level": "warning", "timestamp": "2026-09-10T20:33:38.294394Z"}
+{"reason": "invalid_state", "current_state": "ready", "event": "session_pause_failed", "level": "warning", "timestamp": "2026-09-10T20:33:38.294394Z"}
+{"reason": "invalid_state", "current_state": "ready", "event": "session_pause_failed", "level": "warning", "timestamp": "2026-09-10T20:33:38.294394Z"}
+{"reason": "invalid_state", "current_state": "ready", "event": "session_pause_failed", "level": "warning", "timestamp": "2026-09-10T20:33:38.294394Z"}
+{"reason": "invalid_state", "current_state": "ready", "event": "session_pause_failed", "level": "warning", "timestamp": "2026-09-10T20:33:38.294394Z"}
+{"reason": "invalid_state", "current_state": "ready", "event": "session_pause_failed", "level": "warning", "timestamp": "2026-09-10T20:33:38.294394Z"}
+{"reason": "invalid_state", "current_state": "ready", "event": "session_pause_failed", "level": "warning", "timestamp": "2026-09-10T20:33:38.294394Z"}
+{"reason": "invalid_state", "current_state": "ready", "event": "session_pause_failed", "level": "warning", "timestamp": "2026-09-10T20:33:38.294394Z"}
+{"reason": "invalid_state", "current_state": "ready", "event": "session_resume_failed", "level": "warning", "timestamp": "2026-09-10T20:33:38.601860Z"}
+{"reason": "invalid_state", "current_state": "ready", "event": "session_resume_failed", "level": "warning", "timestamp": "2026-09-10T20:33:38.601860Z"}
+{"reason": "invalid_state", "current_state": "ready", "event": "session_resume_failed", "level": "warning", "timestamp": "2026-09-10T20:33:38.601860Z"}
+{"reason": "invalid_state", "current_state": "ready", "event": "session_resume_failed", "level": "warning", "timestamp": "2026-09-10T20:33:38.601860Z"}
+{"reason": "invalid_state", "current_state": "ready", "event": "session_resume_failed", "level": "warning", "timestamp": "2026-09-10T20:33:38.601860Z"}
+{"reason": "invalid_state", "current_state": "ready", "event": "session_resume_failed", "level": "warning", "timestamp": "2026-09-10T20:33:38.601860Z"}
+{"reason": "invalid_state", "current_state": "ready", "event": "session_resume_failed", "level": "warning", "timestamp": "2026-09-10T20:33:38.601860Z"}
+{"reason": "invalid_state", "current_state": "ready", "event": "session_resume_failed", "level": "warning", "timestamp": "2026-09-10T20:33:38.601860Z"}
+{"reason": "invalid_state", "current_state": "ready", "event": "session_resume_failed", "level": "warning", "timestamp": "2026-09-10T20:33:38.601860Z"}
+{"reason": "invalid_state", "current_state": "ready", "event": "session_resume_failed", "level": "warning", "timestamp": "2026-09-10T20:33:38.601860Z"}
+{"reason": "invalid_state", "current_state": "ready", "event": "session_resume_failed", "level": "warning", "timestamp": "2026-09-10T20:33:38.601860Z"}
+{"reason": "invalid_state", "current_state": "ready", "event": "session_resume_failed", "level": "warning", "timestamp": "2026-09-10T20:33:38.601860Z"}
+{"reason": "invalid_state", "current_state": "ready", "event": "session_resume_failed", "level": "warning", "timestamp": "2026-09-10T20:33:38.601860Z"}
+{"reason": "invalid_state", "current_state": "ready", "event": "session_resume_failed", "level": "warning", "timestamp": "2026-09-10T20:33:38.601860Z"}
+{"modality": "audio", "event": "modality_start_failed", "level": "error", "timestamp": "2026-09-10T20:33:38.607613Z"}
+{"modality": "audio", "event": "modality_start_failed", "level": "error", "timestamp": "2026-09-10T20:33:38.607613Z"}
+{"modality": "audio", "event": "modality_start_failed", "level": "error", "timestamp": "2026-09-10T20:33:38.607613Z"}
+{"modality": "audio", "event": "modality_start_failed", "level": "error", "timestamp": "2026-09-10T20:33:38.607613Z"}
+{"modality": "audio", "event": "modality_start_failed", "level": "error", "timestamp": "2026-09-10T20:33:38.607613Z"}
+{"modality": "audio", "event": "modality_start_failed", "level": "error", "timestamp": "2026-09-10T20:33:38.607613Z"}
+{"modality": "audio", "event": "modality_start_failed", "level": "error", "timestamp": "2026-09-10T20:33:38.607613Z"}
+{"modality": "audio", "event": "modality_start_failed", "level": "error", "timestamp": "2026-09-10T20:33:38.607613Z"}
+{"modality": "audio", "event": "modality_start_failed", "level": "error", "timestamp": "2026-09-10T20:33:38.607613Z"}
+{"modality": "audio", "event": "modality_start_failed", "level": "error", "timestamp": "2026-09-10T20:33:38.607613Z"}
+{"modality": "audio", "event": "modality_start_failed", "level": "error", "timestamp": "2026-09-10T20:33:38.607613Z"}
+{"modality": "audio", "event": "modality_start_failed", "level": "error", "timestamp": "2026-09-10T20:33:38.607613Z"}
+{"modality": "audio", "event": "modality_start_failed", "level": "error", "timestamp": "2026-09-10T20:33:38.607613Z"}
+{"modality": "audio", "event": "modality_start_failed", "level": "error", "timestamp": "2026-09-10T20:33:38.607613Z"}
+{"modality": "audio", "event": "modality_start_failed", "level": "error", "timestamp": "2026-09-10T20:33:38.607613Z"}
+{"session_id": "test-session", "error_count": 3, "event": "session_failed", "level": "error", "timestamp": "2026-09-10T20:33:39.549663Z"}
+{"session_id": "test-session", "error_count": 3, "event": "session_failed", "level": "error", "timestamp": "2026-09-10T20:33:39.549663Z"}
+{"session_id": "test-session", "error_count": 3, "event": "session_failed", "level": "error", "timestamp": "2026-09-10T20:33:39.549663Z"}
+{"session_id": "test-session", "error_count": 3, "event": "session_failed", "level": "error", "timestamp": "2026-09-10T20:33:39.549663Z"}
+{"session_id": "test-session", "error_count": 3, "event": "session_failed", "level": "error", "timestamp": "2026-09-10T20:33:39.549663Z"}
+{"session_id": "test-session", "error_count": 3, "event": "session_failed", "level": "error", "timestamp": "2026-09-10T20:33:39.549663Z"}
+{"session_id": "test-session", "error_count": 3, "event": "session_failed", "level": "error", "timestamp": "2026-09-10T20:33:39.549663Z"}
+{"session_id": "test-session", "error_count": 3, "event": "session_failed", "level": "error", "timestamp": "2026-09-10T20:33:39.549663Z"}
+{"session_id": "test-session", "error_count": 3, "event": "session_failed", "level": "error", "timestamp": "2026-09-10T20:33:39.549663Z"}
+{"session_id": "test-session", "error_count": 3, "event": "session_failed", "level": "error", "timestamp": "2026-09-10T20:33:39.549663Z"}
+{"session_id": "test-session", "error_count": 3, "event": "session_failed", "level": "error", "timestamp": "2026-09-10T20:33:39.549663Z"}
+{"session_id": "test-session", "error_count": 3, "event": "session_failed", "level": "error", "timestamp": "2026-09-10T20:33:39.549663Z"}
+{"session_id": "test-session", "error_count": 3, "event": "session_failed", "level": "error", "timestamp": "2026-09-10T20:33:39.549663Z"}
+{"session_id": "test-session", "error_count": 3, "event": "session_failed", "level": "error", "timestamp": "2026-09-10T20:33:39.549663Z"}
+{"session_id": "test-session", "error_count": 3, "event": "session_failed", "level": "error", "timestamp": "2026-09-10T20:33:39.549663Z"}
+{"session_id": "test-session", "error_count": 3, "event": "session_failed", "level": "error", "timestamp": "2026-09-10T20:33:39.549663Z"}
+{"session_id": "test-session", "error_count": 3, "event": "session_failed", "level": "error", "timestamp": "2026-09-10T20:33:39.549663Z"}

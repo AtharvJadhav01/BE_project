@@ -1,0 +1,14 @@
+=== CLASSIFIER RESULTS ===
+Phase 2 Baseline: 43% accuracy (27 features, RF, FER2013)
+RF Test Accuracy: 0.4793 (47.9%)
+RF Test F1 (weighted): 0.4627
+SVM Test Accuracy: 0.4423 (44.2%)
+SVM Test F1 (weighted): 0.3928
+RF Per-class (test):
+  angry: P=0.467, R=0.249, F1=0.324, support=169
+  disgust: P=0.364, R=0.565, F1=0.443, support=92
+  fear: P=0.387, R=0.164, F1=0.230, support=177
+  happy: P=0.722, R=0.714, F1=0.718, support=189
+  sad: P=0.372, R=0.427, F1=0.398, support=171
+  surprised: P=0.578, R=0.726, F1=0.644, support=179
+  neutral: P=0.390, R=0.519, F1=0.445, support=185

@@ -236,7 +236,7 @@ class FaceFeatureExtractor(BaseFeatureExtractor):
         # Extract Phase 3 advanced features
         self._extract_advanced_eye_features(landmarks_3d, blendshapes, features)
         self._extract_advanced_mouth_features(landmarks_3d, blendshapes, features)
-        self._extract_advanced_brow_features(blendshapes, features)
+        self._extract_advanced_brow_features(landmarks_3d, blendshapes, features)
         
         # Convert to dictionary
         return self._features_to_dict(features)

@@ -24,6 +24,7 @@ from .storage import FaceStorage
 from analysis.face.features import FaceFeatureExtractor
 from analysis.face.state import FaceStateEstimator
 from analysis.face.baseline import FaceBaselineManager
+from analysis.face.emotion_classifier import FaceEmotionClassifier, EmotionClassifierError
 from analysis.temporal import TemporalWindow
 from analysis.results import FeatureVector, StateEstimate, AnalysisResult
 import orjson
@@ -52,6 +53,7 @@ class FaceCapture(FaceModalityInterface):
         self._baseline_manager: Optional[FaceBaselineManager] = None
         self._temporal_windows: Optional[Dict[str, TemporalWindow]] = None
         self._state_estimator: Optional[FaceStateEstimator] = None
+        self._emotion_classifier: Optional[FaceEmotionClassifier] = None
         self._analysis_storage: Optional[Any] = None  # Will be analysis storage writer
         
         # Session state
@@ -64,6 +66,10 @@ class FaceCapture(FaceModalityInterface):
         self._last_analysis_result: Optional[Dict[str, Any]] = None
         self._analysis_frame_count = 0
         self._last_analysis_timestamp: Optional[float] = None
+        
+        # Emotion estimation state
+        self._emotion_enabled: bool = False
+        self._last_emotion_result: Optional[Dict[str, Any]] = None
         
         # Thread safety
         self._lock = threading.Lock()
@@ -277,6 +283,41 @@ class FaceCapture(FaceModalityInterface):
         self._session_id = None
         self._session_dir = None
         self._timestamp_generator = None
+        
+        # Clear analysis components
+        self._feature_extractor = None
+        self._baseline_manager = None
+        self._temporal_windows = None
+        self._state_estimator = None
+        self._emotion_classifier = None
+        self._last_analysis_result = None
+        self._last_emotion_result = None
+        self._emotion_enabled = False
+
+    def set_emotion_enabled(self, enabled: bool) -> None:
+        """
+        Enable or disable emotion estimation at runtime.
+        
+        Args:
+            enabled: True to enable, False to disable
+        """
+        with self._lock:
+            self._emotion_enabled = enabled
+            if not enabled and self._emotion_classifier:
+                self._emotion_classifier.reset()
+            self.logger.info("emotion_estimation_toggled", enabled=enabled)
+
+    def is_emotion_enabled(self) -> bool:
+        """Check if emotion estimation is currently enabled."""
+        return self._emotion_enabled
+
+    def reset_emotion_classifier(self) -> None:
+        """Reset the emotion classifier state."""
+        with self._lock:
+            if self._emotion_classifier:
+                self._emotion_classifier.reset()
+            self._last_emotion_result = None
+            self.logger.info("emotion_classifier_reset")
 
     # Analysis methods
     def _initialize_analysis_components(self) -> None:
@@ -285,6 +326,9 @@ class FaceCapture(FaceModalityInterface):
             # Get face analysis config
             face_config = self.config.get("analysis", {}).get("face", {})
             analysis_config = self.config.get("analysis", {})
+            
+            # Check if emotion estimation is enabled
+            self._emotion_enabled = face_config.get("emotion_enabled", True)
             
             # Initialize feature extractor
             self._feature_extractor = FaceFeatureExtractor(
@@ -323,17 +367,35 @@ class FaceCapture(FaceModalityInterface):
                 face_config
             )
             
+            # Initialize emotion classifier if enabled
+            if self._emotion_enabled:
+                try:
+                    self._emotion_classifier = FaceEmotionClassifier(config=face_config)
+                    if not self._emotion_classifier.is_ready():
+                        self.logger.warning(
+                            "emotion_classifier_not_ready",
+                            error=self._emotion_classifier.get_load_error()
+                        )
+                        self._emotion_classifier = None
+                    else:
+                        self.logger.info("emotion_classifier_initialized")
+                except EmotionClassifierError as e:
+                    self.logger.warning("emotion_classifier_init_failed", error=str(e))
+                    self._emotion_classifier = None
+            
             # Initialize analysis storage
             self._setup_analysis_storage()
             
-            self.logger.info("face_analysis_components_initialized")
+            self.logger.info("face_analysis_components_initialized", 
+                           emotion_enabled=self._emotion_enabled,
+                           emotion_classifier_ready=self._emotion_classifier is not None)
             
         except Exception as e:
             self.logger.error("face_analysis_init_failed", error=str(e))
             raise
 
     def _setup_analysis_storage(self) -> None:
-        """Set up analysis storage for facial features and states."""
+        """Set up analysis storage for facial features, states, and expressions."""
         try:
             # Create analysis directory
             analysis_dir = self._session_dir / "analysis"
@@ -343,14 +405,17 @@ class FaceCapture(FaceModalityInterface):
             # In a full implementation, this would use async writing like FaceStorage
             self._analysis_features_path = analysis_dir / "face_features.jsonl"
             self._analysis_states_path = analysis_dir / "face_states.jsonl"
+            self._analysis_expressions_path = analysis_dir / "face_expressions.jsonl"
             
             # Open files for appending
             self._analysis_features_file = open(self._analysis_features_path, "ab")
             self._analysis_states_file = open(self._analysis_states_path, "ab")
+            self._analysis_expressions_file = open(self._analysis_expressions_path, "ab")
             
             self.logger.info("face_analysis_storage_setup", 
                            features_path=str(self._analysis_features_path),
-                           states_path=str(self._analysis_states_path))
+                           states_path=str(self._analysis_states_path),
+                           expressions_path=str(self._analysis_expressions_path))
                            
         except Exception as e:
             self.logger.error("face_analysis_storage_setup_failed", error=str(e))
@@ -438,8 +503,40 @@ class FaceCapture(FaceModalityInterface):
             # Normalize features using baseline
             normalized_features = self._normalize_features(window_stats)
             
-            # Estimate facial state
+            # Estimate facial state (rule-based)
             state_estimate = self._estimate_facial_state(normalized_features)
+            
+            # Estimate expression (ML-based) if enabled and face detected
+            expression_estimate = None
+            if (self._emotion_enabled and 
+                self._emotion_classifier is not None and 
+                detection_result.face_detected):
+                try:
+                    expression_estimate = self._emotion_classifier.predict(
+                        raw_features,  # Use raw features for ML classifier (matching training)
+                        timestamp_monotonic
+                    )
+                    self._last_emotion_result = expression_estimate
+                except EmotionClassifierError as e:
+                    self.logger.warning("emotion_prediction_failed", error=str(e))
+                    expression_estimate = {
+                        "expression": "unavailable",
+                        "confidence": 0.0,
+                        "probabilities": {},
+                        "timestamp": timestamp_monotonic,
+                        "wallclock": timestamp_wallclock,
+                        "error": str(e)
+                    }
+            elif not detection_result.face_detected:
+                # No face detected - expression unavailable (not guessing)
+                expression_estimate = {
+                    "expression": "unavailable",
+                    "confidence": 0.0,
+                    "probabilities": {},
+                    "timestamp": timestamp_monotonic,
+                    "wallclock": timestamp_wallclock,
+                    "reason": "no_face_detected"
+                }
             
             # Create analysis result
             analysis_result = {
@@ -450,6 +547,7 @@ class FaceCapture(FaceModalityInterface):
                 "window_stats": window_stats,
                 "normalized_features": normalized_features,
                 "state_estimate": state_estimate,
+                "expression_estimate": expression_estimate,
                 "baseline_ready": self._is_baseline_ready(),
                 "analysis_timestamp": time.monotonic()
             }
@@ -604,6 +702,23 @@ class FaceCapture(FaceModalityInterface):
             self._analysis_states_file.write(line)
             self._analysis_states_file.flush()
             
+            # Store expression estimate if available
+            expr_estimate = analysis_result.get("expression_estimate")
+            if expr_estimate:
+                expr_line = {
+                    "timestamp_monotonic": analysis_result["timestamp_monotonic"],
+                    "timestamp_wallclock": analysis_result["timestamp_wallclock"],
+                    "frame_index": frame_index,
+                    "expression": expr_estimate.get("expression", "unavailable"),
+                    "confidence": expr_estimate.get("confidence", 0.0),
+                    "probabilities": expr_estimate.get("probabilities", {}),
+                    "baseline_ready": analysis_result["baseline_ready"]
+                }
+                if hasattr(self, '_analysis_expressions_file') and self._analysis_expressions_file:
+                    line = orjson.dumps(expr_line) + b"\n"
+                    self._analysis_expressions_file.write(line)
+                    self._analysis_expressions_file.flush()
+            
             self._analysis_frame_count += 1
             self._last_analysis_timestamp = analysis_result["timestamp_monotonic"]
             # Store last analysis result for UI polling
@@ -620,6 +735,8 @@ class FaceCapture(FaceModalityInterface):
                 self._analysis_features_file.close()
             if hasattr(self, '_analysis_states_file') and self._analysis_states_file:
                 self._analysis_states_file.close()
+            if hasattr(self, '_analysis_expressions_file') and self._analysis_expressions_file:
+                self._analysis_expressions_file.close()
             
             self.logger.info("face_analysis_stopped", 
                            frames_processed=self._analysis_frame_count)

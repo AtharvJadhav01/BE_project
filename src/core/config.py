@@ -71,6 +71,7 @@ class UIConfig:
 @dataclass
 class AnalysisFaceConfig:
     enabled: bool = True
+    emotion_enabled: bool = True
     window_size_sec: float = 2.0
     update_interval_ms: int = 200
     baseline_frames: int = 150

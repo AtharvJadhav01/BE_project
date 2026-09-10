@@ -170,7 +170,7 @@ class FaceAnalysisPanel(QWidget):
         layout.addLayout(metrics_layout)
         layout.addStretch()
 
-def update_face_detected(self, detected: bool) -> None:
+    def update_face_detected(self, detected: bool) -> None:
         """Update face detected status."""
         if detected:
             self.face_detected_label.setText("Face: Detected")
@@ -179,16 +179,17 @@ def update_face_detected(self, detected: bool) -> None:
             self.face_detected_label.setText("Face: Not Detected")
             self.face_detected_label.setStyleSheet("color: #cc0000;")
 
+    def update_state(self, state: str, confidence: float) -> None:
         """Update facial state and confidence."""
         self.state_label.setText(f"State: {state}")
         self.confidence_label.setText(f"Confidence: {confidence:.0%}")
 
-
+    def update_expression(self, expression: str, confidence: float) -> None:
         """Update estimated expression and confidence."""
         self.expr_label.setText(f"Estimated Expression: {expression}")
         self.expr_conf_label.setText(f"Expression Confidence: {confidence:.0%}")
 
-
+    def update_metrics(self, metrics: dict) -> None:
         """Update real-time facial metrics."""
         if "eye_openness_avg" in metrics:
             self.eye_openness_label.setText(f"Eye Openness: {metrics['eye_openness_avg']:.2f}")
@@ -206,6 +207,15 @@ def update_face_detected(self, detected: bool) -> None:
             self.head_pose_label.setText(
                 f"Head Pose: Pitch={metrics['head_pitch']:.1f}° Yaw={metrics['head_yaw']:.1f}° Roll={metrics['head_roll']:.1f}°"
             )
+
+    def update_baseline(self, ready: bool, progress: float = 0.0) -> None:
+        """Update baseline status."""
+        if ready:
+            self.baseline_label.setText("Baseline: Ready")
+            self.baseline_label.setStyleSheet("color: #00aa00;")
+        else:
+            self.baseline_label.setText(f"Baseline: Warming Up ({progress:.0%})")
+            self.baseline_label.setStyleSheet("color: #ffaa00;")
 
     def clear(self) -> None:
         """Reset all metrics."""
