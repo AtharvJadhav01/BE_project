@@ -77,6 +77,9 @@ class AnalysisFaceConfig:
     baseline_frames: int = 150
     expression_threshold: float = 0.3
     confidence_threshold: float = 0.5
+    emotion_confidence_threshold: float = 0.5
+    emotion_smoothing_window: float = 10.0
+    emotion_smoothing_alpha: float = 0.5
 
 
 @dataclass

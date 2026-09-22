@@ -1000,10 +1000,19 @@ class MainWindow(QMainWindow):
                 # Update estimated expression
                 expr_est = result.get("expression_estimate")
                 if expr_est:
+                    expr_value = expr_est.get("expression", "--")
+                    expr_confidence = expr_est.get("confidence", 0.0)
+                    # Show "--" when expression is "unavailable" (no face) or confidence is 0
+                    if expr_value == "unavailable" or expr_confidence == 0.0:
+                        expr_value = "--"
+                        expr_confidence = 0.0
                     self.face_analysis.update_expression(
-                        expr_est.get("expression", "--"),
-                        expr_est.get("confidence", 0.0)
+                        expr_value, expr_confidence
                     )
+                else:
+                    # No expression estimate (emotion disabled, classifier unavailable, 
+                    # or no face detected before baseline ready)
+                    self.face_analysis.update_expression("--", 0.0)
                 
                 # Update metrics
                 norm_features = result.get("normalized_features", {})

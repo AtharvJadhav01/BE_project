@@ -25,6 +25,7 @@ from analysis.face.features import FaceFeatureExtractor
 from analysis.face.state import FaceStateEstimator
 from analysis.face.baseline import FaceBaselineManager
 from analysis.face.emotion_classifier import FaceEmotionClassifier, EmotionClassifierError
+from analysis.face.state import EmotionSmoother
 from analysis.temporal import TemporalWindow
 from analysis.results import FeatureVector, StateEstimate, AnalysisResult
 import orjson
@@ -330,6 +331,17 @@ class FaceCapture(FaceModalityInterface):
             # Check if emotion estimation is enabled
             self._emotion_enabled = face_config.get("emotion_enabled", True)
             
+            # Initialize emotion smoother
+            smoothing_window = face_config.get("emotion_smoothing_window", 5)
+            smoothing_alpha = face_config.get("emotion_smoothing_alpha", 0.3)
+            confidence_threshold = face_config.get("emotion_confidence_threshold", 0.5)
+            self._emotion_smoother = EmotionSmoother(
+                window_size=smoothing_window,
+                alpha=smoothing_alpha,
+                min_confidence=confidence_threshold,
+                enabled=self._emotion_enabled
+            )
+            
             # Initialize feature extractor
             self._feature_extractor = FaceFeatureExtractor(
                 "face_features", 
@@ -511,6 +523,54 @@ class FaceCapture(FaceModalityInterface):
             if (self._emotion_enabled and 
                 self._emotion_classifier is not None and 
                 detection_result.face_detected):
+                
+                # Add prediction to smoother
+                try:
+                    raw_probs = self._emotion_classifier.get_metadata().get("target_names", EMOTION_LABELS)
+                    # Get the raw prediction first
+                    result = self._emotion_classifier.predict(raw_features)
+                    probas = result["probabilities"]
+                    # Convert to numpy array in correct order
+                    probs_array = np.array([probas[label] for label in raw_probs], dtype=np.float64)
+                    confidence = result["confidence"]
+                    self._emotion_smoother.add_prediction(probs_array, confidence)
+                    
+                    # Get smoothed result
+                    smoothed_expr, smoothed_conf = self._emotion_smoother.get_smoothed()
+                    
+                    if smoothed_expr is not None:
+                        expression_estimate = {
+                            "expression": smoothed_expr,
+                            "confidence": smoothed_conf,
+                            "probabilities": result["probabilities"],
+                            "timestamp": timestamp_monotonic,
+                            "wallclock": timestamp_wallclock,
+                        }
+                    else:
+                        # No valid smoothed prediction - check if we should show unavailable
+                        if not detection_result.face_detected:
+                            expression_estimate = {
+                                "expression": "unavailable",
+                                "confidence": 0.0,
+                                "probabilities": {},
+                                "timestamp": timestamp_monotonic,
+                                "wallclock": timestamp_wallclock,
+                                "reason": "no_face_detected"
+                            }
+                        else:
+                            # Classifier not confident enough, show unavailable
+                            expression_estimate = {
+                                "expression": "unavailable",
+                                "confidence": 0.0,
+                                "probabilities": {},
+                                "timestamp": timestamp_monotonic,
+                                "wallclock": timestamp_wallclock,
+                                "reason": "low_confidence"
+                            }
+                except Exception as e:
+                    self.logger.warning("emotion_smoothing_failed", error=str(e))
+                    # Fall back to raw prediction without smoothing
+                    expression_estimate = self._emotion_classifier.predict(raw_features)
                 try:
                     expression_estimate = self._emotion_classifier.predict(
                         raw_features,  # Use raw features for ML classifier (matching training)

@@ -1,0 +1,508 @@
+============================= test session starts =============================
+platform win32 -- Python 3.13.1, pytest-9.1.1, pluggy-1.6.0 -- C:\Python313\python.exe
+cachedir: .pytest_cache
+rootdir: C:\Users\theat\OneDrive\Desktop\BE_Project\my_app\app_work
+configfile: pyproject.toml
+plugins: anyio-4.10.0, asyncio-1.4.0, mock-3.15.1, typeguard-4.4.4
+asyncio: mode=Mode.STRICT, debug=False, asyncio_default_fixture_loop_scope=None, asyncio_default_test_loop_scope=function
+collecting ... collected 267 items
+
+tests/unit/test_analysis_foundation.py::TestTemporalWindow::test_creation PASSED [  0%]
+tests/unit/test_analysis_foundation.py::TestTemporalWindow::test_add_single_observation PASSED [  0%]
+tests/unit/test_analysis_foundation.py::TestTemporalWindow::test_add_multiple_observations PASSED [  1%]
+tests/unit/test_analysis_foundation.py::TestTemporalWindow::test_expiration PASSED [  1%]
+tests/unit/test_analysis_foundation.py::TestTemporalWindow::test_empty_window_stats PASSED [  1%]
+tests/unit/test_analysis_foundation.py::TestTemporalWindow::test_insufficient_observations_std PASSED [  2%]
+tests/unit/test_analysis_foundation.py::TestTemporalWindow::test_max_observations_limit PASSED [  2%]
+tests/unit/test_analysis_foundation.py::TestTemporalWindow::test_clear PASSED [  2%]
+tests/unit/test_analysis_foundation.py::TestTemporalWindow::test_len PASSED [  3%]
+tests/unit/test_analysis_foundation.py::TestTemporalWindow::test_get_span PASSED [  3%]
+tests/unit/test_analysis_foundation.py::TestTemporalWindow::test_get_values_and_timestamps PASSED [  4%]
+tests/unit/test_analysis_foundation.py::TestTemporalWindow::test_auto_timestamp PASSED [  4%]
+tests/unit/test_analysis_foundation.py::TestMultiFeatureTemporalWindow::test_creation PASSED [  4%]
+tests/unit/test_analysis_foundation.py::TestMultiFeatureTemporalWindow::test_add_multiple_features PASSED [  5%]
+tests/unit/test_analysis_foundation.py::TestMultiFeatureTemporalWindow::test_ignore_unknown_features PASSED [  5%]
+tests/unit/test_analysis_foundation.py::TestMultiFeatureTemporalWindow::test_get_all_stats_dict PASSED [  5%]
+tests/unit/test_analysis_foundation.py::TestWindowStats::test_is_valid PASSED [  6%]
+tests/unit/test_analysis_foundation.py::TestWindowStats::test_to_dict PASSED [  6%]
+tests/unit/test_analysis_foundation.py::TestBaseBaselineManager::test_creation PASSED [  7%]
+tests/unit/test_analysis_foundation.py::TestBaseBaselineManager::test_update_first_observation PASSED [  7%]
+tests/unit/test_analysis_foundation.py::TestBaseBaselineManager::test_update_multiple_observations PASSED [  7%]
+tests/unit/test_analysis_foundation.py::TestBaseBaselineManager::test_warmup_status PASSED [  8%]
+tests/unit/test_analysis_foundation.py::TestBaseBaselineManager::test_normalize_not_ready PASSED [  8%]
+tests/unit/test_analysis_foundation.py::TestBaseBaselineManager::test_normalize_ready PASSED [  8%]
+tests/unit/test_analysis_foundation.py::TestBaseBaselineManager::test_zero_std_handling PASSED [  9%]
+tests/unit/test_analysis_foundation.py::TestBaseBaselineManager::test_ema_behavior PASSED [  9%]
+tests/unit/test_analysis_foundation.py::TestBaseBaselineManager::test_multiple_features PASSED [ 10%]
+tests/unit/test_analysis_foundation.py::TestBaseBaselineManager::test_get_all_statuses PASSED [ 10%]
+tests/unit/test_analysis_foundation.py::TestBaseBaselineManager::test_get_warmup_progress PASSED [ 10%]
+tests/unit/test_analysis_foundation.py::TestBaseBaselineManager::test_reset PASSED [ 11%]
+tests/unit/test_analysis_foundation.py::TestBaseBaselineManager::test_reset_feature PASSED [ 11%]
+tests/unit/test_analysis_foundation.py::TestBaseBaselineManager::test_invalid_parameters PASSED [ 11%]
+tests/unit/test_analysis_foundation.py::TestFeatureVector::test_creation PASSED [ 12%]
+tests/unit/test_analysis_foundation.py::TestFeatureVector::test_to_dict PASSED [ 12%]
+tests/unit/test_analysis_foundation.py::TestFeatureVector::test_from_dict PASSED [ 13%]
+tests/unit/test_analysis_foundation.py::TestStateEstimate::test_creation PASSED [ 13%]
+tests/unit/test_analysis_foundation.py::TestStateEstimate::test_to_dict PASSED [ 13%]
+tests/unit/test_analysis_foundation.py::TestAnalysisResult::test_creation PASSED [ 14%]
+tests/unit/test_analysis_foundation.py::TestAnalysisResult::test_with_state_estimate PASSED [ 14%]
+tests/unit/test_analysis_foundation.py::TestAnalysisResult::test_serialization_roundtrip PASSED [ 14%]
+tests/unit/test_analysis_foundation.py::TestMultimodalAnalysisResult::test_creation PASSED [ 15%]
+tests/unit/test_analysis_foundation.py::TestMultimodalAnalysisResult::test_with_fused_state PASSED [ 15%]
+tests/unit/test_analysis_foundation.py::TestAnalysisConfig::test_defaults PASSED [ 16%]
+tests/unit/test_analysis_foundation.py::TestAnalysisConfig::test_serialization PASSED [ 16%]
+tests/unit/test_analysis_foundation.py::TestAnalysisConfig::test_from_dict PASSED [ 16%]
+tests/unit/test_analysis_foundation.py::TestDataQualityEnum::test_values PASSED [ 17%]
+tests/unit/test_analysis_foundation.py::TestDataQualityEnum::test_interface_compatibility PASSED [ 17%]
+tests/unit/test_analysis_foundation.py::TestBaselineStatusEnum::test_values PASSED [ 17%]
+tests/unit/test_audio.py::TestAudioListener::test_listener_creation PASSED [ 18%]
+tests/unit/test_audio.py::TestAudioListener::test_start_stop PASSED      [ 18%]
+tests/unit/test_audio.py::TestAudioListener::test_pause_resume PASSED    [ 19%]
+tests/unit/test_audio.py::TestAudioListener::test_check_device_availability PASSED [ 19%]
+tests/unit/test_audio.py::TestAudioListener::test_get_available_devices PASSED [ 19%]
+tests/unit/test_audio.py::TestAudioProcessor::test_processor_start_stop PASSED [ 20%]
+tests/unit/test_audio.py::TestAudioProcessor::test_process_chunk PASSED  [ 20%]
+tests/unit/test_audio.py::TestAudioProcessor::test_stats PASSED          [ 20%]
+tests/unit/test_audio.py::TestAudioStorage::test_storage_start_stop PASSED [ 21%]
+tests/unit/test_audio.py::TestAudioStorage::test_write_chunk PASSED      [ 21%]
+tests/unit/test_audio.py::TestAudioStorage::test_multiple_chunks PASSED  [ 22%]
+tests/unit/test_audio.py::TestAudioCapture::test_capture_creation PASSED [ 22%]
+tests/unit/test_audio.py::TestAudioCapture::test_capture_start_stop PASSED [ 22%]
+tests/unit/test_audio.py::TestAudioCapture::test_capture_pause_resume PASSED [ 23%]
+tests/unit/test_audio.py::TestAudioCapture::test_get_stats PASSED        [ 23%]
+tests/unit/test_audio.py::TestAudioIntegration::test_audio_with_session_manager PASSED [ 23%]
+tests/unit/test_audio_analysis.py::TestAudioFeatureExtractor::test_extractor_creation PASSED [ 24%]
+tests/unit/test_audio_analysis.py::TestAudioFeatureExtractor::test_get_feature_names PASSED [ 24%]
+tests/unit/test_audio_analysis.py::TestAudioFeatureExtractor::test_extract_silence PASSED [ 25%]
+tests/unit/test_audio_analysis.py::TestAudioFeatureExtractor::test_extract_sine_wave PASSED [ 25%]
+tests/unit/test_audio_analysis.py::TestAudioFeatureExtractor::test_extract_white_noise PASSED [ 25%]
+tests/unit/test_audio_analysis.py::TestAudioFeatureExtractor::test_pitch_features PASSED [ 26%]
+tests/unit/test_audio_analysis.py::TestAudioFeatureExtractor::test_energy_features PASSED [ 26%]
+tests/unit/test_audio_analysis.py::TestAudioFeatureExtractor::test_zcr_features PASSED [ 26%]
+tests/unit/test_audio_analysis.py::TestAudioFeatureExtractor::test_voice_activity PASSED [ 27%]
+tests/unit/test_audio_analysis.py::TestAudioFeatureExtractor::test_spectral_features PASSED [ 27%]
+tests/unit/test_audio_analysis.py::TestAudioFeatureExtractor::test_reset PASSED [ 28%]
+tests/unit/test_audio_analysis.py::TestAudioStateEstimator::test_estimator_creation PASSED [ 28%]
+tests/unit/test_audio_analysis.py::TestAudioStateEstimator::test_get_possible_states PASSED [ 28%]
+tests/unit/test_audio_analysis.py::TestAudioStateEstimator::test_estimate_uncertain_when_baseline_not_ready PASSED [ 29%]
+tests/unit/test_audio_analysis.py::TestAudioStateEstimator::test_estimate_neutral PASSED [ 29%]
+tests/unit/test_audio_analysis.py::TestAudioStateEstimator::test_estimate_elevated_arousal PASSED [ 29%]
+tests/unit/test_audio_analysis.py::TestAudioStateEstimator::test_estimate_calm PASSED [ 30%]
+tests/unit/test_audio_analysis.py::TestAudioStateEstimator::test_estimate_empty_features PASSED [ 30%]
+tests/unit/test_audio_analysis.py::TestAudioStateEstimator::test_estimate_confidence_bounds PASSED [ 31%]
+tests/unit/test_audio_analysis.py::TestAudioStateEstimator::test_estimate_contributing_features PASSED [ 31%]
+tests/unit/test_audio_analysis.py::TestAudioStateEstimator::test_reset PASSED [ 31%]
+tests/unit/test_audio_analysis.py::TestAudioBaselineManager::test_creation PASSED [ 32%]
+tests/unit/test_audio_analysis.py::TestAudioBaselineManager::test_feature_groups PASSED [ 32%]
+tests/unit/test_audio_analysis.py::TestAudioBaselineManager::test_update_and_normalize PASSED [ 32%]
+tests/unit/test_audio_analysis.py::TestAudioBaselineManager::test_get_audio_baseline_status PASSED [ 33%]
+tests/unit/test_audio_analysis.py::TestAudioBaselineManager::test_get_audio_baseline_summary PASSED [ 33%]
+tests/unit/test_audio_analysis.py::TestAudioBaselineManager::test_is_audio_baseline_ready PASSED [ 34%]
+tests/unit/test_audio_analysis.py::TestAudioBaselineManager::test_get_normalized_audio_features PASSED [ 34%]
+tests/unit/test_audio_analysis.py::TestAudioBaselineManager::test_reset_feature PASSED [ 34%]
+tests/unit/test_config.py::test_config_loads PASSED                      [ 35%]
+tests/unit/test_config_loading.py::TestAppConfig::test_default_config PASSED [ 35%]
+tests/unit/test_config_loading.py::TestAppConfig::test_audio_config_defaults PASSED [ 35%]
+tests/unit/test_config_loading.py::TestAppConfig::test_keyboard_config_defaults PASSED [ 36%]
+tests/unit/test_config_loading.py::TestAppConfig::test_camera_config_defaults PASSED [ 36%]
+tests/unit/test_config_loading.py::TestAppConfig::test_face_config_defaults PASSED [ 37%]
+tests/unit/test_config_loading.py::TestAppConfig::test_storage_config_defaults PASSED [ 37%]
+tests/unit/test_config_loading.py::TestAppConfig::test_logging_config_defaults PASSED [ 37%]
+tests/unit/test_config_loading.py::TestAppConfig::test_ui_config_defaults PASSED [ 38%]
+tests/unit/test_config_loading.py::TestAppConfig::test_config_serialization PASSED [ 38%]
+tests/unit/test_config_loading.py::TestLoadConfig::test_load_config_from_file PASSED [ 38%]
+tests/unit/test_config_loading.py::TestLoadConfig::test_load_config_file_not_found PASSED [ 39%]
+tests/unit/test_config_loading.py::TestLoadConfig::test_load_config_empty_file PASSED [ 39%]
+tests/unit/test_config_loading.py::TestLoadConfig::test_load_config_none_returns_defaults PASSED [ 40%]
+tests/unit/test_config_loading.py::TestConfigEdgeCases::test_partial_config PASSED [ 40%]
+tests/unit/test_config_loading.py::TestConfigEdgeCases::test_config_with_null_values PASSED [ 40%]
+tests/unit/test_dependencies.py::test_sounddevice_import PASSED          [ 41%]
+tests/unit/test_dependencies.py::test_soundfile_import PASSED            [ 41%]
+tests/unit/test_dependencies.py::test_pynput_import PASSED               [ 41%]
+tests/unit/test_dependencies.py::test_opencv_import PASSED               [ 42%]
+tests/unit/test_dependencies.py::test_mediapipe_import PASSED            [ 42%]
+tests/unit/test_dependencies.py::test_pyside6_import PASSED              [ 43%]
+tests/unit/test_dependencies.py::test_numpy_import PASSED                [ 43%]
+tests/unit/test_dependencies.py::test_scipy_import PASSED                [ 43%]
+tests/unit/test_dependencies.py::test_yaml_import PASSED                 [ 44%]
+tests/unit/test_dependencies.py::test_structlog_import PASSED            [ 44%]
+tests/unit/test_dependencies.py::test_orjson_import PASSED               [ 44%]
+tests/unit/test_dependencies.py::test_pytest_import PASSED               [ 45%]
+tests/unit/test_emotion_classifier.py::TestFaceEmotionClassifier::test_classifier_creation PASSED [ 45%]
+tests/unit/test_emotion_classifier.py::TestFaceEmotionClassifier::test_get_feature_names PASSED [ 46%]
+tests/unit/test_emotion_classifier.py::TestFaceEmotionClassifier::test_get_label_names PASSED [ 46%]
+tests/unit/test_emotion_classifier.py::TestFaceEmotionClassifier::test_get_metadata PASSED [ 46%]
+tests/unit/test_emotion_classifier.py::TestFaceEmotionClassifier::test_validate_features_valid PASSED [ 47%]
+tests/unit/test_emotion_classifier.py::TestFaceEmotionClassifier::test_validate_features_missing PASSED [ 47%]
+tests/unit/test_emotion_classifier.py::TestFaceEmotionClassifier::test_validate_features_extra PASSED [ 47%]
+tests/unit/test_emotion_classifier.py::TestFaceEmotionClassifier::test_prepare_feature_vector PASSED [ 48%]
+tests/unit/test_emotion_classifier.py::TestFaceEmotionClassifier::test_prepare_feature_vector_missing_raises PASSED [ 48%]
+tests/unit/test_emotion_classifier.py::TestFaceEmotionClassifier::test_prepare_feature_vector_nan_raises PASSED [ 49%]
+tests/unit/test_emotion_classifier.py::TestFaceEmotionClassifier::test_prepare_feature_vector_inf_raises PASSED [ 49%]
+tests/unit/test_emotion_classifier.py::TestFaceEmotionClassifier::test_predict_returns_correct_structure PASSED [ 49%]
+tests/unit/test_emotion_classifier.py::TestFaceEmotionClassifier::test_predict_expression_in_labels PASSED [ 50%]
+tests/unit/test_emotion_classifier.py::TestFaceEmotionClassifier::test_predict_confidence_matches_max_probability PASSED [ 50%]
+tests/unit/test_emotion_classifier.py::TestFaceEmotionClassifier::test_predict_with_timestamp PASSED [ 50%]
+tests/unit/test_emotion_classifier.py::TestFaceEmotionClassifier::test_predict_raw PASSED [ 51%]
+tests/unit/test_emotion_classifier.py::TestFaceEmotionClassifier::test_reset PASSED [ 51%]
+tests/unit/test_emotion_classifier.py::TestFaceEmotionClassifier::test_is_ready_after_load PASSED [ 52%]
+tests/unit/test_emotion_classifier.py::TestFaceEmotionClassifier::test_load_error_handling PASSED [ 52%]
+tests/unit/test_emotion_classifier.py::TestEmotionClassifierIntegration::test_emotion_classifier_factory PASSED [ 52%]
+tests/unit/test_emotion_classifier.py::TestEmotionClassifierIntegration::test_feature_ordering_matches_training PASSED [ 53%]
+tests/unit/test_emotion_classifier.py::TestEmotionClassifierIntegration::test_scaler_applied_correctly PASSED [ 53%]
+tests/unit/test_emotion_classifier.py::TestEmotionClassifierNoFace::test_predict_no_face_returns_unavailable PASSED [ 53%]
+tests/unit/test_emotion_classifier.py::TestEmotionClassifierConfig::test_config_passed_to_classifier PASSED [ 54%]
+tests/unit/test_emotion_classifier.py::TestEmotionClassifierConfig::test_empty_config PASSED [ 54%]
+tests/unit/test_face.py::TestFaceCamera::test_camera_creation PASSED     [ 55%]
+tests/unit/test_face.py::TestFaceCamera::test_check_camera_availability PASSED [ 55%]
+tests/unit/test_face.py::TestFaceCamera::test_get_available_cameras PASSED [ 55%]
+tests/unit/test_face.py::TestFaceDetector::test_detector_creation PASSED [ 56%]
+tests/unit/test_face.py::TestFaceDetector::test_process_frame_no_face PASSED [ 56%]
+tests/unit/test_face.py::TestFaceDetector::test_close PASSED             [ 56%]
+tests/unit/test_face.py::TestFaceProcessor::test_processor_start_stop PASSED [ 57%]
+tests/unit/test_face.py::TestFaceProcessor::test_process_observation PASSED [ 57%]
+tests/unit/test_face.py::TestFaceProcessor::test_face_state_tracking PASSED [ 58%]
+tests/unit/test_face.py::TestFaceProcessor::test_stats PASSED            [ 58%]
+tests/unit/test_face.py::TestFaceStorage::test_storage_start_stop PASSED [ 58%]
+tests/unit/test_face.py::TestFaceStorage::test_write_observation PASSED  [ 59%]
+tests/unit/test_face.py::TestFaceStorage::test_multiple_observations PASSED [ 59%]
+tests/unit/test_face.py::TestFaceCapture::test_capture_creation PASSED   [ 59%]
+tests/unit/test_face.py::TestFaceCapture::test_capture_start_stop FAILED [ 60%]
+tests/unit/test_face.py::TestFaceCapture::test_capture_pause_resume FAILED [ 60%]
+tests/unit/test_face.py::TestFaceCapture::test_get_stats FAILED          [ 61%]
+tests/unit/test_face.py::TestFaceIntegration::test_face_with_session_manager FAILED [ 61%]
+tests/unit/test_face_analysis.py::TestFaceFeatureExtractor::test_extractor_creation PASSED [ 61%]
+tests/unit/test_face_analysis.py::TestFaceFeatureExtractor::test_get_feature_names PASSED [ 62%]
+tests/unit/test_face_analysis.py::TestFaceFeatureExtractor::test_extract_no_face PASSED [ 62%]
+tests/unit/test_face_analysis.py::TestFaceFeatureExtractor::test_extract_with_face PASSED [ 62%]
+tests/unit/test_face_analysis.py::TestFaceFeatureExtractor::test_eye_features PASSED [ 63%]
+tests/unit/test_face_analysis.py::TestFaceFeatureExtractor::test_mouth_features PASSED [ 63%]
+tests/unit/test_face_analysis.py::TestFaceFeatureExtractor::test_eyebrow_features PASSED [ 64%]
+tests/unit/test_face_analysis.py::TestFaceFeatureExtractor::test_nose_features PASSED [ 64%]
+tests/unit/test_face_analysis.py::TestFaceFeatureExtractor::test_head_pose_features PASSED [ 64%]
+tests/unit/test_face_analysis.py::TestFaceFeatureExtractor::test_facial_movement PASSED [ 65%]
+tests/unit/test_face_analysis.py::TestFaceFeatureExtractor::test_facial_symmetry PASSED [ 65%]
+tests/unit/test_face_analysis.py::TestFaceFeatureExtractor::test_overall_expressivity PASSED [ 65%]
+tests/unit/test_face_analysis.py::TestFaceFeatureExtractor::test_reset PASSED [ 66%]
+tests/unit/test_face_analysis.py::TestFaceStateEstimator::test_estimator_creation PASSED [ 66%]
+tests/unit/test_face_analysis.py::TestFaceStateEstimator::test_get_possible_states PASSED [ 67%]
+tests/unit/test_face_analysis.py::TestFaceStateEstimator::test_estimate_uncertain_when_baseline_not_ready PASSED [ 67%]
+tests/unit/test_face_analysis.py::TestFaceStateEstimator::test_estimate_neutral PASSED [ 67%]
+tests/unit/test_face_analysis.py::TestFaceStateEstimator::test_estimate_positive_expression PASSED [ 68%]
+tests/unit/test_face_analysis.py::TestFaceStateEstimator::test_estimate_surprise_like PASSED [ 68%]
+tests/unit/test_face_analysis.py::TestFaceStateEstimator::test_estimate_negative_expression PASSED [ 68%]
+tests/unit/test_face_analysis.py::TestFaceStateEstimator::test_estimate_elevated_tension PASSED [ 69%]
+tests/unit/test_face_analysis.py::TestFaceStateEstimator::test_estimate_empty_features PASSED [ 69%]
+tests/unit/test_face_analysis.py::TestFaceStateEstimator::test_estimate_confidence_bounds PASSED [ 70%]
+tests/unit/test_face_analysis.py::TestFaceStateEstimator::test_estimate_contributing_features PASSED [ 70%]
+tests/unit/test_face_analysis.py::TestFaceStateEstimator::test_reset PASSED [ 70%]
+tests/unit/test_face_analysis.py::TestFaceBaselineManager::test_creation PASSED [ 71%]
+tests/unit/test_face_analysis.py::TestFaceBaselineManager::test_feature_groups PASSED [ 71%]
+tests/unit/test_face_analysis.py::TestFaceBaselineManager::test_update_and_normalize PASSED [ 71%]
+tests/unit/test_face_analysis.py::TestFaceBaselineManager::test_get_face_baseline_status PASSED [ 72%]
+tests/unit/test_face_analysis.py::TestFaceBaselineManager::test_get_face_baseline_summary PASSED [ 72%]
+tests/unit/test_face_analysis.py::TestFaceBaselineManager::test_is_face_baseline_ready PASSED [ 73%]
+tests/unit/test_face_analysis.py::TestFaceBaselineManager::test_get_normalized_face_features PASSED [ 73%]
+tests/unit/test_face_analysis.py::TestFaceBaselineManager::test_reset_feature PASSED [ 73%]
+tests/unit/test_keyboard.py::TestKeyboardListener::test_listener_creation PASSED [ 74%]
+tests/unit/test_keyboard.py::TestKeyboardListener::test_normalize_printable_key PASSED [ 74%]
+tests/unit/test_keyboard.py::TestKeyboardListener::test_normalize_special_key PASSED [ 74%]
+tests/unit/test_keyboard.py::TestKeyboardListener::test_normalize_modifier_key PASSED [ 75%]
+tests/unit/test_keyboard.py::TestKeyboardListener::test_start_stop PASSED [ 75%]
+tests/unit/test_keyboard.py::TestKeyboardListener::test_pause_resume PASSED [ 76%]
+tests/unit/test_keyboard.py::TestKeyboardListener::test_sensitive_context_detection PASSED [ 76%]
+tests/unit/test_keyboard.py::TestKeyboardProcessor::test_processor_start_stop PASSED [ 76%]
+tests/unit/test_keyboard.py::TestKeyboardProcessor::test_process_event PASSED [ 77%]
+tests/unit/test_keyboard.py::TestKeyboardProcessor::test_process_event_with_unified_callback PASSED [ 77%]
+tests/unit/test_keyboard.py::TestKeyboardProcessor::test_stats PASSED    [ 77%]
+tests/unit/test_keyboard.py::TestKeyboardStorage::test_storage_start_stop PASSED [ 78%]
+tests/unit/test_keyboard.py::TestKeyboardStorage::test_write_event PASSED [ 78%]
+tests/unit/test_keyboard.py::TestKeyboardStorage::test_multiple_events PASSED [ 79%]
+tests/unit/test_keyboard.py::TestKeyboardCapture::test_capture_creation PASSED [ 79%]
+tests/unit/test_keyboard.py::TestKeyboardCapture::test_capture_start_stop PASSED [ 79%]
+tests/unit/test_keyboard.py::TestKeyboardCapture::test_capture_pause_resume PASSED [ 80%]
+tests/unit/test_keyboard.py::TestKeyboardCapture::test_get_stats PASSED  [ 80%]
+tests/unit/test_keyboard.py::TestKeyboardIntegration::test_keyboard_with_session_manager PASSED [ 80%]
+tests/unit/test_session_manager.py::TestSessionManager::test_initial_state PASSED [ 81%]
+tests/unit/test_session_manager.py::TestSessionManager::test_register_modality PASSED [ 81%]
+tests/unit/test_session_manager.py::TestSessionManager::test_unregister_modality PASSED [ 82%]
+tests/unit/test_session_manager.py::TestSessionManager::test_start_session PASSED [ 82%]
+tests/unit/test_session_manager.py::TestSessionManager::test_start_session_invalid_state PASSED [ 82%]
+tests/unit/test_session_manager.py::TestSessionManager::test_stop_session PASSED [ 83%]
+tests/unit/test_session_manager.py::TestSessionManager::test_stop_session_invalid_state PASSED [ 83%]
+tests/unit/test_session_manager.py::TestSessionManager::test_pause_session PASSED [ 83%]
+tests/unit/test_session_manager.py::TestSessionManager::test_pause_session_invalid_state PASSED [ 84%]
+tests/unit/test_session_manager.py::TestSessionManager::test_resume_session PASSED [ 84%]
+tests/unit/test_session_manager.py::TestSessionManager::test_resume_session_invalid_state PASSED [ 85%]
+tests/unit/test_session_manager.py::TestSessionManager::test_modality_failure_handling PASSED [ 85%]
+tests/unit/test_session_manager.py::TestSessionManager::test_session_status PASSED [ 85%]
+tests/unit/test_session_manager.py::TestSessionManager::test_cleanup PASSED [ 86%]
+tests/unit/test_session_manager.py::TestSessionMetadata::test_create_new PASSED [ 86%]
+tests/unit/test_session_manager.py::TestSessionMetadata::test_mark_completed PASSED [ 86%]
+tests/unit/test_session_manager.py::TestSessionMetadata::test_update_modality_status PASSED [ 87%]
+tests/unit/test_session_manager.py::TestSessionMetadata::test_to_dict_from_dict PASSED [ 87%]
+tests/unit/test_session_manager.py::TestSessionStateMachine::test_initial_state PASSED [ 88%]
+tests/unit/test_session_manager.py::TestSessionStateMachine::test_valid_transitions PASSED [ 88%]
+tests/unit/test_session_manager.py::TestSessionStateMachine::test_invalid_transitions PASSED [ 88%]
+tests/unit/test_session_manager.py::TestSessionStateMachine::test_can_transition PASSED [ 89%]
+tests/unit/test_session_manager.py::TestSessionStateMachine::test_reset PASSED [ 89%]
+tests/unit/test_storage.py::TestSessionStore::test_store_creation PASSED [ 89%]
+tests/unit/test_storage.py::TestSessionStore::test_create_session PASSED [ 90%]
+tests/unit/test_storage.py::TestSessionStore::test_session_json_persistence PASSED [ 90%]
+tests/unit/test_storage.py::TestSessionStore::test_update_modality_status PASSED [ 91%]
+tests/unit/test_storage.py::TestSessionStore::test_mark_session_completed PASSED [ 91%]
+tests/unit/test_storage.py::TestSessionStore::test_mark_session_failed PASSED [ 91%]
+tests/unit/test_storage.py::TestSessionStore::test_save_and_load_session_json PASSED [ 92%]
+tests/unit/test_storage.py::TestSessionStore::test_list_sessions PASSED  [ 92%]
+tests/unit/test_storage.py::TestSessionStore::test_delete_session PASSED [ 92%]
+tests/unit/test_storage.py::TestSessionStore::test_get_session_summary PASSED [ 93%]
+tests/unit/test_storage.py::TestSessionLoader::test_load_session_not_found PASSED [ 93%]
+tests/unit/test_storage.py::TestSessionLoader::test_load_session_basic PASSED [ 94%]
+tests/unit/test_structure.py::test_project_structure PASSED              [ 94%]
+tests/unit/test_structure.py::test_key_files_exist PASSED                [ 94%]
+tests/unit/test_structure.py::test_python_package_structure PASSED       [ 95%]
+tests/unit/test_ui.py::TestStatusIndicator::test_creation PASSED         [ 95%]
+tests/unit/test_ui.py::TestStatusIndicator::test_set_status PASSED       [ 95%]
+tests/unit/test_ui.py::TestSessionInfoPanel::test_creation PASSED        [ 96%]
+tests/unit/test_ui.py::TestSessionInfoPanel::test_update_session_info PASSED [ 96%]
+tests/unit/test_ui.py::TestSessionInfoPanel::test_reset PASSED           [ 97%]
+tests/unit/test_ui.py::TestSessionControls::test_creation PASSED         [ 97%]
+tests/unit/test_ui.py::TestSessionControls::test_initial_state PASSED    [ 97%]
+tests/unit/test_ui.py::TestSessionControls::test_state_transitions PASSED [ 98%]
+tests/unit/test_ui.py::TestLogPanel::test_creation PASSED                [ 98%]
+tests/unit/test_ui.py::TestLogPanel::test_append_log PASSED              [ 98%]
+tests/unit/test_ui.py::TestLogPanel::test_clear_logs PASSED              [ 99%]
+tests/unit/test_ui.py::TestMainWindow::test_creation PASSED              [ 99%]
+tests/unit/test_ui.py::TestMainWindow::test_state_changed PASSED         [100%]
+
+================================== FAILURES ===================================
+___________________ TestFaceCapture.test_capture_start_stop ___________________
+
+self = <test_face.TestFaceCapture object at 0x000002624F8CA5D0>
+capture = <face.capture.FaceCapture object at 0x00000262062C2210>
+temp_dir = WindowsPath('C:/Users/theat/AppData/Local/Temp/tmp_4xzte9_')
+
+    def test_capture_start_stop(self, capture, temp_dir):
+        """Test capture start/stop."""
+        config = capture.config.copy()
+        config["camera"]["enabled"] = True
+        config["storage"]["output_directory"] = str(temp_dir)
+    
+        # Mock camera availability
+        with patch('face.capture.FaceCamera.check_camera_availability') as mock_check:
+            mock_check.return_value = True
+    
+            # Mock OpenCV VideoCapture
+            with patch('cv2.VideoCapture') as mock_cv_cap:
+                mock_cap = MagicMock()
+                mock_cap.isOpened.return_value = True
+                mock_cap.read.return_value = (True, np.zeros((480, 640, 3), dtype=np.uint8))
+                mock_cap.get.return_value = 15.0
+                mock_cv_cap.return_value = mock_cap
+    
+                # Mock MediaPipe FaceLandmarker
+                with patch('mediapipe.tasks.python.vision.FaceLandmarker') as mock_face_landmarker:
+                    mock_landmarker = MagicMock()
+                    mock_landmarker.detect_async = MagicMock()
+                    mock_landmarker.close = MagicMock()
+                    mock_face_landmarker.create_from_options.return_value = mock_landmarker
+    
+                    # Mock the result callback behavior
+                    def mock_detect_async(mp_image, timestamp_ms):
+                        # Simulate async callback
+                        import time
+                        time.sleep(0.001)
+                    mock_landmarker.detect_async.side_effect = mock_detect_async
+    
+                    # Mock unified event callback
+                    unified_callback = Mock()
+                    capture.set_unified_event_callback(unified_callback)
+    
+                    # Start capture
+                    result = capture.start("test-session", temp_dir)
+>                   assert result is True
+E                   assert False is True
+
+tests\unit\test_face.py:449: AssertionError
+------------------------------ Captured log call ------------------------------
+ERROR    face.capture:capture.py:406 {"error": "name 'get_logger' is not defined", "event": "face_analysis_init_failed", "level": "error", "timestamp": "2026-09-10T21:23:47.411368Z"}
+__________________ TestFaceCapture.test_capture_pause_resume __________________
+
+self = <test_face.TestFaceCapture object at 0x000002624F940510>
+capture = <face.capture.FaceCapture object at 0x00000262062C25D0>
+temp_dir = WindowsPath('C:/Users/theat/AppData/Local/Temp/tmpy7_ttxuv')
+
+    def test_capture_pause_resume(self, capture, temp_dir):
+        """Test capture pause/resume."""
+        config = capture.config.copy()
+        config["camera"]["enabled"] = True
+        config["storage"]["output_directory"] = str(temp_dir)
+    
+        with patch('face.capture.FaceCamera.check_camera_availability') as mock_check:
+            mock_check.return_value = True
+    
+            with patch('cv2.VideoCapture') as mock_cv_cap:
+                mock_cap = MagicMock()
+                mock_cap.isOpened.return_value = True
+                mock_cap.read.return_value = (True, np.zeros((480, 640, 3), dtype=np.uint8))
+                mock_cap.get.return_value = 15.0
+                mock_cv_cap.return_value = mock_cap
+    
+                with patch('mediapipe.tasks.python.vision.FaceLandmarker') as mock_face_landmarker:
+                    mock_landmarker = MagicMock()
+                    mock_landmarker.detect_async = MagicMock()
+                    mock_landmarker.close = MagicMock()
+                    mock_face_landmarker.create_from_options.return_value = mock_landmarker
+    
+                    def mock_detect_async(mp_image, timestamp_ms):
+                        import time
+                        time.sleep(0.001)
+                    mock_landmarker.detect_async.side_effect = mock_detect_async
+    
+                    unified_callback = Mock()
+                    capture.set_unified_event_callback(unified_callback)
+    
+                    capture.start("test-session", temp_dir)
+    
+                    # Pause
+                    result = capture.pause()
+>                   assert result is True
+E                   assert False is True
+
+tests\unit\test_face.py:491: AssertionError
+------------------------------ Captured log call ------------------------------
+ERROR    face.capture:capture.py:406 {"error": "name 'get_logger' is not defined", "event": "face_analysis_init_failed", "level": "error", "timestamp": "2026-09-10T21:23:47.558336Z"}
+_______________________ TestFaceCapture.test_get_stats ________________________
+
+self = <test_face.TestFaceCapture object at 0x000002624F940770>
+capture = <face.capture.FaceCapture object at 0x00000262062763F0>
+temp_dir = WindowsPath('C:/Users/theat/AppData/Local/Temp/tmp_2vj58zv')
+
+    def test_get_stats(self, capture, temp_dir):
+        """Test getting capture statistics."""
+        config = capture.config.copy()
+        config["camera"]["enabled"] = True
+        config["storage"]["output_directory"] = str(temp_dir)
+    
+        with patch('face.capture.FaceCamera.check_camera_availability') as mock_check:
+            mock_check.return_value = True
+    
+            with patch('cv2.VideoCapture') as mock_cv_cap:
+                mock_cap = MagicMock()
+                mock_cap.isOpened.return_value = True
+                mock_cap.read.return_value = (True, np.zeros((480, 640, 3), dtype=np.uint8))
+                mock_cap.get.return_value = 15.0
+                mock_cv_cap.return_value = mock_cap
+    
+                with patch('mediapipe.tasks.python.vision.FaceLandmarker') as mock_face_landmarker:
+                    mock_landmarker = MagicMock()
+                    mock_landmarker.detect_async = MagicMock()
+                    mock_landmarker.close = MagicMock()
+                    mock_face_landmarker.create_from_options.return_value = mock_landmarker
+    
+                    def mock_detect_async(mp_image, timestamp_ms):
+                        import time
+                        time.sleep(0.001)
+                    mock_landmarker.detect_async.side_effect = mock_detect_async
+    
+                    unified_callback = Mock()
+                    capture.set_unified_event_callback(unified_callback)
+    
+                    capture.start("test-session", temp_dir)
+    
+                    stats = capture.get_stats()
+                    assert "status" in stats
+>                   assert "processor" in stats
+E                   AssertionError: assert 'processor' in {'status': 'error', 'session_id': None, 'analysis': {'frames_processed': 0, 'last_analysis_timestamp': None, 'features_file': None, 'states_file': None}}
+
+tests\unit\test_face.py:535: AssertionError
+------------------------------ Captured log call ------------------------------
+ERROR    face.capture:capture.py:406 {"error": "name 'get_logger' is not defined", "event": "face_analysis_init_failed", "level": "error", "timestamp": "2026-09-10T21:23:47.565021Z"}
+_____________ TestFaceIntegration.test_face_with_session_manager ______________
+
+self = <test_face.TestFaceIntegration object at 0x000002624F8CA710>
+temp_dir = WindowsPath('C:/Users/theat/AppData/Local/Temp/tmpvvnp2bup')
+
+    def test_face_with_session_manager(self, temp_dir):
+        """Test face capture integrated with session manager."""
+        from core.config import get_default_config
+        from session.manager import SessionManager
+    
+        config = get_default_config()
+        config.storage.output_directory = str(temp_dir)
+        config.face.enabled = True
+        config.camera.enabled = True
+        config.keyboard.enabled = False
+        config.audio.enabled = False
+    
+        with patch('face.capture.FaceCamera.check_camera_availability') as mock_check:
+            mock_check.return_value = True
+    
+            with patch('cv2.VideoCapture') as mock_cv_cap:
+                mock_cap = MagicMock()
+                mock_cap.isOpened.return_value = True
+                mock_cap.read.return_value = (True, np.zeros((480, 640, 3), dtype=np.uint8))
+                mock_cap.get.return_value = 15.0
+                mock_cv_cap.return_value = mock_cap
+    
+                with patch('mediapipe.tasks.python.vision.FaceLandmarker') as mock_face_landmarker:
+                    mock_landmarker = MagicMock()
+                    mock_landmarker.detect_async = MagicMock()
+                    mock_landmarker.close = MagicMock()
+                    mock_face_landmarker.create_from_options.return_value = mock_landmarker
+    
+                    def mock_detect_async(mp_image, timestamp_ms):
+                        import time
+                        time.sleep(0.001)
+                    mock_landmarker.detect_async.side_effect = mock_detect_async
+    
+                    manager = SessionManager(config=config, application_version="test-1.0.0")
+    
+                    # Register face capture
+                    from face import FaceCapture
+                    face_capture = FaceCapture(config.face.__dict__)
+                    face_capture.set_unified_event_callback(
+                        lambda event: manager._emit_event(event)
+                    )
+                    manager.register_modality(face_capture)
+    
+                    # Start session
+                    result = manager.start_session()
+                    assert result is True
+                    assert manager.state.value == "recording"
+    
+                    # Verify face modality is running
+                    assert "face" in manager.modalities
+>                   assert manager.modalities["face"].status.value == "running"
+E                   AssertionError: assert 'error' == 'running'
+E                     
+E                     - running
+E                     + error
+
+tests\unit\test_face.py:595: AssertionError
+------------------------------ Captured log call ------------------------------
+ERROR    face.capture:capture.py:406 {"error": "name 'get_logger' is not defined", "event": "face_analysis_init_failed", "level": "error", "timestamp": "2026-09-10T21:23:47.574401Z"}
+ERROR    session.manager:manager.py:228 {"modality": "face", "event": "modality_start_failed", "level": "error", "timestamp": "2026-09-10T21:23:47.575003Z"}
+============================== warnings summary ===============================
+tests/unit/test_emotion_classifier.py::TestEmotionClassifierIntegration::test_emotion_classifier_factory
+  C:\Users\theat\AppData\Roaming\Python\Python313\site-packages\sklearn\base.py:442: InconsistentVersionWarning: Trying to unpickle estimator DecisionTreeClassifier from version 1.9.0 when using version 1.7.2. This might lead to breaking code or invalid results. Use at your own risk. For more info please refer to:
+  https://scikit-learn.org/stable/model_persistence.html#security-maintainability-limitations
+    warnings.warn(
+
+tests/unit/test_emotion_classifier.py::TestEmotionClassifierIntegration::test_emotion_classifier_factory
+  C:\Users\theat\AppData\Roaming\Python\Python313\site-packages\sklearn\base.py:442: InconsistentVersionWarning: Trying to unpickle estimator RandomForestClassifier from version 1.9.0 when using version 1.7.2. This might lead to breaking code or invalid results. Use at your own risk. For more info please refer to:
+  https://scikit-learn.org/stable/model_persistence.html#security-maintainability-limitations
+    warnings.warn(
+
+tests/unit/test_emotion_classifier.py::TestEmotionClassifierIntegration::test_emotion_classifier_factory
+  C:\Users\theat\AppData\Roaming\Python\Python313\site-packages\sklearn\base.py:442: InconsistentVersionWarning: Trying to unpickle estimator StandardScaler from version 1.9.0 when using version 1.7.2. This might lead to breaking code or invalid results. Use at your own risk. For more info please refer to:
+  https://scikit-learn.org/stable/model_persistence.html#security-maintainability-limitations
+    warnings.warn(
+
+-- Docs: https://docs.pytest.org/en/stable/how-to/capture-warnings.html
+=========================== short test summary info ===========================
+FAILED tests/unit/test_face.py::TestFaceCapture::test_capture_start_stop - as...
+FAILED tests/unit/test_face.py::TestFaceCapture::test_capture_pause_resume - ...
+FAILED tests/unit/test_face.py::TestFaceCapture::test_get_stats - AssertionEr...
+FAILED tests/unit/test_face.py::TestFaceIntegration::test_face_with_session_manager
+================= 4 failed, 263 passed, 3 warnings in 41.93s ==================

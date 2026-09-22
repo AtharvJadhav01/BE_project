@@ -64,6 +64,9 @@ analysis:
   face:
     enabled: true
     emotion_enabled: true
+    emotion_confidence_threshold: 0.5
+    emotion_smoothing_window: 5
+    emotion_smoothing_alpha: 0.3
     window_size_sec: 2.0
     update_interval_ms: 200
     baseline_frames: 150

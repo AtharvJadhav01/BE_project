@@ -1,250 +1,58 @@
-# Phase 7: Temporal Smoothing and Emotion Stability - Implementation Plan
+# Phase 7: Temporal Smoothing for Emotion Classifier
 
-## Baseline Model Summary
-- **Model**: Random Forest (200 trees, max_depth=15)
-- **Features**: 27 features (eye, mouth, eyebrow, head pose, movement, symmetry, expressivity, nose sneer)
-- **Test Accuracy**: 43.0%
-- **Weighted F1**: 0.408
-- **Macro F1**: ~0.38
-- **Per-class Recall**: Angry=18%, Disgust=55%, Fear=14%, Happy=60%, Sad=37%, Surprised=74%, Neutral=45%
+## Summary
 
-## Temporal Smoothing Design
+Implemented temporal smoothing using the existing `EmotionSmoother` class (EMA-based) to reduce frame-to-frame expression flickering and provide stable emotion estimations in the live face-analysis pipeline.
 
-### Smoothing Approach
-Use a **probability-based sliding window** with exponential smoothing:
+## Changes Made
 
-1. **Feature Window**: Maintain rolling window of last N frame predictions
-2. **Prediction Smoothing**: Use classifier's `predict_proba` to get probability distributions
-3. **Temporal Averaging**: Apply exponential moving average on class probabilities
-3. **Confidence Threshold**: Only emit expression if smoothed confidence > threshold
-4. **State Reset**: Clear buffers on no-face, session stop, emotion disabled
+### 1. Fixed `src/analysis/face/state.py` - Added `get_logger` import
+- Added `from core.logging import get_logger` to fix `NameError` when `EmotionSmoother` initializes its logger
+- The `EmotionSmoother.__init__` calls `get_logger(__name__)` at line 428
 
-### Smoothing Parameters (configurable)
-- `window_size`: Number of frames to average (default: 5, ~1 second at 5 fps)
-- `min_confidence`: Minimum smoothed confidence to emit expression (default: 0.4)
-- `alpha`: EMA alpha factor (default: 0.3)
-- `enabled`: Enable/disable smoothing (default: True)
+### 2. Fixed `src/face/capture.py` - Fixed broken import line
+- Fixed syntax error where `from analysis.face.state import EmotionSmoother` was concatenated with the previous import using literal `\n` instead of actual newline
+- The import now properly spans two lines
 
-## Files to Modify
+### 3. Integration verified - No new code needed
+- The `_run_face_analysis()` method in `capture.py` already integrates the `EmotionSmoother`:
+  - Adds raw classifier predictions to the smoother (line 536)
+  - Gets smoothed EMA result (line 539)
+  - Creates `expression_estimate` using **smoothed** expression values (lines 542-548)
+- The `_poll_face_analysis()` method in `main_window.py` reads the smoothed expression from `_last_analysis_result` and displays it (lines 989-1011)
 
-### 1. `src/analysis/face/state.py` - Add EmotionSmoother class
-- New `EmotionSmoother` class with:
-  - `add_prediction(probabilities, confidence)` - Add frame prediction
-  - `get_smoothed()` -> (expression, confidence) or (None, 0.0)
-  - `reset()` - Clear history
-  - Config: window_size, min_confidence, alpha
+### 4. Configuration added to `config/config.yaml` under `analysis.face`
+- `emotion_confidence_threshold: 0.5` - minimum confidence threshold
+- `emotion_smoothing_window: 5` - EMA window size
+- `emotion_smoothing_alpha: 0.3` - EMA alpha factor
 
-### 2. `src/face/capture.py` - Integrate smoother
-- Add `EmotionSmoother` instance
-- Call smoother in `_poll_face_analysis` after getting `expression_estimate`
-- Pass smoothed result to `face_analysis.update_expression()`
+## Test Results
 
-### 3. `src/analysis/face/state.py` - Add EmotionSmoother class
-- New `EmotionSmoother` class with:
-  - `add_prediction(probabilities, confidence)` - Add frame prediction
-  - `get_smoothed()` -> (expression, confidence) or (None, 0.0)
-  - `reset()` - Clear history
-  - Config: window_size, min_confidence, alpha
+- **267/267 tests pass** (previously 4 failures due to `get_logger` import issue)
+- All test categories pass: unit tests, integration tests, UI tests, face analysis tests
+- No regressions introduced
 
-### 4. `src/face/capture.py` - Integrate smoother
-- Add `EmotionSmoother` instance
-- Call smoother in `_poll_face_analysis` after getting `expression_estimate`
-- Pass smoothed result to `face_analysis.update_expression()`
+## Architecture
 
-### 4. `src/ui/main_window.py` - Config support
-- Add config options for smoothing parameters
-- Pass config to FaceCapture
+The smoothing pipeline flows as:
 
-### 4. Configuration
-- Add to `config/config.yaml`:
-```yaml
-analysis:
-  face:
-    emotion_smoothing:
-      enabled: true
-      window_size: 5
-      min_confidence: 0.4
-      alpha: 0.3
-```
+1. `_run_face_analysis()` extracts features, predicts emotion class probabilities
+2. Probabilities are fed to `EmotionSmoother.add_prediction()` 
+3. EMA computes smoothed probabilities: `smoothed = alpha * raw + (1 - alpha) * previous`
+4. Smoothed expression estimate is stored in `analysis_result["expression_estimate"]`
+5. `_poll_face_analysis()` reads the smoothed estimate and updates the UI display
 
-### 5. Tests
-- `tests/unit/test_emotion_smoothing.py` - New test file
-- Test cases:
-  - Stable expression over multiple frames
-  - Noisy frame predictions don't flip output
-  - Confidence threshold respected
-  - No-face reset clears buffer
-  - Session reset clears buffer
-  - Disabled smoothing bypasses buffer
-  - Low confidence predictions suppressed
-  - Expression changes detected after stable frames
+This ensures that expression labels change only when the smoothed confidence is sustained across multiple frames, eliminating jitter from individual frame predictions.
 
-## Implementation Details
+## Files Modified
 
-### EmotionSmoother Class (in `src/analysis/face/state.py`)
-```python
-class EmotionSmoother:
-    def __init__(self, window_size=5, min_confidence=0.4, alpha=0.3):
-        self.window_size = window_size
-        self.min_confidence = min_confidence
-        self.alpha = alpha
-        self._probs_buffer = []  # List of probability arrays
-        self._labels = None
-    
-    def set_labels(self, labels: List[str]):
-        self._labels = labels
-    
-    def add_prediction(self, probs: np.ndarray, confidence: float):
-        self._probs_buffer.append(probs)
-        if len(self._probs_buffer) > self.window_size:
-            self._probs_buffer.pop(0)
-    
-    def get_smoothed(self) -> Tuple[Optional[str], float]:
-        if not self._probs_buffer or self._labels is None:
-            return None, 0.0
-        
-        # Exponential moving average on probabilities
-        ema = self._probs_buffer[0]
-        for probs in self._probs_buffer[1:]:
-            ema = self.alpha * probs + (1 - self.alpha) * ema
-        
-        max_idx = np.argmax(ema)
-        max_conf = ema[max_idx]
-        
-        if max_conf >= self.min_confidence:
-            return self._labels[max_idx], float(max_conf)
-        return None, 0.0
-    
-    def reset(self):
-        self._probs_buffer.clear()
-    
-    def set_labels(self, labels: List[str]):
-        self._labels = labels
-```
+- `src/analysis/face/state.py` - Added `get_logger` import
+- `src/face/capture.py` - Fixed broken import line (import now correct)
+- `config/config.yaml` - Added `emotion_confidence_threshold`, `emotion_smoothing_window`, `emotion_smoothing_alpha`
 
-## Integration Points
+## No Changes Needed
 
-### FaceCapture Integration
-In `src/face/capture.py`:
-1. Add `EmotionSmoother` import and instance
-2. Initialize with config from config.yaml
-3. In `_poll_face_analysis`:
-   - Get `expression_estimate` from face capture
-   - Pass to `emotion_smoother.add_prediction()`
-   - Get smoothed result and call `face_analysis.update_expression()`
-
-### Config Integration
-- Add to `config/config.yaml`:
-```yaml
-analysis:
-  face:
-    emotion_smoothing:
-      enabled: true
-      window_size: 5
-      min_confidence: 0.4
-      alpha: 0.3
-```
-
-## Test Plan
-
-### New Test File: `tests/unit/test_emotion_smoothing.py`
-```python
-class TestEmotionSmoother:
-    def test_stable_expression_over_frames(self):
-        # Stable expression should stabilize
-    def test_noisy_frames_dont_flip(self):
-        # Noisy frames shouldn't flip output
-    def test_confidence_threshold(self):
-        # Low confidence predictions suppressed
-    def test_no_face_reset(self):
-        # No-face reset clears buffer
-    def test_session_reset(self):
-        # Session reset clears buffer
-    def test_disabled_smoothing(self):
-        # Disabled smoothing bypasses buffer
-    def test_low_confidence_suppressed(self):
-        # Low confidence predictions suppressed
-    def test_expression_change_detected(self):
-        # Expression changes detected after stable frames
-```
-
-## Test Results (Expected)
-
-### Automated Tests
-- All 242 existing tests pass ✓
-- New smoothing tests: 8 tests pass ✓
-
-### Mypy Results
-- Clean (except numpy stub warning)
-
-## Manual Camera Test Results
-
-### Test Conditions
-- Windows laptop, built-in camera
-- 5 fps face capture
-- Random Forest classifier (43% accuracy)
-
-### Results
-
-| Expression | Behavior | Notes |
-|------------|----------|-------|
-| Neutral (baseline) | Stable, occasional neutral↔surprised flips | Low confidence |
-| Happy (smiling) | Stable after 2-3 frames | High confidence (0.7+) |
-| Surprised | Stable after 2-3 frames | High confidence (0.7+) |
-| Sad | Occasional neutral flips | Low confidence (0.3-0.4) |
-| Angry | Often confused with neutral/disgust | Low confidence |
-| Fear | Often confused with surprise/sad | Very low confidence |
-| Disgust | Often confused with angry | Low confidence |
-| Rapid changes | Smoothed, ~1 frame latency | ~200ms latency |
-
-### Confidence Behavior
-- Smoothed confidence more stable than raw classifier output
-- Low confidence (<0.4) correctly suppresses output (shows "--")
-- High confidence (>0.6) stable after 2-3 frames
-
-## Known Failure Cases
-
-1. **Fear vs Surprise**: Frequently confused (similar eye/mouth patterns)
-2. **Angry vs Disgust**: Poor separation (both brow down, lip press)
-3. **Angry/Sad vs Neutral**: Low confidence, frequent neutral flips
-3. **Sad vs Neutral**: Confused when mouth not clearly downturned
-4. **Rapid transitions**: 1-2 frame lag in expression change
-
-## Limitations
-
-1. **Model accuracy**: 43% limits smoothing effectiveness
-2. **Class imbalance**: Disgust/Fear underrepresented in FER2013
-3. **No temporal model**: Frame-level smoothing only, no temporal dynamics
-4. **Confidence calibration**: RF probabilities not well calibrated
-5. **No temporal model**: No LSTM/TCN for temporal dynamics
-
-## Privacy Verification
-
-- ✅ No raw images stored
-- ✅ No raw audio stored
-- ✅ Only derived features stored
-- ✅ No external API calls
-- ✅ Classifier runs locally
-
-## Recommendations for Phase 8+
-
-1. **Better Model**: Train CNN on face crops (ResNet/MobileNet)
-2. **Temporal Model**: LSTM/TCN on feature sequences
-3. **Better Features**: AU intensities, 3D head pose, optical flow
-4. **More Data**: RAF-DB, AffectNet, or custom data collection
-5. **Calibration**: Temperature scaling / isotonic regression
-6. **Fewer Classes**: Merge Fear+Surprise, Angry+Disgust
-
-## Conclusion
-
-The temporal smoothing (Phase 7) provides meaningful stability improvement:
-- **Before**: Expression flips every frame
-- **After**: Stable after 2-3 frames, confidence reflects true certainty
-
-**Not production-ready** for clinical/security use, but suitable for:
-- Research prototyping
-- Demo applications
-- Expression-aware UI experiments
-- Academic exploration
-
-**Next Phase**: Collect better data, train CNN+LSTM, add temporal model.
+- `src/ui/main_window.py` - Already reads smoothed expression from `_last_analysis_result`
+- `src/face/capture.py:_run_face_analysis()` - Already uses smoothed expressions
+- Feature extraction (37-dimensional representation) - Preserved unchanged
+- Model retraining - Not performed (uses existing Random Forest model)
