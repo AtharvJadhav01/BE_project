@@ -17,6 +17,39 @@ from keyboard.listener import KeyboardListener
 from keyboard.processor import KeyboardProcessor, ProcessedKeyboardEvent
 from keyboard.storage import KeyboardStorage
 from keyboard.capture import KeyboardCapture
+from analysis.keyboard.features import KeyboardFeatureExtractor, KeyboardFeatures
+
+
+class TestKeyboardFeatureExtractor:
+    def test_typing_speed_and_correction_rate_use_key_timestamps(self):
+        extractor = KeyboardFeatureExtractor("keyboard", {})
+
+        extractor._process_key_down("a", True, [], 0.0)
+        extractor._process_key_down("Backspace", False, [], 60.0)
+        result = KeyboardFeatures()
+        extractor._compute_features(result, 60.0)
+
+        assert extractor._key_timestamps == [0.0, 60.0]
+        assert result.typing_speed_kpm == 2.0
+        assert result.correction_rate == 1.0
+
+    def test_consistent_intervals_have_maximum_rhythm_regularity(self):
+        extractor = KeyboardFeatureExtractor("keyboard", {})
+        extractor._inter_key_intervals = [100.0, 100.0, 100.0]
+
+        result = KeyboardFeatures()
+        extractor._compute_features(result, 1.0)
+
+        assert result.typing_rhythm_regularity == 1.0
+
+    def test_rhythm_regularity_changes_with_interval_variation(self):
+        extractor = KeyboardFeatureExtractor("keyboard", {})
+        extractor._inter_key_intervals = [100.0, 200.0, 300.0]
+
+        result = KeyboardFeatures()
+        extractor._compute_features(result, 1.0)
+
+        assert 0.0 < result.typing_rhythm_regularity < 1.0
 
 
 class TestKeyboardListener:

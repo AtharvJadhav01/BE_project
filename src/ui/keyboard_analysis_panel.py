@@ -3,11 +3,39 @@ Keyboard Analysis Panel for displaying real-time typing behavior analysis.
 """
 
 from typing import Optional, Dict
+from pathlib import Path
 from PySide6.QtWidgets import (
-    QWidget, QVBoxLayout, QLabel, QFrame, QProgressBar
+    QWidget, QVBoxLayout, QLabel, QFrame, QLineEdit
 )
 from PySide6.QtGui import QFont
 from PySide6.QtCore import Qt
+
+from analysis.keyboard.features import KeyboardFeatureExtractor
+
+
+class _TypingInput(QLineEdit):
+    """Text field that reports key timing without exposing entered text."""
+
+    def __init__(self, on_key_input, parent=None):
+        super().__init__(parent)
+        self._on_key_input = on_key_input
+
+    def keyPressEvent(self, event) -> None:
+        super().keyPressEvent(event)
+
+        if event.isAutoRepeat():
+            return
+
+        modifiers = event.modifiers()
+        if modifiers & (Qt.KeyboardModifier.ControlModifier | Qt.KeyboardModifier.AltModifier | Qt.KeyboardModifier.MetaModifier):
+            return
+
+        if event.key() == Qt.Key.Key_Backspace:
+            self._on_key_input("Backspace", False)
+        elif event.key() == Qt.Key.Key_Delete:
+            self._on_key_input("Delete", False)
+        elif event.text() and event.text().isprintable():
+            self._on_key_input(event.text(), True)
 
 
 class KeyboardAnalysisPanel(QWidget):
@@ -36,16 +64,30 @@ class KeyboardAnalysisPanel(QWidget):
         self.state_label.setFont(QFont("Segoe UI", 10, 600))  # Bold
         self.layout().addWidget(self.state_label)
 
-        # Confidence
-        self.confidence_label = QLabel("Confidence: --")
-        self.confidence_label.setFont(QFont("Segoe UI", 9))
-        self.layout().addWidget(self.confidence_label)
+        # Sample progress
+        self.sample_progress_label = QLabel("Sample Progress: 0%")
+        self.sample_progress_label.setFont(QFont("Segoe UI", 9))
+        self.layout().addWidget(self.sample_progress_label)
 
         # Baseline status
         self.baseline_label = QLabel("Baseline: Warming Up")
         self.baseline_label.setFont(QFont("Segoe UI", 9))
         self.baseline_label.setStyleSheet("color: #ffaa00;")
         self.layout().addWidget(self.baseline_label)
+
+        self.input_status_label = QLabel("Start a session to record text and analyze your typing.")
+        self.input_status_label.setWordWrap(True)
+        self.input_status_label.setFont(QFont("Segoe UI", 8))
+        self.layout().addWidget(self.input_status_label)
+
+        self._feature_extractor = KeyboardFeatureExtractor("keyboard_sample", {})
+        self.input_field = _TypingInput(self._on_sample_key, self)
+        self.input_field.setPlaceholderText("Start a session to enter text")
+        self.input_field.setEnabled(False)
+        self.input_field.textChanged.connect(self._persist_session_text)
+        self.layout().addWidget(self.input_field)
+        self._session_text_path: Optional[Path] = None
+        self._session_text_recording_active = False
 
         # Separator
         sep = QFrame()
@@ -79,8 +121,9 @@ class KeyboardAnalysisPanel(QWidget):
         self.layout().addWidget(self.pause_duration_label)
 
         # Rhythm regularity
-        self.rhythm_label = QLabel("Rhythm: --")
+        self.rhythm_label = QLabel("Rhythm Regularity: --")
         self.rhythm_label.setFont(QFont("Segoe UI", 8))
+        self.rhythm_label.setToolTip("0 to 1; higher values mean more consistent inter-key timing.")
         self.layout().addWidget(self.rhythm_label)
 
         # Hesitation score
@@ -91,6 +134,92 @@ class KeyboardAnalysisPanel(QWidget):
         self.layout().addLayout(metrics_layout)
         self.layout().addStretch()
 
+    def _on_sample_key(self, key_name: str, is_printable: bool) -> None:
+        result = self._feature_extractor.extract({
+            "event_type": "key_down",
+            "key": key_name,
+            "is_printable": is_printable,
+            "modifiers": [],
+            "is_sensitive_context": False,
+        })
+        if result is None:
+            return
+
+        metrics = result.features
+        key_count = int(metrics.get("total_keys", 0))
+        self.update_keyboard_detected(True)
+        self.update_metrics(metrics)
+
+        enough_data = key_count >= 4
+        state = "typing_pattern_observed" if enough_data else "collecting_sample"
+        progress = min(1.0, key_count / 20)
+        self.update_state(state)
+        self.update_sample_progress(progress)
+        if progress >= 1.0:
+            self.baseline_label.setText("Baseline: Sample ready (not personalized)")
+            self.baseline_label.setStyleSheet("color: #0078d4;")
+        else:
+            self.baseline_label.setText(f"Baseline: Collecting sample ({key_count}/20 keys)")
+            self.baseline_label.setStyleSheet("color: #ffaa00;")
+
+    def _reset_sample_analysis(self) -> None:
+        self._feature_extractor.reset()
+        self.update_keyboard_detected(False)
+        self.update_state("--")
+        self.update_sample_progress(0.0)
+        self.update_baseline(False)
+        self.typing_speed_label.setText("Typing Speed: --")
+        self.iki_label.setText("Inter-Key Interval: --")
+        self.correction_rate_label.setText("Correction Rate: --")
+        self.pause_duration_label.setText("Pause Duration: --")
+        self.rhythm_label.setText("Rhythm: --")
+        self.hesitation_label.setText("Hesitation: --")
+
+    @property
+    def session_text_recording_active(self) -> bool:
+        return self._session_text_recording_active
+
+    def begin_session_text_recording(self, output_path: Path) -> None:
+        self._session_text_path = output_path
+        self.input_field.clear()
+        self._reset_sample_analysis()
+        self._session_text_recording_active = True
+        self.input_field.setEnabled(True)
+        self.input_status_label.setText(
+            "Session text is being saved locally. Do not enter passwords or sensitive information."
+        )
+        self._persist_session_text()
+
+    def set_session_text_recording_active(self, active: bool) -> None:
+        if self._session_text_path is None:
+            return
+        self._session_text_recording_active = active
+        self.input_field.setEnabled(active)
+        if active:
+            self.input_status_label.setText(
+                "Session text is being saved locally. Do not enter passwords or sensitive information."
+            )
+        else:
+            self.input_status_label.setText("Session paused. Text entry is temporarily disabled.")
+
+    def finish_session_text_recording(self) -> None:
+        if self._session_text_path is None:
+            return
+        self._persist_session_text()
+        self._session_text_path = None
+        self._session_text_recording_active = False
+        self.input_field.setEnabled(False)
+        self.input_status_label.setText("Session text saved to typed_text.txt.")
+
+    def _persist_session_text(self, _text: Optional[str] = None) -> None:
+        if self._session_text_path is None:
+            return
+        try:
+            self._session_text_path.parent.mkdir(parents=True, exist_ok=True)
+            self._session_text_path.write_text(self.input_field.text(), encoding="utf-8")
+        except OSError as error:
+            self.input_status_label.setText(f"Could not save session text: {error}")
+
     def update_keyboard_detected(self, detected: bool) -> None:
         """Update keyboard detected status."""
         if detected:
@@ -100,10 +229,12 @@ class KeyboardAnalysisPanel(QWidget):
             self.keyboard_detected_label.setText("Keyboard: Not Active")
             self.keyboard_detected_label.setStyleSheet("color: #cc0000;")
 
-    def update_state(self, state: str, confidence: float) -> None:
-        """Update typing state and confidence."""
+    def update_state(self, state: str) -> None:
+        """Update the observed typing state."""
         self.state_label.setText(f"State: {state}")
-        self.confidence_label.setText(f"Confidence: {confidence:.0%}")
+
+    def update_sample_progress(self, progress: float) -> None:
+        self.sample_progress_label.setText(f"Sample Progress: {progress:.0%}")
 
     def update_baseline(self, ready: bool, progress: float = 0.0) -> None:
         """Update baseline status."""
@@ -125,14 +256,20 @@ class KeyboardAnalysisPanel(QWidget):
         if "pause_duration_mean" in metrics:
             self.pause_duration_label.setText(f"Pause Duration: {metrics['pause_duration_mean']:.0f} ms")
         if "typing_rhythm_regularity" in metrics:
-            self.rhythm_label.setText(f"Rhythm: {metrics['typing_rhythm_regularity']:.2f}")
+            if metrics.get("total_keys", 0) < 4:
+                self.rhythm_label.setText("Rhythm Regularity: collecting timing")
+            else:
+                self.rhythm_label.setText(f"Rhythm Regularity: {metrics['typing_rhythm_regularity']:.2f}")
         if "hesitation_score" in metrics:
             self.hesitation_label.setText(f"Hesitation: {metrics['hesitation_score']:.2f}")
 
     def clear(self) -> None:
         """Reset all metrics."""
+        self.input_field.clear()
+        self._reset_sample_analysis()
         self.update_keyboard_detected(False)
-        self.update_state("--", 0.0)
+        self.update_state("--")
+        self.update_sample_progress(0.0)
         self.update_baseline(False)
         self.typing_speed_label.setText("Typing Speed: --")
         self.iki_label.setText("Inter-Key Interval: --")

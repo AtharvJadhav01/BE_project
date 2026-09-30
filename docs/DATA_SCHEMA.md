@@ -16,6 +16,7 @@ data/
         │   ├── chunk_000002.wav
         │   └── audio_index.jsonl     # Chunk metadata
         ├── keystrokes.jsonl          # Keyboard events (one per line)
+        ├── typed_text.txt            # Text entered in the session's keyboard analysis field
         ├── facial_features.jsonl     # Facial observations (one per line)
         └── events.jsonl              # Unified event log (all modalities)
 ```
@@ -171,6 +172,14 @@ Each line is a JSON object:
   - `key` is replaced with `"[REDACTED]"`
   - `window_title` is replaced with `"[REDACTED]"`
   - Event still recorded for timing analysis but content protected
+
+---
+
+### Dedicated Session Text (`typed_text.txt`)
+
+This UTF-8 plain-text file contains text entered in the dedicated keyboard analysis field. It is rewritten as the text changes, so the latest content is available during the session. It is created for a session when the field is used. The field is disabled while paused and after the session stops.
+
+Unlike `keystrokes.jsonl`, this file contains the user's actual text. Users should not enter passwords or other sensitive information in the analysis field.
 
 ---
 
