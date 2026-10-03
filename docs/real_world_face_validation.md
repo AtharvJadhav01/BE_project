@@ -11,14 +11,10 @@ No labeled webcam dataset has been collected yet.
 ## Validation Methodology
 
 ### Model Being Evaluated
-- **Model**: LogisticRegression (current best)
-- **Features**: 1,457 expanded MediaPipe features
-  - 1,404 landmark coordinates (468 × 3, normalized)
-  - 52 blendshape coefficients
-  - 3 head pose (pitch, yaw, roll)
-  - 2 metadata (inter-ocular distance, detection confidence)
-- **Training Data**: FER2013 (2,401 face-detected samples)
-- **FER2013 PublicTest Benchmark**: 49.14% accuracy, 48.61% Macro F1, 49.12% Weighted F1
+- **Model**: LinearSVC (current best, 50.69% FER2013 accuracy)
+- **Features**: 1,449 MediaPipe landmarks + blendshapes
+- **Training Data**: FER2013 (1,239 face-detected samples: 1,054 train + 185 val)
+- **FER2013 PublicTest Benchmark**: 50.69% accuracy, 49.19% Macro F1, 49.98% Weighted F1
 
 ### Evaluation Approach
 1. Collect labeled webcam dataset using `tools/webcam_dataset_collector.py`
@@ -82,17 +78,20 @@ The evaluation computes:
 | Protocol documentation | ✅ Created (`docs/webcam_dataset_protocol.md`) |
 | Webcam dataset | ❌ NOT COLLECTED |
 | Real-world evaluation | ❌ NOT RUN |
-| Best model artifact (1,457-feat LR) | ❌ NOT SAVED |
+| Best model artifact (LinearSVC 1449 feat) | ✅ SAVED (`training/models/linear_svc_optimized_1449.joblib`) |
 
 ### Critical Blocker
 
-**The 1,457-feature LogisticRegression model was never persisted to disk.**
+**The LinearSVC model (1,449 features) IS persisted and verified.**
 
-The benchmark phase evaluated this model in-memory but did not save the artifact. The `training/models/` directory only contains:
-- `rf_emotion_200est_15depth.joblib` (27 features, 43.03%)
-- `svm_emotion_C10.0.joblib` (27 features)
+The `training/models/` directory contains:
+- `linear_svc_optimized_1449.joblib` (50.69% test accuracy)
+- `scaler_optimized_1449.joblib`
+- `linear_svc_optimized_1449_metadata.json`
 
-**Action Required**: Retrain and save the LogisticRegression model on 1,457 expanded features before webcam evaluation can proceed.
+The 1,457-feature LogisticRegression model was never persisted (correct), but the LinearSVC with 1,449 features is the protected benchmark model and IS available.
+
+**Action Required**: Use the existing LinearSVC model for webcam evaluation. No retraining needed.
 
 ---
 
@@ -104,7 +103,7 @@ Once data is collected and model is available:
 
 | Dataset | Model | Accuracy | Macro F1 | Weighted F1 |
 |---------|-------|----------|----------|-------------|
-| FER2013 PublicTest | LogisticRegression (1457 feat) | 49.14% | 48.61% | 49.12% |
+| FER2013 PublicTest | LinearSVC (1449 feat) | 50.69% | 49.19% | 49.98% |
 | Webcam Test Set | Same model | TBD | TBD | TBD |
 
 ### Per-Class Webcam Performance
@@ -134,28 +133,22 @@ Once data is collected and model is available:
 
 ## Next Actions
 
-1. **Retrain and save 1,457-feature LogisticRegression model**
-   ```bash
-   # Run training script for expanded features
-   python training/train_classifier.py --features expanded --model logistic_regression
-   ```
-
-2. **Collect webcam dataset**
+1. **Collect webcam dataset**
    ```bash
    python tools/webcam_dataset_collector.py
    ```
 
-3. **Validate dataset**
+2. **Validate dataset**
    ```bash
    python tools/validate_webcam_dataset.py
    ```
 
-4. **Evaluate model**
+3. **Evaluate LinearSVC model**
    ```bash
    python training/evaluate_webcam.py
    ```
 
-5. **Document results** in this file
+4. **Document results** in this file
 
 ---
 

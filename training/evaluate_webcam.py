@@ -36,6 +36,7 @@ from sklearn.metrics import (
 # Add src to path
 sys.path.insert(0, str(Path(__file__).parent.parent / "src"))
 
+import cv2
 from face.detector import FaceDetector, FaceDetectionResult
 from training.feature_extractor_expanded import (
     ExpandedMediaPipeFeatureExtractor,
@@ -355,6 +356,4 @@ def main():
 
 
 if __name__ == "__main__":
-    # Need to import cv2 here since it's used in evaluate_on_webcam
-    import cv2
     main()

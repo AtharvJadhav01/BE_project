@@ -1,9 +1,10 @@
-with open('C:/Users/theat/OneDrive/Desktop/BE_Project/my_app/app_work/src/ui/main_window.py', 'r', encoding='utf-8') as f:
-    lines = f.readlines()
-
-for i in range(178, 195):
-    if i < len(lines):
-        line = lines[i]
-        indent = len(line) - len(line.lstrip())
-        first_char = repr(line[0]) if line else 'empty'
-        print('{:4d}: indent={} first={} repr={}'.format(i+1, indent, first_char, repr(line[:60])))
+import json
+with open('training/geometric_experiment_results.json') as f:
+    data = json.load(f)
+for exp in data['experiments']:
+    if exp['status'] == 'COMPLETED':
+        name = exp['name']
+        acc = exp['test_metrics']['accuracy']
+        macro_f1 = exp['test_metrics']['f1_macro']
+        w_f1 = exp['test_metrics']['f1_weighted']
+        print(f"{name:20s} | Test Acc: {acc:.4f} | Macro F1: {macro_f1:.4f} | Wt F1: {w_f1:.4f}")

@@ -75,11 +75,11 @@ class WebcamDatasetCollector:
         self.cap.set(cv2.CAP_PROP_FRAME_HEIGHT, self.resolution[1])
         self.cap.set(cv2.CAP_PROP_FPS, self.fps)
 
-        actual_width = int(self.cap.get(cv2.CAP_PROP_FRAME_WIDTH))
-        actual_height = int(self.cap.get(cv2.CAP_PROP_FRAME_HEIGHT))
+        self.actual_width = int(self.cap.get(cv2.CAP_PROP_FRAME_WIDTH))
+        self.actual_height = int(self.cap.get(cv2.CAP_PROP_FRAME_HEIGHT))
         actual_fps = self.cap.get(cv2.CAP_PROP_FPS)
 
-        print(f"Camera initialized: {actual_width}x{actual_height} @ {actual_fps:.1f} FPS")
+        print(f"Camera initialized: {self.actual_width}x{self.actual_height} @ {actual_fps:.1f} FPS")
         return True
 
     def _release_camera(self):
@@ -113,7 +113,7 @@ class WebcamDatasetCollector:
             "timestamp_monotonic": self.timestamp_generator.now_monotonic(),
             "session_id": self.session_id,
             "image_path": str(filepath.relative_to(self.output_dir)),
-            "camera_resolution": [actual_width, actual_height] if self.cap else [self.resolution[0], self.resolution[1]],
+            "camera_resolution": [self.actual_width, self.actual_height] if self.cap else [self.resolution[0], self.resolution[1]],
             "frame_index": self.frame_count,
         }
 

@@ -1,0 +1,1823 @@
+{
+  "experiments": [
+    {
+      "model": "LogisticRegression",
+      "params": {
+        "C": 0.001,
+        "max_iter": 2000,
+        "random_state": 42,
+        "class_weight": null,
+        "solver": "lbfgs",
+        "n_jobs": -1
+      },
+      "train_time": 3.9083127975463867,
+      "inference_ms": 0.018749475479125977,
+      "val_metrics": {
+        "accuracy": 0.3783783783783784,
+        "precision_weighted": 0.34617889144204933,
+        "recall_weighted": 0.3783783783783784,
+        "f1_weighted": 0.34627701134542677,
+        "precision_macro": 0.3460981513613093,
+        "recall_macro": 0.37765357194508165,
+        "f1_macro": 0.34647067205659254
+      },
+      "status": "COMPLETED"
+    },
+    {
+      "model": "LogisticRegression",
+      "params": {
+        "C": 0.001,
+        "max_iter": 2000,
+        "random_state": 42,
+        "class_weight": "balanced",
+        "solver": "lbfgs",
+        "n_jobs": -1
+      },
+      "train_time": 4.980222463607788,
+      "inference_ms": 0.01578235626220703,
+      "val_metrics": {
+        "accuracy": 0.3783783783783784,
+        "precision_weighted": 0.3339344458909676,
+        "recall_weighted": 0.3783783783783784,
+        "f1_weighted": 0.3466831504216501,
+        "precision_macro": 0.3315071574388345,
+        "recall_macro": 0.37785707214858183,
+        "f1_macro": 0.3453846090919068
+      },
+      "status": "COMPLETED"
+    },
+    {
+      "model": "LogisticRegression",
+      "params": {
+        "C": 0.01,
+        "max_iter": 2000,
+        "random_state": 42,
+        "class_weight": null,
+        "solver": "lbfgs",
+        "n_jobs": -1
+      },
+      "train_time": 7.052805662155151,
+      "inference_ms": 0.015529632568359377,
+      "val_metrics": {
+        "accuracy": 0.43243243243243246,
+        "precision_weighted": 0.41272636429532983,
+        "recall_weighted": 0.43243243243243246,
+        "f1_weighted": 0.4146426038036073,
+        "precision_macro": 0.40801287314218354,
+        "recall_macro": 0.43675037734730576,
+        "f1_macro": 0.41428393560498994
+      },
+      "status": "COMPLETED"
+    },
+    {
+      "model": "LogisticRegression",
+      "params": {
+        "C": 0.01,
+        "max_iter": 2000,
+        "random_state": 42,
+        "class_weight": "balanced",
+        "solver": "lbfgs",
+        "n_jobs": -1
+      },
+      "train_time": 6.946715354919434,
+      "inference_ms": 0.014919042587280273,
+      "val_metrics": {
+        "accuracy": 0.42702702702702705,
+        "precision_weighted": 0.4153243684861332,
+        "recall_weighted": 0.42702702702702705,
+        "f1_weighted": 0.4156985915968063,
+        "precision_macro": 0.40940709617180204,
+        "recall_macro": 0.4297862595457495,
+        "f1_macro": 0.4138276760792735
+      },
+      "status": "COMPLETED"
+    },
+    {
+      "model": "LogisticRegression",
+      "params": {
+        "C": 0.1,
+        "max_iter": 2000,
+        "random_state": 42,
+        "class_weight": null,
+        "solver": "lbfgs",
+        "n_jobs": -1
+      },
+      "train_time": 7.2300333976745605,
+      "inference_ms": 0.014417171478271484,
+      "val_metrics": {
+        "accuracy": 0.4486486486486487,
+        "precision_weighted": 0.4227291210129048,
+        "recall_weighted": 0.4486486486486487,
+        "f1_weighted": 0.43031269991321863,
+        "precision_macro": 0.4217513942513942,
+        "recall_macro": 0.45094206800958464,
+        "f1_macro": 0.4309445272291403
+      },
+      "status": "COMPLETED"
+    },
+    {
+      "model": "LogisticRegression",
+      "params": {
+        "C": 0.1,
+        "max_iter": 2000,
+        "random_state": 42,
+        "class_weight": "balanced",
+        "solver": "lbfgs",
+        "n_jobs": -1
+      },
+      "train_time": 12.376755952835083,
+      "inference_ms": 0.0149993896484375,
+      "val_metrics": {
+        "accuracy": 0.4540540540540541,
+        "precision_weighted": 0.43378788453122247,
+        "recall_weighted": 0.4540540540540541,
+        "f1_weighted": 0.43869766286242257,
+        "precision_macro": 0.4325500041488821,
+        "recall_macro": 0.45664007370759035,
+        "f1_macro": 0.4393640793117747
+      },
+      "status": "COMPLETED"
+    },
+    {
+      "model": "LogisticRegression",
+      "params": {
+        "C": 1,
+        "max_iter": 2000,
+        "random_state": 42,
+        "class_weight": null,
+        "solver": "lbfgs",
+        "n_jobs": -1
+      },
+      "train_time": 30.935829401016235,
+      "inference_ms": 0.0160984992980957,
+      "val_metrics": {
+        "accuracy": 0.4486486486486487,
+        "precision_weighted": 0.4371304962252993,
+        "recall_weighted": 0.4486486486486487,
+        "f1_weighted": 0.43898871029844583,
+        "precision_macro": 0.436503668461192,
+        "recall_macro": 0.45124591647338674,
+        "f1_macro": 0.43948360402895054
+      },
+      "status": "COMPLETED"
+    },
+    {
+      "model": "LogisticRegression",
+      "params": {
+        "C": 1,
+        "max_iter": 2000,
+        "random_state": 42,
+        "class_weight": "balanced",
+        "solver": "lbfgs",
+        "n_jobs": -1
+      },
+      "train_time": 19.46204400062561,
+      "inference_ms": 0.01665520668029785,
+      "val_metrics": {
+        "accuracy": 0.4594594594594595,
+        "precision_weighted": 0.4516469296547762,
+        "recall_weighted": 0.4594594594594595,
+        "f1_weighted": 0.45213617079843865,
+        "precision_macro": 0.4504871889664516,
+        "recall_macro": 0.4616665303422765,
+        "f1_macro": 0.45215829591913403
+      },
+      "status": "COMPLETED"
+    },
+    {
+      "model": "LogisticRegression",
+      "params": {
+        "C": 10,
+        "max_iter": 2000,
+        "random_state": 42,
+        "class_weight": null,
+        "solver": "lbfgs",
+        "n_jobs": -1
+      },
+      "train_time": 77.0358374118805,
+      "inference_ms": 0.015197038650512697,
+      "val_metrics": {
+        "accuracy": 0.41621621621621624,
+        "precision_weighted": 0.40422423001370367,
+        "recall_weighted": 0.41621621621621624,
+        "f1_weighted": 0.40673553691130004,
+        "precision_macro": 0.4032148720118645,
+        "recall_macro": 0.4178174980840875,
+        "f1_macro": 0.4069663329343519
+      },
+      "status": "COMPLETED"
+    },
+    {
+      "model": "LogisticRegression",
+      "params": {
+        "C": 10,
+        "max_iter": 2000,
+        "random_state": 42,
+        "class_weight": "balanced",
+        "solver": "lbfgs",
+        "n_jobs": -1
+      },
+      "train_time": 80.62568354606628,
+      "inference_ms": 0.018314599990844727,
+      "val_metrics": {
+        "accuracy": 0.44324324324324327,
+        "precision_weighted": 0.43792451034386526,
+        "recall_weighted": 0.44324324324324327,
+        "f1_weighted": 0.4387428237416471,
+        "precision_macro": 0.4370778862714347,
+        "recall_macro": 0.4428604064941358,
+        "f1_macro": 0.4379930674696758
+      },
+      "status": "COMPLETED"
+    },
+    {
+      "model": "LogisticRegression",
+      "params": {
+        "C": 100,
+        "max_iter": 2000,
+        "random_state": 42,
+        "class_weight": null,
+        "solver": "lbfgs",
+        "n_jobs": -1
+      },
+      "train_time": 91.77011060714722,
+      "inference_ms": 0.019141912460327145,
+      "val_metrics": {
+        "accuracy": 0.3891891891891892,
+        "precision_weighted": 0.3728807126454185,
+        "recall_weighted": 0.3891891891891892,
+        "f1_weighted": 0.3768384569150949,
+        "precision_macro": 0.3720835000666934,
+        "recall_macro": 0.39282490586460445,
+        "f1_macro": 0.3780363176561508
+      },
+      "status": "COMPLETED"
+    },
+    {
+      "model": "LogisticRegression",
+      "params": {
+        "C": 100,
+        "max_iter": 2000,
+        "random_state": 42,
+        "class_weight": "balanced",
+        "solver": "lbfgs",
+        "n_jobs": -1
+      },
+      "train_time": 80.99738073348999,
+      "inference_ms": 0.013831138610839844,
+      "val_metrics": {
+        "accuracy": 0.3783783783783784,
+        "precision_weighted": 0.3646037663279043,
+        "recall_weighted": 0.3783783783783784,
+        "f1_weighted": 0.3677794496924931,
+        "precision_macro": 0.363036593947924,
+        "recall_macro": 0.3810403940800927,
+        "f1_macro": 0.36807991180661986
+      },
+      "status": "COMPLETED"
+    },
+    {
+      "model": "LinearSVC",
+      "params": {
+        "C": 0.001,
+        "random_state": 42,
+        "class_weight": null,
+        "max_iter": 10000
+      },
+      "status": "ERROR",
+      "error": "sklearn.svm._classes.LinearSVC() got multiple values for keyword argument 'random_state'"
+    },
+    {
+      "model": "LinearSVC",
+      "params": {
+        "C": 0.001,
+        "random_state": 42,
+        "class_weight": "balanced",
+        "max_iter": 10000
+      },
+      "status": "ERROR",
+      "error": "sklearn.svm._classes.LinearSVC() got multiple values for keyword argument 'random_state'"
+    },
+    {
+      "model": "LinearSVC",
+      "params": {
+        "C": 0.01,
+        "random_state": 42,
+        "class_weight": null,
+        "max_iter": 10000
+      },
+      "status": "ERROR",
+      "error": "sklearn.svm._classes.LinearSVC() got multiple values for keyword argument 'random_state'"
+    },
+    {
+      "model": "LinearSVC",
+      "params": {
+        "C": 0.01,
+        "random_state": 42,
+        "class_weight": "balanced",
+        "max_iter": 10000
+      },
+      "status": "ERROR",
+      "error": "sklearn.svm._classes.LinearSVC() got multiple values for keyword argument 'random_state'"
+    },
+    {
+      "model": "LinearSVC",
+      "params": {
+        "C": 0.1,
+        "random_state": 42,
+        "class_weight": null,
+        "max_iter": 10000
+      },
+      "status": "ERROR",
+      "error": "sklearn.svm._classes.LinearSVC() got multiple values for keyword argument 'random_state'"
+    },
+    {
+      "model": "LinearSVC",
+      "params": {
+        "C": 0.1,
+        "random_state": 42,
+        "class_weight": "balanced",
+        "max_iter": 10000
+      },
+      "status": "ERROR",
+      "error": "sklearn.svm._classes.LinearSVC() got multiple values for keyword argument 'random_state'"
+    },
+    {
+      "model": "LinearSVC",
+      "params": {
+        "C": 1,
+        "random_state": 42,
+        "class_weight": null,
+        "max_iter": 10000
+      },
+      "status": "ERROR",
+      "error": "sklearn.svm._classes.LinearSVC() got multiple values for keyword argument 'random_state'"
+    },
+    {
+      "model": "LinearSVC",
+      "params": {
+        "C": 1,
+        "random_state": 42,
+        "class_weight": "balanced",
+        "max_iter": 10000
+      },
+      "status": "ERROR",
+      "error": "sklearn.svm._classes.LinearSVC() got multiple values for keyword argument 'random_state'"
+    },
+    {
+      "model": "LinearSVC",
+      "params": {
+        "C": 10,
+        "random_state": 42,
+        "class_weight": null,
+        "max_iter": 10000
+      },
+      "status": "ERROR",
+      "error": "sklearn.svm._classes.LinearSVC() got multiple values for keyword argument 'random_state'"
+    },
+    {
+      "model": "LinearSVC",
+      "params": {
+        "C": 10,
+        "random_state": 42,
+        "class_weight": "balanced",
+        "max_iter": 10000
+      },
+      "status": "ERROR",
+      "error": "sklearn.svm._classes.LinearSVC() got multiple values for keyword argument 'random_state'"
+    },
+    {
+      "model": "LinearSVC",
+      "params": {
+        "C": 100,
+        "random_state": 42,
+        "class_weight": null,
+        "max_iter": 10000
+      },
+      "status": "ERROR",
+      "error": "sklearn.svm._classes.LinearSVC() got multiple values for keyword argument 'random_state'"
+    },
+    {
+      "model": "LinearSVC",
+      "params": {
+        "C": 100,
+        "random_state": 42,
+        "class_weight": "balanced",
+        "max_iter": 10000
+      },
+      "status": "ERROR",
+      "error": "sklearn.svm._classes.LinearSVC() got multiple values for keyword argument 'random_state'"
+    },
+    {
+      "model": "SVC",
+      "params": {
+        "C": 0.1,
+        "kernel": "rbf",
+        "gamma": "scale",
+        "random_state": 42,
+        "class_weight": null
+      },
+      "status": "ERROR",
+      "error": "sklearn.svm._classes.SVC() got multiple values for keyword argument 'random_state'"
+    },
+    {
+      "model": "SVC",
+      "params": {
+        "C": 0.1,
+        "kernel": "rbf",
+        "gamma": "scale",
+        "random_state": 42,
+        "class_weight": "balanced"
+      },
+      "status": "ERROR",
+      "error": "sklearn.svm._classes.SVC() got multiple values for keyword argument 'random_state'"
+    },
+    {
+      "model": "SVC",
+      "params": {
+        "C": 0.1,
+        "kernel": "rbf",
+        "gamma": "auto",
+        "random_state": 42,
+        "class_weight": null
+      },
+      "status": "ERROR",
+      "error": "sklearn.svm._classes.SVC() got multiple values for keyword argument 'random_state'"
+    },
+    {
+      "model": "SVC",
+      "params": {
+        "C": 0.1,
+        "kernel": "rbf",
+        "gamma": "auto",
+        "random_state": 42,
+        "class_weight": "balanced"
+      },
+      "status": "ERROR",
+      "error": "sklearn.svm._classes.SVC() got multiple values for keyword argument 'random_state'"
+    },
+    {
+      "model": "SVC",
+      "params": {
+        "C": 0.1,
+        "kernel": "rbf",
+        "gamma": 0.01,
+        "random_state": 42,
+        "class_weight": null
+      },
+      "status": "ERROR",
+      "error": "sklearn.svm._classes.SVC() got multiple values for keyword argument 'random_state'"
+    },
+    {
+      "model": "SVC",
+      "params": {
+        "C": 0.1,
+        "kernel": "rbf",
+        "gamma": 0.01,
+        "random_state": 42,
+        "class_weight": "balanced"
+      },
+      "status": "ERROR",
+      "error": "sklearn.svm._classes.SVC() got multiple values for keyword argument 'random_state'"
+    },
+    {
+      "model": "SVC",
+      "params": {
+        "C": 0.1,
+        "kernel": "rbf",
+        "gamma": 0.1,
+        "random_state": 42,
+        "class_weight": null
+      },
+      "status": "ERROR",
+      "error": "sklearn.svm._classes.SVC() got multiple values for keyword argument 'random_state'"
+    },
+    {
+      "model": "SVC",
+      "params": {
+        "C": 0.1,
+        "kernel": "rbf",
+        "gamma": 0.1,
+        "random_state": 42,
+        "class_weight": "balanced"
+      },
+      "status": "ERROR",
+      "error": "sklearn.svm._classes.SVC() got multiple values for keyword argument 'random_state'"
+    },
+    {
+      "model": "SVC",
+      "params": {
+        "C": 1,
+        "kernel": "rbf",
+        "gamma": "scale",
+        "random_state": 42,
+        "class_weight": null
+      },
+      "status": "ERROR",
+      "error": "sklearn.svm._classes.SVC() got multiple values for keyword argument 'random_state'"
+    },
+    {
+      "model": "SVC",
+      "params": {
+        "C": 1,
+        "kernel": "rbf",
+        "gamma": "scale",
+        "random_state": 42,
+        "class_weight": "balanced"
+      },
+      "status": "ERROR",
+      "error": "sklearn.svm._classes.SVC() got multiple values for keyword argument 'random_state'"
+    },
+    {
+      "model": "SVC",
+      "params": {
+        "C": 1,
+        "kernel": "rbf",
+        "gamma": "auto",
+        "random_state": 42,
+        "class_weight": null
+      },
+      "status": "ERROR",
+      "error": "sklearn.svm._classes.SVC() got multiple values for keyword argument 'random_state'"
+    },
+    {
+      "model": "SVC",
+      "params": {
+        "C": 1,
+        "kernel": "rbf",
+        "gamma": "auto",
+        "random_state": 42,
+        "class_weight": "balanced"
+      },
+      "status": "ERROR",
+      "error": "sklearn.svm._classes.SVC() got multiple values for keyword argument 'random_state'"
+    },
+    {
+      "model": "SVC",
+      "params": {
+        "C": 1,
+        "kernel": "rbf",
+        "gamma": 0.01,
+        "random_state": 42,
+        "class_weight": null
+      },
+      "status": "ERROR",
+      "error": "sklearn.svm._classes.SVC() got multiple values for keyword argument 'random_state'"
+    },
+    {
+      "model": "SVC",
+      "params": {
+        "C": 1,
+        "kernel": "rbf",
+        "gamma": 0.01,
+        "random_state": 42,
+        "class_weight": "balanced"
+      },
+      "status": "ERROR",
+      "error": "sklearn.svm._classes.SVC() got multiple values for keyword argument 'random_state'"
+    },
+    {
+      "model": "SVC",
+      "params": {
+        "C": 1,
+        "kernel": "rbf",
+        "gamma": 0.1,
+        "random_state": 42,
+        "class_weight": null
+      },
+      "status": "ERROR",
+      "error": "sklearn.svm._classes.SVC() got multiple values for keyword argument 'random_state'"
+    },
+    {
+      "model": "SVC",
+      "params": {
+        "C": 1,
+        "kernel": "rbf",
+        "gamma": 0.1,
+        "random_state": 42,
+        "class_weight": "balanced"
+      },
+      "status": "ERROR",
+      "error": "sklearn.svm._classes.SVC() got multiple values for keyword argument 'random_state'"
+    },
+    {
+      "model": "SVC",
+      "params": {
+        "C": 10,
+        "kernel": "rbf",
+        "gamma": "scale",
+        "random_state": 42,
+        "class_weight": null
+      },
+      "status": "ERROR",
+      "error": "sklearn.svm._classes.SVC() got multiple values for keyword argument 'random_state'"
+    },
+    {
+      "model": "SVC",
+      "params": {
+        "C": 10,
+        "kernel": "rbf",
+        "gamma": "scale",
+        "random_state": 42,
+        "class_weight": "balanced"
+      },
+      "status": "ERROR",
+      "error": "sklearn.svm._classes.SVC() got multiple values for keyword argument 'random_state'"
+    },
+    {
+      "model": "SVC",
+      "params": {
+        "C": 10,
+        "kernel": "rbf",
+        "gamma": "auto",
+        "random_state": 42,
+        "class_weight": null
+      },
+      "status": "ERROR",
+      "error": "sklearn.svm._classes.SVC() got multiple values for keyword argument 'random_state'"
+    },
+    {
+      "model": "SVC",
+      "params": {
+        "C": 10,
+        "kernel": "rbf",
+        "gamma": "auto",
+        "random_state": 42,
+        "class_weight": "balanced"
+      },
+      "status": "ERROR",
+      "error": "sklearn.svm._classes.SVC() got multiple values for keyword argument 'random_state'"
+    },
+    {
+      "model": "SVC",
+      "params": {
+        "C": 10,
+        "kernel": "rbf",
+        "gamma": 0.01,
+        "random_state": 42,
+        "class_weight": null
+      },
+      "status": "ERROR",
+      "error": "sklearn.svm._classes.SVC() got multiple values for keyword argument 'random_state'"
+    },
+    {
+      "model": "SVC",
+      "params": {
+        "C": 10,
+        "kernel": "rbf",
+        "gamma": 0.01,
+        "random_state": 42,
+        "class_weight": "balanced"
+      },
+      "status": "ERROR",
+      "error": "sklearn.svm._classes.SVC() got multiple values for keyword argument 'random_state'"
+    },
+    {
+      "model": "SVC",
+      "params": {
+        "C": 10,
+        "kernel": "rbf",
+        "gamma": 0.1,
+        "random_state": 42,
+        "class_weight": null
+      },
+      "status": "ERROR",
+      "error": "sklearn.svm._classes.SVC() got multiple values for keyword argument 'random_state'"
+    },
+    {
+      "model": "SVC",
+      "params": {
+        "C": 10,
+        "kernel": "rbf",
+        "gamma": 0.1,
+        "random_state": 42,
+        "class_weight": "balanced"
+      },
+      "status": "ERROR",
+      "error": "sklearn.svm._classes.SVC() got multiple values for keyword argument 'random_state'"
+    },
+    {
+      "model": "RandomForest",
+      "params": {
+        "n_estimators": 100,
+        "max_depth": null,
+        "min_samples_split": 5,
+        "min_samples_leaf": 2,
+        "random_state": 42,
+        "n_jobs": -1,
+        "class_weight": null
+      },
+      "status": "ERROR",
+      "error": "sklearn.ensemble._forest.RandomForestClassifier() got multiple values for keyword argument 'random_state'"
+    },
+    {
+      "model": "RandomForest",
+      "params": {
+        "n_estimators": 100,
+        "max_depth": null,
+        "min_samples_split": 5,
+        "min_samples_leaf": 2,
+        "random_state": 42,
+        "n_jobs": -1,
+        "class_weight": "balanced"
+      },
+      "status": "ERROR",
+      "error": "sklearn.ensemble._forest.RandomForestClassifier() got multiple values for keyword argument 'random_state'"
+    },
+    {
+      "model": "RandomForest",
+      "params": {
+        "n_estimators": 100,
+        "max_depth": 10,
+        "min_samples_split": 5,
+        "min_samples_leaf": 2,
+        "random_state": 42,
+        "n_jobs": -1,
+        "class_weight": null
+      },
+      "status": "ERROR",
+      "error": "sklearn.ensemble._forest.RandomForestClassifier() got multiple values for keyword argument 'random_state'"
+    },
+    {
+      "model": "RandomForest",
+      "params": {
+        "n_estimators": 100,
+        "max_depth": 10,
+        "min_samples_split": 5,
+        "min_samples_leaf": 2,
+        "random_state": 42,
+        "n_jobs": -1,
+        "class_weight": "balanced"
+      },
+      "status": "ERROR",
+      "error": "sklearn.ensemble._forest.RandomForestClassifier() got multiple values for keyword argument 'random_state'"
+    },
+    {
+      "model": "RandomForest",
+      "params": {
+        "n_estimators": 100,
+        "max_depth": 15,
+        "min_samples_split": 5,
+        "min_samples_leaf": 2,
+        "random_state": 42,
+        "n_jobs": -1,
+        "class_weight": null
+      },
+      "status": "ERROR",
+      "error": "sklearn.ensemble._forest.RandomForestClassifier() got multiple values for keyword argument 'random_state'"
+    },
+    {
+      "model": "RandomForest",
+      "params": {
+        "n_estimators": 100,
+        "max_depth": 15,
+        "min_samples_split": 5,
+        "min_samples_leaf": 2,
+        "random_state": 42,
+        "n_jobs": -1,
+        "class_weight": "balanced"
+      },
+      "status": "ERROR",
+      "error": "sklearn.ensemble._forest.RandomForestClassifier() got multiple values for keyword argument 'random_state'"
+    },
+    {
+      "model": "RandomForest",
+      "params": {
+        "n_estimators": 100,
+        "max_depth": 20,
+        "min_samples_split": 5,
+        "min_samples_leaf": 2,
+        "random_state": 42,
+        "n_jobs": -1,
+        "class_weight": null
+      },
+      "status": "ERROR",
+      "error": "sklearn.ensemble._forest.RandomForestClassifier() got multiple values for keyword argument 'random_state'"
+    },
+    {
+      "model": "RandomForest",
+      "params": {
+        "n_estimators": 100,
+        "max_depth": 20,
+        "min_samples_split": 5,
+        "min_samples_leaf": 2,
+        "random_state": 42,
+        "n_jobs": -1,
+        "class_weight": "balanced"
+      },
+      "status": "ERROR",
+      "error": "sklearn.ensemble._forest.RandomForestClassifier() got multiple values for keyword argument 'random_state'"
+    },
+    {
+      "model": "RandomForest",
+      "params": {
+        "n_estimators": 200,
+        "max_depth": null,
+        "min_samples_split": 5,
+        "min_samples_leaf": 2,
+        "random_state": 42,
+        "n_jobs": -1,
+        "class_weight": null
+      },
+      "status": "ERROR",
+      "error": "sklearn.ensemble._forest.RandomForestClassifier() got multiple values for keyword argument 'random_state'"
+    },
+    {
+      "model": "RandomForest",
+      "params": {
+        "n_estimators": 200,
+        "max_depth": null,
+        "min_samples_split": 5,
+        "min_samples_leaf": 2,
+        "random_state": 42,
+        "n_jobs": -1,
+        "class_weight": "balanced"
+      },
+      "status": "ERROR",
+      "error": "sklearn.ensemble._forest.RandomForestClassifier() got multiple values for keyword argument 'random_state'"
+    },
+    {
+      "model": "RandomForest",
+      "params": {
+        "n_estimators": 200,
+        "max_depth": 10,
+        "min_samples_split": 5,
+        "min_samples_leaf": 2,
+        "random_state": 42,
+        "n_jobs": -1,
+        "class_weight": null
+      },
+      "status": "ERROR",
+      "error": "sklearn.ensemble._forest.RandomForestClassifier() got multiple values for keyword argument 'random_state'"
+    },
+    {
+      "model": "RandomForest",
+      "params": {
+        "n_estimators": 200,
+        "max_depth": 10,
+        "min_samples_split": 5,
+        "min_samples_leaf": 2,
+        "random_state": 42,
+        "n_jobs": -1,
+        "class_weight": "balanced"
+      },
+      "status": "ERROR",
+      "error": "sklearn.ensemble._forest.RandomForestClassifier() got multiple values for keyword argument 'random_state'"
+    },
+    {
+      "model": "RandomForest",
+      "params": {
+        "n_estimators": 200,
+        "max_depth": 15,
+        "min_samples_split": 5,
+        "min_samples_leaf": 2,
+        "random_state": 42,
+        "n_jobs": -1,
+        "class_weight": null
+      },
+      "status": "ERROR",
+      "error": "sklearn.ensemble._forest.RandomForestClassifier() got multiple values for keyword argument 'random_state'"
+    },
+    {
+      "model": "RandomForest",
+      "params": {
+        "n_estimators": 200,
+        "max_depth": 15,
+        "min_samples_split": 5,
+        "min_samples_leaf": 2,
+        "random_state": 42,
+        "n_jobs": -1,
+        "class_weight": "balanced"
+      },
+      "status": "ERROR",
+      "error": "sklearn.ensemble._forest.RandomForestClassifier() got multiple values for keyword argument 'random_state'"
+    },
+    {
+      "model": "RandomForest",
+      "params": {
+        "n_estimators": 200,
+        "max_depth": 20,
+        "min_samples_split": 5,
+        "min_samples_leaf": 2,
+        "random_state": 42,
+        "n_jobs": -1,
+        "class_weight": null
+      },
+      "status": "ERROR",
+      "error": "sklearn.ensemble._forest.RandomForestClassifier() got multiple values for keyword argument 'random_state'"
+    },
+    {
+      "model": "RandomForest",
+      "params": {
+        "n_estimators": 200,
+        "max_depth": 20,
+        "min_samples_split": 5,
+        "min_samples_leaf": 2,
+        "random_state": 42,
+        "n_jobs": -1,
+        "class_weight": "balanced"
+      },
+      "status": "ERROR",
+      "error": "sklearn.ensemble._forest.RandomForestClassifier() got multiple values for keyword argument 'random_state'"
+    },
+    {
+      "model": "RandomForest",
+      "params": {
+        "n_estimators": 300,
+        "max_depth": null,
+        "min_samples_split": 5,
+        "min_samples_leaf": 2,
+        "random_state": 42,
+        "n_jobs": -1,
+        "class_weight": null
+      },
+      "status": "ERROR",
+      "error": "sklearn.ensemble._forest.RandomForestClassifier() got multiple values for keyword argument 'random_state'"
+    },
+    {
+      "model": "RandomForest",
+      "params": {
+        "n_estimators": 300,
+        "max_depth": null,
+        "min_samples_split": 5,
+        "min_samples_leaf": 2,
+        "random_state": 42,
+        "n_jobs": -1,
+        "class_weight": "balanced"
+      },
+      "status": "ERROR",
+      "error": "sklearn.ensemble._forest.RandomForestClassifier() got multiple values for keyword argument 'random_state'"
+    },
+    {
+      "model": "RandomForest",
+      "params": {
+        "n_estimators": 300,
+        "max_depth": 10,
+        "min_samples_split": 5,
+        "min_samples_leaf": 2,
+        "random_state": 42,
+        "n_jobs": -1,
+        "class_weight": null
+      },
+      "status": "ERROR",
+      "error": "sklearn.ensemble._forest.RandomForestClassifier() got multiple values for keyword argument 'random_state'"
+    },
+    {
+      "model": "RandomForest",
+      "params": {
+        "n_estimators": 300,
+        "max_depth": 10,
+        "min_samples_split": 5,
+        "min_samples_leaf": 2,
+        "random_state": 42,
+        "n_jobs": -1,
+        "class_weight": "balanced"
+      },
+      "status": "ERROR",
+      "error": "sklearn.ensemble._forest.RandomForestClassifier() got multiple values for keyword argument 'random_state'"
+    },
+    {
+      "model": "RandomForest",
+      "params": {
+        "n_estimators": 300,
+        "max_depth": 15,
+        "min_samples_split": 5,
+        "min_samples_leaf": 2,
+        "random_state": 42,
+        "n_jobs": -1,
+        "class_weight": null
+      },
+      "status": "ERROR",
+      "error": "sklearn.ensemble._forest.RandomForestClassifier() got multiple values for keyword argument 'random_state'"
+    },
+    {
+      "model": "RandomForest",
+      "params": {
+        "n_estimators": 300,
+        "max_depth": 15,
+        "min_samples_split": 5,
+        "min_samples_leaf": 2,
+        "random_state": 42,
+        "n_jobs": -1,
+        "class_weight": "balanced"
+      },
+      "status": "ERROR",
+      "error": "sklearn.ensemble._forest.RandomForestClassifier() got multiple values for keyword argument 'random_state'"
+    },
+    {
+      "model": "RandomForest",
+      "params": {
+        "n_estimators": 300,
+        "max_depth": 20,
+        "min_samples_split": 5,
+        "min_samples_leaf": 2,
+        "random_state": 42,
+        "n_jobs": -1,
+        "class_weight": null
+      },
+      "status": "ERROR",
+      "error": "sklearn.ensemble._forest.RandomForestClassifier() got multiple values for keyword argument 'random_state'"
+    },
+    {
+      "model": "RandomForest",
+      "params": {
+        "n_estimators": 300,
+        "max_depth": 20,
+        "min_samples_split": 5,
+        "min_samples_leaf": 2,
+        "random_state": 42,
+        "n_jobs": -1,
+        "class_weight": "balanced"
+      },
+      "status": "ERROR",
+      "error": "sklearn.ensemble._forest.RandomForestClassifier() got multiple values for keyword argument 'random_state'"
+    },
+    {
+      "model": "ExtraTrees",
+      "params": {
+        "n_estimators": 100,
+        "max_depth": null,
+        "min_samples_split": 5,
+        "min_samples_leaf": 2,
+        "random_state": 42,
+        "n_jobs": -1,
+        "class_weight": null
+      },
+      "status": "ERROR",
+      "error": "sklearn.ensemble._forest.ExtraTreesClassifier() got multiple values for keyword argument 'random_state'"
+    },
+    {
+      "model": "ExtraTrees",
+      "params": {
+        "n_estimators": 100,
+        "max_depth": null,
+        "min_samples_split": 5,
+        "min_samples_leaf": 2,
+        "random_state": 42,
+        "n_jobs": -1,
+        "class_weight": "balanced"
+      },
+      "status": "ERROR",
+      "error": "sklearn.ensemble._forest.ExtraTreesClassifier() got multiple values for keyword argument 'random_state'"
+    },
+    {
+      "model": "ExtraTrees",
+      "params": {
+        "n_estimators": 100,
+        "max_depth": 10,
+        "min_samples_split": 5,
+        "min_samples_leaf": 2,
+        "random_state": 42,
+        "n_jobs": -1,
+        "class_weight": null
+      },
+      "status": "ERROR",
+      "error": "sklearn.ensemble._forest.ExtraTreesClassifier() got multiple values for keyword argument 'random_state'"
+    },
+    {
+      "model": "ExtraTrees",
+      "params": {
+        "n_estimators": 100,
+        "max_depth": 10,
+        "min_samples_split": 5,
+        "min_samples_leaf": 2,
+        "random_state": 42,
+        "n_jobs": -1,
+        "class_weight": "balanced"
+      },
+      "status": "ERROR",
+      "error": "sklearn.ensemble._forest.ExtraTreesClassifier() got multiple values for keyword argument 'random_state'"
+    },
+    {
+      "model": "ExtraTrees",
+      "params": {
+        "n_estimators": 100,
+        "max_depth": 15,
+        "min_samples_split": 5,
+        "min_samples_leaf": 2,
+        "random_state": 42,
+        "n_jobs": -1,
+        "class_weight": null
+      },
+      "status": "ERROR",
+      "error": "sklearn.ensemble._forest.ExtraTreesClassifier() got multiple values for keyword argument 'random_state'"
+    },
+    {
+      "model": "ExtraTrees",
+      "params": {
+        "n_estimators": 100,
+        "max_depth": 15,
+        "min_samples_split": 5,
+        "min_samples_leaf": 2,
+        "random_state": 42,
+        "n_jobs": -1,
+        "class_weight": "balanced"
+      },
+      "status": "ERROR",
+      "error": "sklearn.ensemble._forest.ExtraTreesClassifier() got multiple values for keyword argument 'random_state'"
+    },
+    {
+      "model": "ExtraTrees",
+      "params": {
+        "n_estimators": 100,
+        "max_depth": 20,
+        "min_samples_split": 5,
+        "min_samples_leaf": 2,
+        "random_state": 42,
+        "n_jobs": -1,
+        "class_weight": null
+      },
+      "status": "ERROR",
+      "error": "sklearn.ensemble._forest.ExtraTreesClassifier() got multiple values for keyword argument 'random_state'"
+    },
+    {
+      "model": "ExtraTrees",
+      "params": {
+        "n_estimators": 100,
+        "max_depth": 20,
+        "min_samples_split": 5,
+        "min_samples_leaf": 2,
+        "random_state": 42,
+        "n_jobs": -1,
+        "class_weight": "balanced"
+      },
+      "status": "ERROR",
+      "error": "sklearn.ensemble._forest.ExtraTreesClassifier() got multiple values for keyword argument 'random_state'"
+    },
+    {
+      "model": "ExtraTrees",
+      "params": {
+        "n_estimators": 200,
+        "max_depth": null,
+        "min_samples_split": 5,
+        "min_samples_leaf": 2,
+        "random_state": 42,
+        "n_jobs": -1,
+        "class_weight": null
+      },
+      "status": "ERROR",
+      "error": "sklearn.ensemble._forest.ExtraTreesClassifier() got multiple values for keyword argument 'random_state'"
+    },
+    {
+      "model": "ExtraTrees",
+      "params": {
+        "n_estimators": 200,
+        "max_depth": null,
+        "min_samples_split": 5,
+        "min_samples_leaf": 2,
+        "random_state": 42,
+        "n_jobs": -1,
+        "class_weight": "balanced"
+      },
+      "status": "ERROR",
+      "error": "sklearn.ensemble._forest.ExtraTreesClassifier() got multiple values for keyword argument 'random_state'"
+    },
+    {
+      "model": "ExtraTrees",
+      "params": {
+        "n_estimators": 200,
+        "max_depth": 10,
+        "min_samples_split": 5,
+        "min_samples_leaf": 2,
+        "random_state": 42,
+        "n_jobs": -1,
+        "class_weight": null
+      },
+      "status": "ERROR",
+      "error": "sklearn.ensemble._forest.ExtraTreesClassifier() got multiple values for keyword argument 'random_state'"
+    },
+    {
+      "model": "ExtraTrees",
+      "params": {
+        "n_estimators": 200,
+        "max_depth": 10,
+        "min_samples_split": 5,
+        "min_samples_leaf": 2,
+        "random_state": 42,
+        "n_jobs": -1,
+        "class_weight": "balanced"
+      },
+      "status": "ERROR",
+      "error": "sklearn.ensemble._forest.ExtraTreesClassifier() got multiple values for keyword argument 'random_state'"
+    },
+    {
+      "model": "ExtraTrees",
+      "params": {
+        "n_estimators": 200,
+        "max_depth": 15,
+        "min_samples_split": 5,
+        "min_samples_leaf": 2,
+        "random_state": 42,
+        "n_jobs": -1,
+        "class_weight": null
+      },
+      "status": "ERROR",
+      "error": "sklearn.ensemble._forest.ExtraTreesClassifier() got multiple values for keyword argument 'random_state'"
+    },
+    {
+      "model": "ExtraTrees",
+      "params": {
+        "n_estimators": 200,
+        "max_depth": 15,
+        "min_samples_split": 5,
+        "min_samples_leaf": 2,
+        "random_state": 42,
+        "n_jobs": -1,
+        "class_weight": "balanced"
+      },
+      "status": "ERROR",
+      "error": "sklearn.ensemble._forest.ExtraTreesClassifier() got multiple values for keyword argument 'random_state'"
+    },
+    {
+      "model": "ExtraTrees",
+      "params": {
+        "n_estimators": 200,
+        "max_depth": 20,
+        "min_samples_split": 5,
+        "min_samples_leaf": 2,
+        "random_state": 42,
+        "n_jobs": -1,
+        "class_weight": null
+      },
+      "status": "ERROR",
+      "error": "sklearn.ensemble._forest.ExtraTreesClassifier() got multiple values for keyword argument 'random_state'"
+    },
+    {
+      "model": "ExtraTrees",
+      "params": {
+        "n_estimators": 200,
+        "max_depth": 20,
+        "min_samples_split": 5,
+        "min_samples_leaf": 2,
+        "random_state": 42,
+        "n_jobs": -1,
+        "class_weight": "balanced"
+      },
+      "status": "ERROR",
+      "error": "sklearn.ensemble._forest.ExtraTreesClassifier() got multiple values for keyword argument 'random_state'"
+    },
+    {
+      "model": "ExtraTrees",
+      "params": {
+        "n_estimators": 300,
+        "max_depth": null,
+        "min_samples_split": 5,
+        "min_samples_leaf": 2,
+        "random_state": 42,
+        "n_jobs": -1,
+        "class_weight": null
+      },
+      "status": "ERROR",
+      "error": "sklearn.ensemble._forest.ExtraTreesClassifier() got multiple values for keyword argument 'random_state'"
+    },
+    {
+      "model": "ExtraTrees",
+      "params": {
+        "n_estimators": 300,
+        "max_depth": null,
+        "min_samples_split": 5,
+        "min_samples_leaf": 2,
+        "random_state": 42,
+        "n_jobs": -1,
+        "class_weight": "balanced"
+      },
+      "status": "ERROR",
+      "error": "sklearn.ensemble._forest.ExtraTreesClassifier() got multiple values for keyword argument 'random_state'"
+    },
+    {
+      "model": "ExtraTrees",
+      "params": {
+        "n_estimators": 300,
+        "max_depth": 10,
+        "min_samples_split": 5,
+        "min_samples_leaf": 2,
+        "random_state": 42,
+        "n_jobs": -1,
+        "class_weight": null
+      },
+      "status": "ERROR",
+      "error": "sklearn.ensemble._forest.ExtraTreesClassifier() got multiple values for keyword argument 'random_state'"
+    },
+    {
+      "model": "ExtraTrees",
+      "params": {
+        "n_estimators": 300,
+        "max_depth": 10,
+        "min_samples_split": 5,
+        "min_samples_leaf": 2,
+        "random_state": 42,
+        "n_jobs": -1,
+        "class_weight": "balanced"
+      },
+      "status": "ERROR",
+      "error": "sklearn.ensemble._forest.ExtraTreesClassifier() got multiple values for keyword argument 'random_state'"
+    },
+    {
+      "model": "ExtraTrees",
+      "params": {
+        "n_estimators": 300,
+        "max_depth": 15,
+        "min_samples_split": 5,
+        "min_samples_leaf": 2,
+        "random_state": 42,
+        "n_jobs": -1,
+        "class_weight": null
+      },
+      "status": "ERROR",
+      "error": "sklearn.ensemble._forest.ExtraTreesClassifier() got multiple values for keyword argument 'random_state'"
+    },
+    {
+      "model": "ExtraTrees",
+      "params": {
+        "n_estimators": 300,
+        "max_depth": 15,
+        "min_samples_split": 5,
+        "min_samples_leaf": 2,
+        "random_state": 42,
+        "n_jobs": -1,
+        "class_weight": "balanced"
+      },
+      "status": "ERROR",
+      "error": "sklearn.ensemble._forest.ExtraTreesClassifier() got multiple values for keyword argument 'random_state'"
+    },
+    {
+      "model": "ExtraTrees",
+      "params": {
+        "n_estimators": 300,
+        "max_depth": 20,
+        "min_samples_split": 5,
+        "min_samples_leaf": 2,
+        "random_state": 42,
+        "n_jobs": -1,
+        "class_weight": null
+      },
+      "status": "ERROR",
+      "error": "sklearn.ensemble._forest.ExtraTreesClassifier() got multiple values for keyword argument 'random_state'"
+    },
+    {
+      "model": "ExtraTrees",
+      "params": {
+        "n_estimators": 300,
+        "max_depth": 20,
+        "min_samples_split": 5,
+        "min_samples_leaf": 2,
+        "random_state": 42,
+        "n_jobs": -1,
+        "class_weight": "balanced"
+      },
+      "status": "ERROR",
+      "error": "sklearn.ensemble._forest.ExtraTreesClassifier() got multiple values for keyword argument 'random_state'"
+    },
+    {
+      "model": "HistGradientBoosting",
+      "params": {
+        "max_iter": 100,
+        "max_depth": null,
+        "learning_rate": 0.01,
+        "random_state": 42
+      },
+      "status": "ERROR",
+      "error": "sklearn.ensemble._hist_gradient_boosting.gradient_boosting.HistGradientBoostingClassifier() got multiple values for keyword argument 'random_state'"
+    },
+    {
+      "model": "HistGradientBoosting",
+      "params": {
+        "max_iter": 100,
+        "max_depth": null,
+        "learning_rate": 0.1,
+        "random_state": 42
+      },
+      "status": "ERROR",
+      "error": "sklearn.ensemble._hist_gradient_boosting.gradient_boosting.HistGradientBoostingClassifier() got multiple values for keyword argument 'random_state'"
+    },
+    {
+      "model": "HistGradientBoosting",
+      "params": {
+        "max_iter": 100,
+        "max_depth": 5,
+        "learning_rate": 0.01,
+        "random_state": 42
+      },
+      "status": "ERROR",
+      "error": "sklearn.ensemble._hist_gradient_boosting.gradient_boosting.HistGradientBoostingClassifier() got multiple values for keyword argument 'random_state'"
+    },
+    {
+      "model": "HistGradientBoosting",
+      "params": {
+        "max_iter": 100,
+        "max_depth": 5,
+        "learning_rate": 0.1,
+        "random_state": 42
+      },
+      "status": "ERROR",
+      "error": "sklearn.ensemble._hist_gradient_boosting.gradient_boosting.HistGradientBoostingClassifier() got multiple values for keyword argument 'random_state'"
+    },
+    {
+      "model": "HistGradientBoosting",
+      "params": {
+        "max_iter": 100,
+        "max_depth": 10,
+        "learning_rate": 0.01,
+        "random_state": 42
+      },
+      "status": "ERROR",
+      "error": "sklearn.ensemble._hist_gradient_boosting.gradient_boosting.HistGradientBoostingClassifier() got multiple values for keyword argument 'random_state'"
+    },
+    {
+      "model": "HistGradientBoosting",
+      "params": {
+        "max_iter": 100,
+        "max_depth": 10,
+        "learning_rate": 0.1,
+        "random_state": 42
+      },
+      "status": "ERROR",
+      "error": "sklearn.ensemble._hist_gradient_boosting.gradient_boosting.HistGradientBoostingClassifier() got multiple values for keyword argument 'random_state'"
+    },
+    {
+      "model": "HistGradientBoosting",
+      "params": {
+        "max_iter": 200,
+        "max_depth": null,
+        "learning_rate": 0.01,
+        "random_state": 42
+      },
+      "status": "ERROR",
+      "error": "sklearn.ensemble._hist_gradient_boosting.gradient_boosting.HistGradientBoostingClassifier() got multiple values for keyword argument 'random_state'"
+    },
+    {
+      "model": "HistGradientBoosting",
+      "params": {
+        "max_iter": 200,
+        "max_depth": null,
+        "learning_rate": 0.1,
+        "random_state": 42
+      },
+      "status": "ERROR",
+      "error": "sklearn.ensemble._hist_gradient_boosting.gradient_boosting.HistGradientBoostingClassifier() got multiple values for keyword argument 'random_state'"
+    },
+    {
+      "model": "HistGradientBoosting",
+      "params": {
+        "max_iter": 200,
+        "max_depth": 5,
+        "learning_rate": 0.01,
+        "random_state": 42
+      },
+      "status": "ERROR",
+      "error": "sklearn.ensemble._hist_gradient_boosting.gradient_boosting.HistGradientBoostingClassifier() got multiple values for keyword argument 'random_state'"
+    },
+    {
+      "model": "HistGradientBoosting",
+      "params": {
+        "max_iter": 200,
+        "max_depth": 5,
+        "learning_rate": 0.1,
+        "random_state": 42
+      },
+      "status": "ERROR",
+      "error": "sklearn.ensemble._hist_gradient_boosting.gradient_boosting.HistGradientBoostingClassifier() got multiple values for keyword argument 'random_state'"
+    },
+    {
+      "model": "HistGradientBoosting",
+      "params": {
+        "max_iter": 200,
+        "max_depth": 10,
+        "learning_rate": 0.01,
+        "random_state": 42
+      },
+      "status": "ERROR",
+      "error": "sklearn.ensemble._hist_gradient_boosting.gradient_boosting.HistGradientBoostingClassifier() got multiple values for keyword argument 'random_state'"
+    },
+    {
+      "model": "HistGradientBoosting",
+      "params": {
+        "max_iter": 200,
+        "max_depth": 10,
+        "learning_rate": 0.1,
+        "random_state": 42
+      },
+      "status": "ERROR",
+      "error": "sklearn.ensemble._hist_gradient_boosting.gradient_boosting.HistGradientBoostingClassifier() got multiple values for keyword argument 'random_state'"
+    },
+    {
+      "model": "HistGradientBoosting",
+      "params": {
+        "max_iter": 300,
+        "max_depth": null,
+        "learning_rate": 0.01,
+        "random_state": 42
+      },
+      "status": "ERROR",
+      "error": "sklearn.ensemble._hist_gradient_boosting.gradient_boosting.HistGradientBoostingClassifier() got multiple values for keyword argument 'random_state'"
+    },
+    {
+      "model": "HistGradientBoosting",
+      "params": {
+        "max_iter": 300,
+        "max_depth": null,
+        "learning_rate": 0.1,
+        "random_state": 42
+      },
+      "status": "ERROR",
+      "error": "sklearn.ensemble._hist_gradient_boosting.gradient_boosting.HistGradientBoostingClassifier() got multiple values for keyword argument 'random_state'"
+    },
+    {
+      "model": "HistGradientBoosting",
+      "params": {
+        "max_iter": 300,
+        "max_depth": 5,
+        "learning_rate": 0.01,
+        "random_state": 42
+      },
+      "status": "ERROR",
+      "error": "sklearn.ensemble._hist_gradient_boosting.gradient_boosting.HistGradientBoostingClassifier() got multiple values for keyword argument 'random_state'"
+    },
+    {
+      "model": "HistGradientBoosting",
+      "params": {
+        "max_iter": 300,
+        "max_depth": 5,
+        "learning_rate": 0.1,
+        "random_state": 42
+      },
+      "status": "ERROR",
+      "error": "sklearn.ensemble._hist_gradient_boosting.gradient_boosting.HistGradientBoostingClassifier() got multiple values for keyword argument 'random_state'"
+    },
+    {
+      "model": "HistGradientBoosting",
+      "params": {
+        "max_iter": 300,
+        "max_depth": 10,
+        "learning_rate": 0.01,
+        "random_state": 42
+      },
+      "status": "ERROR",
+      "error": "sklearn.ensemble._hist_gradient_boosting.gradient_boosting.HistGradientBoostingClassifier() got multiple values for keyword argument 'random_state'"
+    },
+    {
+      "model": "HistGradientBoosting",
+      "params": {
+        "max_iter": 300,
+        "max_depth": 10,
+        "learning_rate": 0.1,
+        "random_state": 42
+      },
+      "status": "ERROR",
+      "error": "sklearn.ensemble._hist_gradient_boosting.gradient_boosting.HistGradientBoostingClassifier() got multiple values for keyword argument 'random_state'"
+    },
+    {
+      "model": "LinearSVC",
+      "params": {
+        "C": 0.001,
+        "class_weight": null,
+        "max_iter": 10000
+      },
+      "train_time": 2.488999128341675,
+      "inference_ms": 0.036635398864746094,
+      "val_metrics": {
+        "accuracy": 0.4486486486486487,
+        "precision_weighted": 0.40770281165018,
+        "recall_weighted": 0.4486486486486487,
+        "f1_weighted": 0.4020182201123166,
+        "precision_macro": 0.4059989196267392,
+        "recall_macro": 0.45171831827873554,
+        "f1_macro": 0.40366117678716673
+      },
+      "status": "COMPLETED"
+    },
+    {
+      "model": "LinearSVC",
+      "params": {
+        "C": 0.001,
+        "class_weight": "balanced",
+        "max_iter": 10000
+      },
+      "train_time": 13.205146789550781,
+      "inference_ms": 0.03137993812561036,
+      "val_metrics": {
+        "accuracy": 0.4540540540540541,
+        "precision_weighted": 0.4050694584447445,
+        "recall_weighted": 0.4540540540540541,
+        "f1_weighted": 0.4090618090618091,
+        "precision_macro": 0.40332199900277704,
+        "recall_macro": 0.457212823773241,
+        "f1_macro": 0.41035234606663173
+      },
+      "status": "COMPLETED"
+    },
+    {
+      "model": "LinearSVC",
+      "params": {
+        "C": 0.01,
+        "class_weight": null,
+        "max_iter": 10000
+      },
+      "train_time": 81.94183397293091,
+      "inference_ms": 0.03366756439208985,
+      "val_metrics": {
+        "accuracy": 0.4486486486486487,
+        "precision_weighted": 0.4226756850894781,
+        "recall_weighted": 0.4486486486486487,
+        "f1_weighted": 0.4128002325051851,
+        "precision_macro": 0.41857757732141965,
+        "recall_macro": 0.45101314110297014,
+        "f1_macro": 0.41279043820467004
+      },
+      "status": "COMPLETED"
+    },
+    {
+      "model": "LinearSVC",
+      "params": {
+        "C": 0.01,
+        "class_weight": "balanced",
+        "max_iter": 10000
+      },
+      "train_time": 88.78896641731262,
+      "inference_ms": 0.03469061851501465,
+      "val_metrics": {
+        "accuracy": 0.4594594594594595,
+        "precision_weighted": 0.44209009009009004,
+        "recall_weighted": 0.4594594594594595,
+        "f1_weighted": 0.43343818530703926,
+        "precision_macro": 0.4386935286935287,
+        "recall_macro": 0.4616372551753601,
+        "f1_macro": 0.43373094073163776
+      },
+      "status": "COMPLETED"
+    },
+    {
+      "model": "LinearSVC",
+      "params": {
+        "C": 0.1,
+        "class_weight": null,
+        "max_iter": 10000
+      },
+      "train_time": 337.0905818939209,
+      "inference_ms": 0.010100603103637695,
+      "val_metrics": {
+        "accuracy": 0.4648648648648649,
+        "precision_weighted": 0.4347436072436073,
+        "recall_weighted": 0.4648648648648649,
+        "f1_weighted": 0.4387390328937718,
+        "precision_macro": 0.4331950456950457,
+        "recall_macro": 0.4701551922647257,
+        "f1_macro": 0.44034457301256363
+      },
+      "status": "COMPLETED"
+    },
+    {
+      "model": "LinearSVC",
+      "params": {
+        "C": 0.1,
+        "class_weight": "balanced",
+        "max_iter": 10000
+      },
+      "train_time": 365.8387653827667,
+      "inference_ms": 0.04220414161682129,
+      "val_metrics": {
+        "accuracy": 0.4756756756756757,
+        "precision_weighted": 0.45065084359053503,
+        "recall_weighted": 0.4756756756756757,
+        "f1_weighted": 0.4545894353845759,
+        "precision_macro": 0.4500657850798103,
+        "recall_macro": 0.4805758061336155,
+        "f1_macro": 0.4566095422605236
+      },
+      "status": "COMPLETED"
+    },
+    {
+      "model": "LinearSVC",
+      "params": {
+        "C": 1,
+        "class_weight": null,
+        "max_iter": 10000
+      },
+      "train_time": 201.8258876800537,
+      "inference_ms": 0.0271458625793457,
+      "val_metrics": {
+        "accuracy": 0.43243243243243246,
+        "precision_weighted": 0.4050885665404722,
+        "recall_weighted": 0.43243243243243246,
+        "f1_weighted": 0.41068373655607693,
+        "precision_macro": 0.4022713523620965,
+        "recall_macro": 0.43646759135023405,
+        "f1_macro": 0.41086154979772005
+      },
+      "status": "COMPLETED"
+    },
+    {
+      "model": "LinearSVC",
+      "params": {
+        "C": 1,
+        "class_weight": "balanced",
+        "max_iter": 10000
+      },
+      "train_time": 293.5666959285736,
+      "inference_ms": 0.03299760818481446,
+      "val_metrics": {
+        "accuracy": 0.43783783783783786,
+        "precision_weighted": 0.4075578509131141,
+        "recall_weighted": 0.43783783783783786,
+        "f1_weighted": 0.4151366522255207,
+        "precision_macro": 0.4058572884230779,
+        "recall_macro": 0.44066927202250294,
+        "f1_macro": 0.4155137477171376
+      },
+      "status": "COMPLETED"
+    },
+    {
+      "model": "LinearSVC",
+      "params": {
+        "C": 10,
+        "class_weight": null,
+        "max_iter": 10000
+      },
+      "train_time": 279.9880471229553,
+      "inference_ms": 0.03336668014526367,
+      "val_metrics": {
+        "accuracy": 0.3621621621621622,
+        "precision_weighted": 0.3380346135609294,
+        "recall_weighted": 0.3621621621621622,
+        "f1_weighted": 0.3444633374556695,
+        "precision_macro": 0.33683762978875764,
+        "recall_macro": 0.3630605525708394,
+        "f1_macro": 0.34407567837728265
+      },
+      "status": "COMPLETED"
+    },
+    {
+      "model": "LinearSVC",
+      "params": {
+        "C": 10,
+        "class_weight": "balanced",
+        "max_iter": 10000
+      },
+      "train_time": 286.4452130794525,
+      "inference_ms": 0.03431534767150879,
+      "val_metrics": {
+        "accuracy": 0.3621621621621622,
+        "precision_weighted": 0.3426339228090701,
+        "recall_weighted": 0.3621621621621622,
+        "f1_weighted": 0.34647863348055913,
+        "precision_macro": 0.33760198444011275,
+        "recall_macro": 0.36023240847929344,
+        "f1_macro": 0.3426875850751764
+      },
+      "status": "COMPLETED"
+    },
+    {
+      "model": "LinearSVC",
+      "params": {
+        "C": 100,
+        "class_weight": null,
+        "max_iter": 10000
+      },
+      "train_time": 177.94541788101196,
+      "inference_ms": 0.010126352310180664,
+      "val_metrics": {
+        "accuracy": 0.4,
+        "precision_weighted": 0.3934600461806344,
+        "recall_weighted": 0.4,
+        "f1_weighted": 0.3916499529859843,
+        "precision_macro": 0.3860769307723089,
+        "recall_macro": 0.3988407516370426,
+        "f1_macro": 0.3869443034640341
+      },
+      "status": "COMPLETED"
+    },
+    {
+      "model": "LinearSVC",
+      "params": {
+        "C": 100,
+        "class_weight": "balanced",
+        "max_iter": 10000
+      },
+      "train_time": 49.25219011306763,
+      "inference_ms": 0.012802839279174805,
+      "val_metrics": {
+        "accuracy": 0.32972972972972975,
+        "precision_weighted": 0.3158840658840659,
+        "recall_weighted": 0.32972972972972975,
+        "f1_weighted": 0.3183936675665999,
+        "precision_macro": 0.30892255892255893,
+        "recall_macro": 0.32598387263701667,
+        "f1_macro": 0.31272952790138614
+      },
+      "status": "COMPLETED"
+    }
+  ],
+  "best": {
+    "model": "LinearSVC",
+    "params": {
+      "C": 0.1,
+      "class_weight": "balanced",
+      "max_iter": 10000
+    },
+    "val_accuracy": 0.4756756756756757,
+    "val_macro_f1": 0.4566095422605236,
+    "val_weighted_f1": 0.4545894353845759,
+    "train_time": 365.8387653827667,
+    "inference_ms": 0.04220414161682129
+  }
+}
