@@ -148,6 +148,7 @@ class KeyboardFeatureExtractor(BaseFeatureExtractor):
     def _process_key_down(self, key_name: str, is_printable: bool, modifiers: List[str], current_time: float) -> None:
         """Process key down event."""
         self._total_keys += 1
+        self._key_timestamps.append(current_time)
         
         if key_name in self._correction_keys:
             # Track correction key
@@ -232,8 +233,8 @@ class KeyboardFeatureExtractor(BaseFeatureExtractor):
             features.is_active = False
         
         # Typing speed (keys per minute/second)
-        if self._key_timestamps:
-            time_span = self._key_timestamps[-1] - self._key_timestamps[0] if len(self._key_timestamps) > 1 else 1.0
+        if len(self._key_timestamps) > 1:
+            time_span = self._key_timestamps[-1] - self._key_timestamps[0]
             if time_span > 0:
                 features.typing_speed_kps = len(self._key_timestamps) / time_span
                 features.typing_speed_kpm = features.typing_speed_kps * 60
@@ -279,7 +280,7 @@ class KeyboardFeatureExtractor(BaseFeatureExtractor):
         # Rhythm/regularity features
         if len(self._inter_key_intervals) > 2:
             # Regularity: inverse of coefficient of variation
-            cv = features.iki_cv if features.iki_cv > 0 else 1.0
+            cv = features.iki_cv
             features.typing_rhythm_regularity = max(0.0, 1.0 - min(1.0, cv))
             
             # Burst typing: detect clusters of rapid typing

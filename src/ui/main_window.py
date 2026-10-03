@@ -1077,6 +1077,9 @@ class MainWindow(QMainWindow):
         """Poll keyboard analysis data from the keyboard capture modality."""
         if not self.session_manager or self.session_manager.state.value != "recording":
             return
+
+        if self.keyboard_analysis.session_text_recording_active:
+            return
         
         keyboard_capture = self.session_manager.modalities.get("keyboard")
         if not keyboard_capture:
@@ -1114,8 +1117,7 @@ class MainWindow(QMainWindow):
                 state_est = result.get("state_estimate")
                 if state_est:
                     self.keyboard_analysis.update_state(
-                        state_est.get("state", "--"),
-                        state_est.get("confidence", 0.0)
+                        state_est.get("state", "--")
                     )
                 
                 # Update metrics
@@ -1129,6 +1131,12 @@ class MainWindow(QMainWindow):
         """Handle start session button."""
         result = self.session_manager.start_session()
         if result:
+            session_text_path = (
+                Path(self.session_manager.config.storage.output_directory)
+                / self.session_manager.session_id
+                / "typed_text.txt"
+            )
+            self.keyboard_analysis.begin_session_text_recording(session_text_path)
             self._state_worker.start()
             self._duration_timer.start()
             self._face_analysis_timer.start()
@@ -1140,12 +1148,14 @@ class MainWindow(QMainWindow):
         """Handle pause session button."""
         result = self.session_manager.pause_session()
         if result:
+            self.keyboard_analysis.set_session_text_recording_active(False)
             self.log_panel.append_log("INFO", "UI", "Session paused")
 
     def _on_resume_session(self) -> None:
         """Handle resume session button."""
         result = self.session_manager.resume_session()
         if result:
+            self.keyboard_analysis.set_session_text_recording_active(True)
             self.log_panel.append_log("INFO", "UI", "Session resumed")
 
     def _on_stop_session(self) -> None:
@@ -1159,7 +1169,7 @@ class MainWindow(QMainWindow):
             self._keyboard_analysis_timer.stop()
             self.face_analysis.clear()
             self.audio_analysis.clear()
-            self.keyboard_analysis.clear()
+            self.keyboard_analysis.finish_session_text_recording()
             self.overall_human_state.clear()
             self.explanation_panel.update_explanation("")
             self.multimodal_contribution.clear()

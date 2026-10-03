@@ -35,12 +35,14 @@ This application is designed with privacy as a core requirement, not an aftertho
 | Modifier keys (Ctrl, Alt, Shift) | Yes | Shortcut/command analysis |
 | Key durations | Yes | Hold time analysis |
 | Window/process context | Yes (redacted) | Application context |
+| Text entered in the dedicated keyboard analysis field | Yes, in `typed_text.txt` during a session | Analyze the user's entered text and typing behavior |
 
 **Privacy Controls - MANDATORY:**
 - **Password/sensitive field detection**: OS accessibility APIs used to detect password fields; keys in these contexts are REDACTED (`"[REDACTED]"`)
 - Window titles containing sensitive terms are REDACTED
-- No plaintext passwords, credit cards, SSNs, tokens ever stored
+- Keyboard data outside the dedicated text field is redacted in detected sensitive contexts. Text entered in the dedicated analysis field is intentionally saved as plaintext; users must not enter passwords or other sensitive information there.
 - User notified that keyboard is being captured (UI indicator)
+- Dedicated analysis field clearly indicates that its text is saved locally; users must not enter passwords or sensitive information there
 - Configurable: can disable keyboard capture entirely
 
 **Sensitive Context Detection:**
@@ -79,7 +81,7 @@ The following are explicitly NOT captured:
 - Network activity
 - File system access
 - Browser history
-- Application content (only window title/process name)
+- Application content, except text deliberately entered in the dedicated keyboard analysis field during a session
 - Audio from other applications (only microphone input)
 - Video from other sources (only webcam)
 

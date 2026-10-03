@@ -19,6 +19,7 @@ from ui.main_window import (
     SessionControls,
     LogPanel,
 )
+from ui.keyboard_analysis_panel import KeyboardAnalysisPanel
 
 
 @pytest.fixture(scope="session")
@@ -183,6 +184,56 @@ class TestLogPanel:
         
         # QTextEdit.clear() leaves one empty block
         assert log.document().blockCount() == 1
+
+
+class TestKeyboardAnalysisPanel:
+    def test_rhythm_waits_for_enough_key_intervals(self, qapp, tmp_path):
+        panel = KeyboardAnalysisPanel()
+        panel.begin_session_text_recording(tmp_path / "session" / "typed_text.txt")
+
+        QTest.keyClicks(panel.input_field, "abc", delay=30)
+        assert panel.rhythm_label.text() == "Rhythm Regularity: collecting timing"
+
+        QTest.keyClicks(panel.input_field, "d", delay=30)
+        assert panel.rhythm_label.text().startswith("Rhythm Regularity: ")
+        assert panel.rhythm_label.text() != "Rhythm Regularity: collecting timing"
+
+    def test_session_text_is_saved_while_metrics_update(self, qapp, tmp_path):
+        panel = KeyboardAnalysisPanel()
+        text_path = tmp_path / "session" / "typed_text.txt"
+        panel.begin_session_text_recording(text_path)
+
+        QTest.keyClicks(panel.input_field, "abcd", delay=30)
+        assert text_path.read_text(encoding="utf-8") == "abcd"
+        QTest.keyClick(panel.input_field, Qt.Key.Key_Backspace)
+
+        assert panel._feature_extractor._total_keys == 5
+        assert panel.input_field.text() == "abc"
+        assert text_path.read_text(encoding="utf-8") == "abc"
+        assert panel.typing_speed_label.text() != "Typing Speed: --"
+        assert panel.iki_label.text() != "Inter-Key Interval: --"
+        assert panel.correction_rate_label.text() != "Correction Rate: --"
+        assert panel.sample_progress_label.text() == "Sample Progress: 25%"
+        assert panel.rhythm_label.text().startswith("Rhythm Regularity:")
+        assert panel.state_label.text() == "State: typing_pattern_observed"
+
+    def test_session_pause_resume_and_stop_preserve_text(self, qapp, tmp_path):
+        panel = KeyboardAnalysisPanel()
+        text_path = tmp_path / "session" / "typed_text.txt"
+        panel.begin_session_text_recording(text_path)
+        QTest.keyClicks(panel.input_field, "session", delay=10)
+
+        panel.set_session_text_recording_active(False)
+        assert not panel.input_field.isEnabled()
+
+        panel.set_session_text_recording_active(True)
+        assert panel.input_field.isEnabled()
+        panel.finish_session_text_recording()
+
+        assert not panel.input_field.isEnabled()
+        assert panel.input_field.text() == "session"
+        assert text_path.read_text(encoding="utf-8") == "session"
+        assert "saved to typed_text.txt" in panel.input_status_label.text()
 
 
 class TestMainWindow:
