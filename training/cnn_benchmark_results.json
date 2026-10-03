@@ -1,10 +1,124 @@
 {
-    "status": "NOT_COMPLETED",
-    "reason": "CNN training on CPU-only environment is too slow (>10 min per epoch). No GPU available. Training would require ~50 epochs * 10+ min = 8+ hours. Not practical in current environment.",
-    "model": "SimpleCNN",
-    "parameters": 322151,
-    "device": "cpu",
-    "dataset_split": "Train: 1190, Val: 210, Test: 1311 (same FER2013 splits)",
-    "note": "Same train/val/test splits as MediaPipe benchmarks. CNN architecture ready for GPU training if hardware becomes available.",
-    "timestamp": "2026-09-21T20:00:00"
+  "model": "SimpleCNN",
+  "train_time": 20.36455464363098,
+  "inference_ms": 0.7463741302490234,
+  "metrics": {
+    "accuracy": 0.20671243325705568,
+    "precision_macro": 0.23892028735897905,
+    "recall_macro": 0.2302252252252252,
+    "f1_macro": 0.19099954423603618,
+    "precision_weighted": 0.24681657124937806,
+    "recall_weighted": 0.20671243325705568,
+    "f1_weighted": 0.19023838404890359,
+    "confusion_matrix": [
+      [
+        14,
+        67,
+        0,
+        61,
+        17,
+        15,
+        26
+      ],
+      [
+        1,
+        64,
+        0,
+        32,
+        0,
+        5,
+        9
+      ],
+      [
+        11,
+        87,
+        0,
+        46,
+        15,
+        16,
+        25
+      ],
+      [
+        2,
+        94,
+        0,
+        67,
+        11,
+        9,
+        17
+      ],
+      [
+        6,
+        73,
+        0,
+        59,
+        31,
+        3,
+        28
+      ],
+      [
+        9,
+        56,
+        2,
+        32,
+        9,
+        61,
+        31
+      ],
+      [
+        4,
+        81,
+        0,
+        66,
+        9,
+        6,
+        34
+      ]
+    ],
+    "per_class": {
+      "angry": {
+        "precision": 0.2978723404255319,
+        "recall": 0.07,
+        "f1": 0.11336032388663968,
+        "support": 200
+      },
+      "disgust": {
+        "precision": 0.12260536398467432,
+        "recall": 0.5765765765765766,
+        "f1": 0.20221169036334913,
+        "support": 111
+      },
+      "fear": {
+        "precision": 0.0,
+        "recall": 0.0,
+        "f1": 0.0,
+        "support": 200
+      },
+      "happy": {
+        "precision": 0.18457300275482094,
+        "recall": 0.335,
+        "f1": 0.23801065719360567,
+        "support": 200
+      },
+      "sad": {
+        "precision": 0.33695652173913043,
+        "recall": 0.155,
+        "f1": 0.21232876712328766,
+        "support": 200
+      },
+      "surprised": {
+        "precision": 0.5304347826086957,
+        "recall": 0.305,
+        "f1": 0.3873015873015873,
+        "support": 200
+      },
+      "neutral": {
+        "precision": 0.2,
+        "recall": 0.17,
+        "f1": 0.1837837837837838,
+        "support": 200
+      }
+    }
+  },
+  "timestamp": "2026-10-02 15:11:12"
 }

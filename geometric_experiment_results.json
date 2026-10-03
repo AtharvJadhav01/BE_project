@@ -1,0 +1,354 @@
+{
+  "experiments": [
+    {
+      "name": "geometric_only",
+      "params": {
+        "C": 0.1,
+        "class_weight": "balanced",
+        "max_iter": 10000
+      },
+      "status": "ERROR",
+      "error": "X has 1503 features, but LinearSVC is expecting 54 features as input."
+    },
+    {
+      "name": "expanded_only",
+      "params": {
+        "C": 0.1,
+        "class_weight": "balanced",
+        "max_iter": 10000
+      },
+      "status": "ERROR",
+      "error": "X has 1503 features, but LinearSVC is expecting 1449 features as input."
+    },
+    {
+      "name": "combined",
+      "params": {
+        "C": 0.1,
+        "class_weight": "balanced",
+        "max_iter": 10000
+      },
+      "train_time": 54.77574896812439,
+      "inference_ms": 0.0057828426361083984,
+      "val_metrics": {
+        "accuracy": 0.5564516129032258,
+        "precision_weighted": 0.5630364687231385,
+        "recall_weighted": 0.5564516129032258,
+        "f1_weighted": 0.5526566720115108,
+        "precision_macro": 0.5582668965021906,
+        "recall_macro": 0.5453075089684997,
+        "f1_macro": 0.5451425022853594,
+        "confusion_matrix": [
+          [
+            8,
+            2,
+            1,
+            1,
+            0,
+            2,
+            3
+          ],
+          [
+            2,
+            11,
+            2,
+            0,
+            0,
+            0,
+            2
+          ],
+          [
+            0,
+            1,
+            6,
+            2,
+            3,
+            2,
+            3
+          ],
+          [
+            1,
+            0,
+            0,
+            14,
+            2,
+            0,
+            2
+          ],
+          [
+            1,
+            2,
+            3,
+            1,
+            3,
+            0,
+            6
+          ],
+          [
+            1,
+            0,
+            1,
+            0,
+            1,
+            13,
+            2
+          ],
+          [
+            0,
+            0,
+            3,
+            0,
+            3,
+            0,
+            14
+          ]
+        ],
+        "per_class": {
+          "angry": {
+            "precision": 0.6153846153846154,
+            "recall": 0.47058823529411764,
+            "f1": 0.5333333333333333,
+            "support": 17
+          },
+          "disgust": {
+            "precision": 0.6875,
+            "recall": 0.6470588235294118,
+            "f1": 0.6666666666666666,
+            "support": 17
+          },
+          "fear": {
+            "precision": 0.375,
+            "recall": 0.35294117647058826,
+            "f1": 0.36363636363636365,
+            "support": 17
+          },
+          "happy": {
+            "precision": 0.7777777777777778,
+            "recall": 0.7368421052631579,
+            "f1": 0.7567567567567568,
+            "support": 19
+          },
+          "sad": {
+            "precision": 0.25,
+            "recall": 0.1875,
+            "f1": 0.21428571428571427,
+            "support": 16
+          },
+          "surprised": {
+            "precision": 0.7647058823529411,
+            "recall": 0.7222222222222222,
+            "f1": 0.7428571428571429,
+            "support": 18
+          },
+          "neutral": {
+            "precision": 0.4375,
+            "recall": 0.7,
+            "f1": 0.5384615384615384,
+            "support": 20
+          }
+        }
+      },
+      "test_metrics": {
+        "accuracy": 0.5060240963855421,
+        "precision_weighted": 0.5018933061396526,
+        "recall_weighted": 0.5060240963855421,
+        "f1_weighted": 0.4980987121426172,
+        "precision_macro": 0.48990893965396465,
+        "recall_macro": 0.5125489869588848,
+        "f1_macro": 0.4929194654971423,
+        "confusion_matrix": [
+          [
+            60,
+            40,
+            16,
+            6,
+            17,
+            13,
+            17
+          ],
+          [
+            12,
+            62,
+            5,
+            3,
+            7,
+            0,
+            3
+          ],
+          [
+            19,
+            17,
+            46,
+            14,
+            20,
+            32,
+            29
+          ],
+          [
+            8,
+            7,
+            5,
+            147,
+            6,
+            2,
+            14
+          ],
+          [
+            20,
+            22,
+            25,
+            3,
+            53,
+            6,
+            42
+          ],
+          [
+            14,
+            4,
+            13,
+            11,
+            6,
+            122,
+            9
+          ],
+          [
+            13,
+            11,
+            14,
+            12,
+            33,
+            4,
+            98
+          ]
+        ],
+        "per_class": {
+          "angry": {
+            "precision": 0.410958904109589,
+            "recall": 0.35502958579881655,
+            "f1": 0.38095238095238093,
+            "support": 169
+          },
+          "disgust": {
+            "precision": 0.3803680981595092,
+            "recall": 0.6739130434782609,
+            "f1": 0.48627450980392156,
+            "support": 92
+          },
+          "fear": {
+            "precision": 0.3709677419354839,
+            "recall": 0.2598870056497175,
+            "f1": 0.30564784053156147,
+            "support": 177
+          },
+          "happy": {
+            "precision": 0.75,
+            "recall": 0.7777777777777778,
+            "f1": 0.7636363636363637,
+            "support": 189
+          },
+          "sad": {
+            "precision": 0.3732394366197183,
+            "recall": 0.30994152046783624,
+            "f1": 0.33865814696485624,
+            "support": 171
+          },
+          "surprised": {
+            "precision": 0.6815642458100558,
+            "recall": 0.6815642458100558,
+            "f1": 0.6815642458100558,
+            "support": 179
+          },
+          "neutral": {
+            "precision": 0.46226415094339623,
+            "recall": 0.5297297297297298,
+            "f1": 0.49370277078085645,
+            "support": 185
+          }
+        }
+      },
+      "status": "COMPLETED"
+    },
+    {
+      "name": "geom_eye",
+      "params": {
+        "C": 0.1,
+        "class_weight": "balanced",
+        "max_iter": 10000
+      },
+      "status": "ERROR",
+      "error": "X has 1503 features, but LinearSVC is expecting 11 features as input."
+    },
+    {
+      "name": "geom_mouth",
+      "params": {
+        "C": 0.1,
+        "class_weight": "balanced",
+        "max_iter": 10000
+      },
+      "status": "ERROR",
+      "error": "X has 1503 features, but LinearSVC is expecting 12 features as input."
+    },
+    {
+      "name": "geom_eyebrow",
+      "params": {
+        "C": 0.1,
+        "class_weight": "balanced",
+        "max_iter": 10000
+      },
+      "status": "ERROR",
+      "error": "X has 1503 features, but LinearSVC is expecting 9 features as input."
+    },
+    {
+      "name": "geom_nose",
+      "params": {
+        "C": 0.1,
+        "class_weight": "balanced",
+        "max_iter": 10000
+      },
+      "status": "ERROR",
+      "error": "X has 1503 features, but LinearSVC is expecting 3 features as input."
+    },
+    {
+      "name": "geom_symmetry",
+      "params": {
+        "C": 0.1,
+        "class_weight": "balanced",
+        "max_iter": 10000
+      },
+      "status": "ERROR",
+      "error": "X has 1503 features, but LinearSVC is expecting 4 features as input."
+    },
+    {
+      "name": "geom_angles",
+      "params": {
+        "C": 0.1,
+        "class_weight": "balanced",
+        "max_iter": 10000
+      },
+      "status": "ERROR",
+      "error": "X has 1503 features, but LinearSVC is expecting 4 features as input."
+    },
+    {
+      "name": "geom_normalized",
+      "params": {
+        "C": 0.1,
+        "class_weight": "balanced",
+        "max_iter": 10000
+      },
+      "status": "ERROR",
+      "error": "X has 1503 features, but LinearSVC is expecting 4 features as input."
+    }
+  ],
+  "best": {
+    "name": "combined",
+    "params": {
+      "C": 0.1,
+      "class_weight": "balanced",
+      "max_iter": 10000
+    },
+    "val_accuracy": 0.5564516129032258,
+    "val_macro_f1": 0.5451425022853594,
+    "val_weighted_f1": 0.5526566720115108,
+    "train_time": 54.77574896812439,
+    "inference_ms": 0.0057828426361083984
+  }
+}
