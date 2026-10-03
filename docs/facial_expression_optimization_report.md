@@ -120,7 +120,7 @@ Created experimental feature extractor adding ~120 expression-specific geometric
 
 **Total experimental features:** ~1,577 (1,457 expanded + ~120 geometric)
 
-**Important:** The geometric feature extractor was implemented but **NOT evaluated on FER2013** due to computational constraints. The ablation study (Phase 4) was performed on the existing 1,457 expanded features only. Future work should evaluate the geometric features on FER2013 and real-world data.
+**Important:** The geometric feature extractor was implemented but **NOT evaluated on FER2013** due to computational constraints. The ablation study (Phase 4) was performed on the existing 1,457 expanded features only. The geometric experiment (separate report) used a different validation split (1,115/124/1,162) and its 51.12% `expanded_only` result is **NOT directly comparable** to the protected 50.69% benchmark (which used 1,054/185/1,162 split). Future work should evaluate the geometric features on FER2013 with the standard split and real-world data.
 
 ---
 

@@ -274,13 +274,15 @@ Feature importance was computed using permutation importance on the best Logisti
 
 | Property | Value |
 |----------|-------|
-| Architecture | SimpleCNN (322,151 parameters) |
-| Device | CPU only |
-| Training Status | **NOT_COMPLETED** |
-| Reason | >10 minutes per epoch on CPU; 50 epochs would require ~8+ hours |
-| Test Evaluation | **Not performed** |
+| Architecture | SimpleCNN (174,311 parameters) |
+| Device | GPU (NVIDIA RTX 4050, CUDA 11.8) |
+| Training Status | **COMPLETED** |
+| Epochs Trained | 50 (early stopping patience=15, not triggered) |
+| Best Epoch | 50 |
+| Best Validation Macro F1 | 23.04% |
+| Test Evaluation | **Performed** on 1,162 face-detected PublicTest samples |
 
-**Conclusion:** CNN was not successfully evaluated on the final held-out test set. The architecture is ready for GPU training if hardware becomes available, but no valid test result exists. Do not treat CNN as better or worse than the tested models.
+**Conclusion:** CNN was trained and evaluated on the exact same 1,162 face-detected PublicTest samples as the protected LinearSVC benchmark. Test accuracy: **19.28%**, Macro F1: **16.46%**, Weighted F1: **16.45%**. The CNN did not exceed the LinearSVC benchmark (50.69% accuracy). The model checkpoint, metadata, and training history are saved in `training/models/cnn_fer2013_best.pt`, `training/models/cnn_fer2013_metadata.json`, and `training/models/cnn_fer2013_history.json`. Reload verification: PASSED.
 
 ---
 
@@ -339,7 +341,7 @@ Feature importance was computed using permutation importance on the best Logisti
 5. **Domain shift** between FER2013 (grayscale, centered) and webcam images (color, variable lighting/pose)
 6. **Hand-crafted feature limitations** for subtle expression discrimination
 7. **No temporal information** — single-frame classification only
-8. **CPU-only environment** prevented CNN training/evaluation
+8. **CNN trained on small dataset** (1,190 training samples) — limited deep learning capacity
 9. **No labeled real-world webcam data** for out-of-distribution evaluation
 
 ---
@@ -379,7 +381,7 @@ Feature importance was computed using permutation importance on the best Logisti
 | **Improvement** | **+2.41 percentage points** |
 | **Best Macro F1** | 48.61% |
 | **Best Weighted F1** | 49.12% |
-| **CNN Test Result** | NOT_COMPLETED (no valid test evaluation) |
+| **CNN Test Result** | **COMPLETED: 19.28% accuracy, 16.46% Macro F1, 16.45% Weighted F1** |
 | **Live Webcam Accuracy** | NOT_MEASURED (no labeled webcam dataset) |
 
 ---
@@ -394,7 +396,7 @@ Feature importance was computed using permutation importance on the best Logisti
 4. **How much improvement was measured?** +2.41 percentage points (46.73% → 49.14%).
 5. **Did expanded MediaPipe features improve performance?** Yes, by +2.41 pp over the verified baseline.
 6. **Which emotion classes remain difficult?** fear (F1 0.287), angry (F1 0.411), sad (F1 0.362), disgust (F1 0.473).
-7. **Was CNN successfully evaluated?** No — CPU-only training was infeasible; no test evaluation performed.
+7. **Was CNN successfully evaluated?** Yes — trained on GPU (RTX 4050) for 50 epochs, evaluated on the exact 1,162 face-detected PublicTest samples. Test accuracy: 19.28% (vs. LinearSVC 50.69%). CNN did not exceed the LinearSVC benchmark.
 8. **Is the best tested pipeline computationally suitable for real-time inference?** Yes — ~16–39 ms total latency (< 40 ms), well within real-time requirements.
 9. **What should be done next?** See Section 20.
 
@@ -434,5 +436,6 @@ Feature importance was computed using permutation importance on the best Logisti
 ---
 
 **Report Status:** COMPLETE  
-**Generated:** 2026-09-22  
-**Author:** Benchmark Pipeline (automated audit + report generation)
+**Generated:** 2026-10-03  
+**Author:** Benchmark Pipeline (automated audit + report generation)  
+**Updated:** 2026-10-03 (CNN results updated post-GPU training)

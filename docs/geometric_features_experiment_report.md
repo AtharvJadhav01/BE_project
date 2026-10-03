@@ -136,9 +136,9 @@ Determine whether explicit geometric facial features can improve upon the verifi
 | Artifact | Path | Status |
 |----------|------|--------|
 | Geometric Dataset | `training/fer2013_features_geometric/` | ✅ Created |
-| Optimized Pipeline | `training/models/geometric_optimized.joblib` | ✅ Saved |
-| Metadata | `training/models/geometric_optimized_metadata.json` | ✅ Saved |
-| Reload Verification | Predictions identical | ✅ PASSED |
+| Optimized Pipeline | `training/models/geometric_optimized.joblib` | ❌ NOT SAVED |
+| Metadata | `training/models/geometric_optimized_metadata.json` | ❌ NOT SAVED |
+| Reload Verification | N/A | ❌ NOT VERIFIED |
 
 ---
 
@@ -230,9 +230,9 @@ print(f"Macro F1: {f1_score(y_test, y_pred, average='macro'):.4f}")
 | Artifact | Path | Verified |
 |----------|------|----------|
 | Geometric Dataset | `training/fer2013_features_geometric/` | ✅ |
-| Optimized Pipeline | `training/models/geometric_optimized.joblib` | ✅ |
-| Metadata | `training/models/geometric_optimized_metadata.json` | ✅ |
-| Reload Verification | Predictions identical | ✅ PASSED |
+| Optimized Pipeline | `training/models/geometric_optimized.joblib` | ❌ NOT SAVED |
+| Metadata | `training/models/geometric_optimized_metadata.json` | ❌ NOT SAVED |
+| Reload Verification | N/A | ❌ NOT VERIFIED |
 | LinearSVC Artifacts | Unchanged | ✅ |
 | LogisticRegression Artifacts | Unchanged | ✅ |
 | XGBoost Artifacts | Unchanged | ✅ |
