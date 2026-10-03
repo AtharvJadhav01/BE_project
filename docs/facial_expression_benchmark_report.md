@@ -284,6 +284,8 @@ Feature importance was computed using permutation importance on the best Logisti
 
 **Conclusion:** CNN was trained and evaluated on the exact same 1,162 face-detected PublicTest samples as the protected LinearSVC benchmark. Test accuracy: **19.28%**, Macro F1: **16.46%**, Weighted F1: **16.45%**. The CNN did not exceed the LinearSVC benchmark (50.69% accuracy). The model checkpoint, metadata, and training history are saved in `training/models/cnn_fer2013_best.pt`, `training/models/cnn_fer2013_metadata.json`, and `training/models/cnn_fer2013_history.json`. Reload verification: PASSED.
 
+**Note on parameter count:** The model has 174,311 trainable parameters (not 322,151 as previously documented in earlier versions). The 322,151 figure was from an earlier architectural variant with a different classifier head configuration.
+
 ---
 
 ## 13. Data Leakage and Validation

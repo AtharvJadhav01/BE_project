@@ -163,7 +163,7 @@ This checks:
 After dataset collection and validation:
 
 1. Run evaluation: `python training/evaluate_webcam.py`
-2. Compare webcam accuracy vs FER2013 (49.14%)
+2. Compare webcam accuracy vs FER2013 PublicTest (LinearSVC 50.69%, 1,162 face-detected samples)
 3. Analyze error patterns
 4. Document findings in `docs/real_world_face_validation.md`
 
