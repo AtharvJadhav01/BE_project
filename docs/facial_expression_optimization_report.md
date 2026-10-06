@@ -233,7 +233,7 @@ Created experimental feature extractor adding ~120 expression-specific geometric
 2. **Domain shift:** FER2013 (grayscale, 48×48) vs. real webcam (color, variable conditions)
 3. **Class imbalance:** Fear (177) vs Disgust (92) in test set
 4. **No temporal modeling:** Single-frame classification only
-5. **No webcam validation:** Real-world accuracy not measured
+5. **Webcam validation:** **COMPLETED** — 18.79% accuracy on 1,804 webcam images (see `docs/real_world_face_validation.md`)
 6. **LinearSVC convergence warnings:** Some configurations didn't fully converge
 7. **Feature cleaning:** 4 constant features removed automatically (lm_1_x, lm_1_y, lm_1_z, feature_1460)
 8. **Geometric features not evaluated:** Experimental extractor created but not benchmarked on FER2013

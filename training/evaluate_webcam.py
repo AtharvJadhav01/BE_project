@@ -1,16 +1,19 @@
 """
 Webcam Expression Evaluation Tool
 
-Evaluates a labeled webcam dataset against the CURRENT BEST MODEL.
+Evaluates a labeled webcam dataset against the CURRENT BEST VERIFIED MODEL.
 
-Current best FER2013 benchmark:
-- Model: LogisticRegression
-- Features: 1,457 expanded MediaPipe features
-- FER2013 PublicTest accuracy: 49.14%
+Current best FER2013 benchmark (verified):
+- Model: LinearSVC
+- Features: 1,449 (Landmarks + Blendshapes)
+- FER2013 PublicTest accuracy: 50.69%
+- Macro F1: 49.19%
+- Weighted F1: 49.98%
 
-IMPORTANT: The 1,457-feature LogisticRegression model artifact was NOT saved
-during the benchmark phase. This tool will report that and stop if the artifact
-is not available.
+The verified LinearSVC model artifacts:
+- Model: training/models/linear_svc_optimized_1449.joblib
+- Scaler: training/models/scaler_optimized_1449.joblib
+- Metadata: training/models/linear_svc_optimized_1449_metadata.json
 
 Usage:
     python training/evaluate_webcam.py --dataset data/webcam_expression_dataset
@@ -38,6 +41,9 @@ sys.path.insert(0, str(Path(__file__).parent.parent / "src"))
 
 import cv2
 from face.detector import FaceDetector, FaceDetectionResult
+
+# Add training to path for feature extractor
+sys.path.insert(0, str(Path(__file__).parent))
 from training.feature_extractor_expanded import (
     ExpandedMediaPipeFeatureExtractor,
     ExpandedFacialFeatures,
@@ -57,42 +63,74 @@ EXPRESSION_CLASSES = [
 EXPRESSION_TO_IDX = {cls: i for i, cls in enumerate(EXPRESSION_CLASSES)}
 
 
-def find_best_model_artifact() -> Tuple[Optional[Path], Optional[Path], Optional[Path]]:
-    """Find the 1,457-feature LogisticRegression model artifacts."""
-    models_dir = Path(__file__).parent / "models"
-
-    # Expected artifact names for the 1,457-feature LogisticRegression model
-    # Based on the benchmark phase naming convention
-    possible_names = [
-        "lr_emotion_1457feat.joblib",
-        "logistic_regression_1457.joblib",
-        "lr_expanded_1457.joblib",
-        "best_logistic_regression_1457.joblib",
-    ]
-
-    for name in possible_names:
-        model_path = models_dir / name
-        scaler_path = models_dir / name.replace(".joblib", "_scaler.joblib")
-        metadata_path = models_dir / name.replace(".joblib", "_metadata.json")
-        if model_path.exists():
-            return model_path, scaler_path, metadata_path
-
-    # Also check for any LogisticRegression model with 1457 features
-    for model_file in models_dir.glob("*.joblib"):
-        if "lr" in model_file.name.lower() or "logistic" in model_file.name.lower():
-            # Check metadata for feature count
-            meta_file = models_dir / model_file.name.replace(".joblib", "_metadata.json")
-            if meta_file.exists():
-                try:
-                    with open(meta_file, "r") as f:
-                        meta = json.load(f)
-                    if meta.get("feature_dim") == 1457:
-                        scaler_path = models_dir / model_file.name.replace(".joblib", "_scaler.joblib")
-                        return model_file, scaler_path, meta_file
-                except Exception:
-                    pass
-
-    return None, None, None
+class LinearSVCFeatureExtractor:
+    """
+    Feature extractor that produces exactly the 1449 features expected by the
+    verified LinearSVC model (1404 landmarks + 48 blendshapes).
+    
+    This wraps the expanded feature extractor and selects only the features
+    that the LinearSVC model was trained on.
+    """
+    
+    def __init__(self, model_path: str, feature_names: List[str]):
+        """
+        Initialize with the MediaPipe model and target feature names.
+        
+        Args:
+            model_path: Path to face_landmarker.task
+            feature_names: List of 1449 feature names from LinearSVC metadata
+        """
+        self.extractor = ExpandedMediaPipeFeatureExtractor(model_path, normalize_landmarks=True)
+        self.target_feature_names = feature_names
+        
+        # Map from target feature name to index in expanded extractor output
+        self._build_feature_index_map()
+    
+    def _build_feature_index_map(self):
+        """Build mapping from target feature names to indices in expanded extractor output."""
+        # Get all feature names from expanded extractor
+        expanded_names = ExpandedFacialFeatures.get_feature_names()
+        
+        # Build name-to-index mapping for expanded features
+        expanded_name_to_idx = {name: i for i, name in enumerate(expanded_names)}
+        
+        # Build mapping for target features
+        self.feature_indices = []
+        missing = []
+        for name in self.target_feature_names:
+            if name in expanded_name_to_idx:
+                self.feature_indices.append(expanded_name_to_idx[name])
+            else:
+                missing.append(name)
+        
+        if missing:
+            raise ValueError(f"Missing features in expanded extractor: {missing}")
+        
+        print(f"Feature mapping: {len(self.target_feature_names)} target -> {len(self.feature_indices)} mapped")
+        if len(self.target_feature_names) != len(self.feature_indices):
+            raise ValueError(f"Feature count mismatch: target={len(self.target_feature_names)}, mapped={len(self.feature_indices)}")
+    
+    def extract_features(self, image: np.ndarray) -> Tuple[Optional[np.ndarray], bool]:
+        """
+        Extract features matching the LinearSVC expected format.
+        
+        Returns:
+            Tuple of (1449-feature array or None, face_detected_flag)
+        """
+        features, face_detected = self.extractor.extract_features(image)
+        if not face_detected or features is None:
+            return None, False
+        
+        # Get full expanded feature vector
+        expanded_array = features.to_array()
+        
+        # Select only the features needed by LinearSVC
+        selected = expanded_array[self.feature_indices]
+        
+        return selected, True
+    
+    def close(self):
+        self.extractor.close()
 
 
 def load_webcam_dataset(dataset_dir: Path) -> Tuple[List[str], List[str]]:
@@ -118,7 +156,7 @@ def evaluate_on_webcam(
     scaler_path: Optional[str] = None,
     metadata_path: Optional[str] = None,
 ) -> Dict:
-    """Evaluate the best model on webcam dataset."""
+    """Evaluate the verified LinearSVC model on webcam dataset."""
 
     print("=== Webcam Expression Evaluation ===\n")
 
@@ -138,30 +176,36 @@ def evaluate_on_webcam(
     for cls in EXPRESSION_CLASSES:
         print(f"  {cls}: {label_counts.get(cls, 0)}")
 
-    # Find or use specified model
+    # Use verified LinearSVC model artifacts if not specified
+    models_dir = Path(__file__).parent / "models"
+    
     if model_path:
         mp = Path(model_path)
         sp = Path(scaler_path) if scaler_path else mp.parent / (mp.stem + "_scaler.joblib")
         mtp = Path(metadata_path) if metadata_path else mp.parent / (mp.stem + "_metadata.json")
     else:
-        mp, sp, mtp = find_best_model_artifact()
+        # Use verified LinearSVC artifacts
+        mp = models_dir / "linear_svc_optimized_1449.joblib"
+        sp = models_dir / "scaler_optimized_1449.joblib"
+        mtp = models_dir / "linear_svc_optimized_1449_metadata.json"
 
-    if mp is None or not mp.exists():
+    if not mp.exists():
         print("\n" + "=" * 60)
-        print("BEST MODEL ARTIFACT NOT AVAILABLE")
+        print("LINEAR SVC MODEL ARTIFACT NOT FOUND")
         print("=" * 60)
-        print("The 1,457-feature LogisticRegression model that achieved")
-        print("49.14% on FER2013 PublicTest was never saved to disk.")
-        print("")
-        print("Available models in training/models/:")
-        for f in (Path(__file__).parent / "models").glob("*.joblib"):
+        print(f"Expected: {mp}")
+        print("\nAvailable models in training/models/:")
+        for f in models_dir.glob("*.joblib"):
             print(f"  {f.name}")
-        print("")
-        print("To proceed, you must:")
-        print("  1. Retrain the LogisticRegression on 1,457 expanded features")
-        print("  2. Save the model, scaler, and metadata")
-        print("  3. Re-run this evaluation")
-        return {"status": "BEST MODEL ARTIFACT NOT AVAILABLE"}
+        return {"status": "MODEL ARTIFACT NOT FOUND"}
+
+    if not sp.exists():
+        print(f"Scaler not found: {sp}")
+        return {"status": "SCALER NOT FOUND"}
+
+    if not mtp.exists():
+        print(f"Metadata not found: {mtp}")
+        return {"status": "METADATA NOT FOUND"}
 
     print(f"\nLoading model: {mp}")
     print(f"Loading scaler: {sp}")
@@ -177,29 +221,34 @@ def evaluate_on_webcam(
         print(f"Error loading model artifacts: {e}")
         return {"status": "MODEL LOAD FAILED", "error": str(e)}
 
-    # Verify feature dimension
+    # Verify feature dimension matches LinearSVC
     feature_dim = metadata.get("feature_dim", 0)
-    if feature_dim != 1457:
-        print(f"Warning: Model feature_dim={feature_dim}, expected 1457")
+    if feature_dim != 1449:
+        print(f"Warning: Model feature_dim={feature_dim}, expected 1449")
 
     print(f"Model loaded: {metadata.get('model_type', 'unknown')}")
     print(f"Feature dimension: {feature_dim}")
+    print(f"Test accuracy (FER2013): {metadata.get('test_accuracy', 'N/A')}")
 
-    # Initialize feature extractor
+    # Get target feature names from metadata
+    target_feature_names = metadata.get("feature_names", [])
+    if not target_feature_names or len(target_feature_names) != 1449:
+        print(f"Warning: Expected 1449 feature names in metadata, got {len(target_feature_names)}")
+        # Fallback: construct from metadata feature_groups
+        if "feature_group" in metadata and metadata["feature_group"] == "landmarks_blendshapes":
+            print("Using landmarks_blendshapes feature group (1449 features)")
+
+    # Initialize feature extractor with LinearSVC's expected features
     model_file = Path(__file__).parent.parent / "face_landmarker.task"
     if not model_file.exists():
-        # Try to find it
         model_file = Path("face_landmarker.task")
 
     if not model_file.exists():
         print(f"MediaPipe model not found: {model_file}")
         return {"status": "MEDIAPIPE MODEL NOT FOUND"}
 
-    extractor = ExpandedMediaPipeFeatureExtractor(str(model_file), normalize_landmarks=True)
-    detector = FaceDetector({
-        "min_detection_confidence": 0.5,
-        "min_tracking_confidence": 0.5,
-    })
+    # Initialize feature extractor with LinearSVC's expected feature names
+    extractor = LinearSVCFeatureExtractor(str(model_file), target_feature_names)
 
     # Process images and extract features
     print("\nExtracting features from webcam images...")
@@ -216,21 +265,21 @@ def evaluate_on_webcam(
             failed += 1
             continue
 
-        # Extract expanded features
+        # Extract features matching LinearSVC expected format
         features, face_detected = extractor.extract_features(img)
         if not face_detected or features is None:
             failed += 1
             continue
 
-        # Convert to array and scale
-        feature_array = features.to_array().reshape(1, -1)
-        if feature_array.shape[1] != feature_dim:
-            # Feature dimension mismatch
+        # Verify feature dimension
+        if features.shape[0] != 1449:
+            print(f"  Warning: Feature dimension mismatch: got {features.shape[0]}, expected 1449")
             failed += 1
             continue
 
+        # Scale features
         try:
-            feature_scaled = scaler.transform(feature_array)
+            feature_scaled = scaler.transform(features.reshape(1, -1))
             X.append(feature_scaled[0])
             y_true.append(EXPRESSION_TO_IDX[label])
         except Exception as e:
@@ -282,7 +331,7 @@ def evaluate_on_webcam(
 
     # Print results
     print("\n" + "=" * 60)
-    print("EVALUATION RESULTS")
+    print("EVALUATION RESULTS (Webcam Dataset)")
     print("=" * 60)
     print(f"Accuracy:          {accuracy:.4f} ({accuracy*100:.2f}%)")
     print(f"Macro Precision:   {macro_precision:.4f}")
@@ -312,11 +361,12 @@ def evaluate_on_webcam(
     print("\nCOMPARISON WITH FER2013 BENCHMARK:")
     print("| Dataset            | Model              | Accuracy | Macro F1 | Weighted F1 |")
     print("| ------------------ | ------------------ | -------: | -------: | ----------: |")
-    print(f"| FER2013 PublicTest | LogisticRegression |  49.14%  |  48.61%  |    49.12%   |")
-    print(f"| Webcam test set    | Same model         | {accuracy*100:6.2f}% | {macro_f1*100:6.2f}%  |   {weighted_f1*100:6.2f}%   |")
+    print(f"| FER2013 PublicTest | LinearSVC (1449ft) |  50.69%  |  49.19%  |    49.98%   |")
+    print(f"| Webcam test set    | Same LinearSVC     | {accuracy*100:6.2f}% | {macro_f1*100:6.2f}%  |   {weighted_f1*100:6.2f}%   |")
 
     return {
         "status": "COMPLETED",
+        "model": "LinearSVC (1449 features, landmarks + blendshapes)",
         "accuracy": float(accuracy),
         "macro_precision": float(macro_precision),
         "macro_recall": float(macro_recall),
@@ -329,14 +379,19 @@ def evaluate_on_webcam(
         "total_samples": len(X),
         "failed_samples": failed,
         "class_distribution": dict(label_counts),
+        "fer2013_benchmark": {
+            "accuracy": 0.5069,
+            "macro_f1": 0.4919,
+            "weighted_f1": 0.4998
+        }
     }
 
 
 def main():
     import argparse
-    parser = argparse.ArgumentParser(description="Evaluate webcam expression dataset against best model")
+    parser = argparse.ArgumentParser(description="Evaluate webcam expression dataset against verified LinearSVC model")
     parser.add_argument("--dataset", default="data/webcam_expression_dataset", help="Dataset directory")
-    parser.add_argument("--model", help="Model path (optional, auto-discover if not provided)")
+    parser.add_argument("--model", help="Model path (optional, uses LinearSVC by default)")
     parser.add_argument("--scaler", help="Scaler path (optional)")
     parser.add_argument("--metadata", help="Metadata path (optional)")
     args = parser.parse_args()

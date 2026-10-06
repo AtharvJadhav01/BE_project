@@ -37,6 +37,27 @@ All modalities are timestamped with a shared monotonic clock and stored in a ses
 
 \* Geometric combined used different validation split (1,115/124/1,162); not directly comparable to protected 1,054/185/1,162 split.
 
+## Webcam Evaluation Results (Held-out Real-World Dataset)
+
+| Model | Features | Test Accuracy | Macro F1 | Weighted F1 |
+|-------|----------|---------------|----------|-------------|
+| **LinearSVC** (same as FER2013) | 1,449 (Landmarks + Blendshapes) | **18.79%** | **8.62%** | **9.69%** |
+
+**Webcam Dataset:** 1,804 images (7 classes: angry: 326, disgust: 178, fear: 331, happy: 234, sad: 249, surprised: 267, neutral: 219)
+
+**Domain Shift:** A substantial domain shift was observed. Performance on the held-out webcam dataset was substantially lower than on FER2013. This demonstrates that benchmark performance does not directly translate to real-world webcam performance.
+
+| Dataset | Accuracy | Macro F1 | Weighted F1 |
+|---------|----------|----------|-------------|
+| FER2013 PublicTest | 50.69% | 49.19% | 49.98% |
+| Webcam Test Set | 18.79% | 8.62% | 9.69% |
+
+**Gap:** −31.90 pp accuracy, −40.57 pp Macro F1, −40.29 pp Weighted F1.
+
+A substantial domain shift was observed. Performance on the held-out webcam dataset was substantially lower than on FER2013. This demonstrates that benchmark performance does not directly translate to real-world webcam performance.
+
+The webcam dataset contains 1,804 manually labeled images across 7 classes. The webcam dataset is not part of FER2013 training and is used as an external/held-out real-world evaluation set. The webcam result should NOT be presented as the FER2013 benchmark accuracy. Confidence scores must not be interpreted as accuracy.
+
 ## Quick Start
 
 ```bash

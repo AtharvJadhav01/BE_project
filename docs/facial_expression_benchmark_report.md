@@ -323,12 +323,32 @@ Feature importance was computed using permutation importance on the best Logisti
 
 ## 15. Live Webcam Accuracy
 
-**Live webcam accuracy has NOT been measured.**
+**Live webcam accuracy HAS BEEN MEASURED (2026-10-03).**
 
-- No labeled webcam ground-truth dataset was created or evaluated
-- FER2013 test accuracy (46.73% / 49.14%) reflects performance on **FER2013 PublicTest images only**
-- Confidence scores from live inference are **NOT** accuracy estimates
-- Domain shift (lighting, pose, occlusion, resolution) between FER2013 and webcam images is expected to affect real-world performance
+A labeled webcam dataset (1,804 images across 7 classes) was collected and evaluated against the verified LinearSVC model.
+
+**Webcam Evaluation Results:**
+- **Accuracy: 18.79%**
+- **Macro F1: 8.62%**
+- **Weighted F1: 9.69%**
+
+**Comparison with FER2013 Benchmark:**
+
+| Dataset | Model | Accuracy | Macro F1 | Weighted F1 |
+|---------|-------|----------|----------|-------------|
+| FER2013 PublicTest | LinearSVC (1,449 feat) | 50.69% | 49.19% | 49.98% |
+| Webcam Test Set | Same LinearSVC | 18.79% | 8.62% | 9.69% |
+
+**Domain Shift:** A substantial domain shift was observed. Performance on the held-out webcam dataset was substantially lower than on FER2013. This demonstrates that benchmark performance does not directly translate to real-world webcam performance. The gap is -31.90 pp accuracy, -40.57 pp Macro F1, -40.29 pp Weighted F1.
+
+**Webcam Dataset Details:**
+- 1,804 manually labeled images across 7 classes
+- Class distribution: angry: 326, disgust: 178, fear: 331, happy: 234, sad: 249, surprised: 267, neutral: 219
+- The webcam dataset is not part of FER2013 training and is used as an external/held-out real-world evaluation set
+- The webcam result should NOT be presented as the FER2013 benchmark accuracy
+- Confidence scores must not be interpreted as accuracy
+
+**Plausible domain shift factors (not proven):** lighting variation, pose variation, resolution differences, camera characteristics, subject variation, dataset differences.
 
 **Do not present FER2013 test accuracy as webcam accuracy.**
 

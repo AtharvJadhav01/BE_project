@@ -148,7 +148,7 @@ Determine whether explicit geometric facial features can improve upon the verifi
 2. **Domain shift:** FER2013 (grayscale, 48×48) vs. real webcam (color, variable conditions)
 3. **Class imbalance:** Fear (177) vs Disgust (92) in test set
 4. **No temporal modeling:** Single-frame classification only
-5. **No webcam validation:** Real-world accuracy not measured
+5. **Webcam validation:** **COMPLETED** — 18.79% accuracy on 1,804 webcam images (see `docs/real_world_face_validation.md`)
 6. **LinearSVC convergence warnings:** Some configurations didn't fully converge
 7. **Feature ablation incomplete:** Feature group ablation experiments failed due to indexing issues
 8. **No geometric feature evaluation on FER2013:** Experimental extractor created but not benchmarked

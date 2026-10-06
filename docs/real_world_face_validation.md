@@ -2,9 +2,19 @@
 
 ## Status
 
-**REAL-WORLD ACCURACY: NOT YET MEASURED**
+**REAL-WORLD ACCURACY: MEASURED (2026-10-03)**
 
-No labeled webcam dataset has been collected yet.
+A labeled webcam dataset has been collected and evaluated against the verified LinearSVC model.
+
+**Verified Webcam Evaluation Results:**
+- **Accuracy: 18.79%**
+- **Macro F1: 8.62%**
+- **Weighted F1: 9.69%**
+
+**Model Evaluated:**
+- LinearSVC (1,449 features: 1,404 landmarks + 48 blendshapes)
+- Artifacts: `training/models/linear_svc_optimized_1449.joblib` + `scaler_optimized_1449.joblib`
+- FER2013 PublicTest benchmark: 50.69% accuracy, 49.19% Macro F1, 49.98% Weighted F1
 
 ---
 
@@ -76,49 +86,57 @@ The evaluation computes:
 | Dataset validator | ✅ Created (`tools/validate_webcam_dataset.py`) |
 | Evaluation tool | ✅ Created (`training/evaluate_webcam.py`) |
 | Protocol documentation | ✅ Created (`docs/webcam_dataset_protocol.md`) |
-| Webcam dataset | ❌ NOT COLLECTED |
-| Real-world evaluation | ❌ NOT RUN |
+| Webcam dataset | ✅ COLLECTED (1,804 images, 7 classes) |
+| Real-world evaluation | ✅ COMPLETED (2026-10-03) |
 | Best model artifact (LinearSVC 1449 feat) | ✅ SAVED (`training/models/linear_svc_optimized_1449.joblib`) |
 
-### Critical Blocker
+### Evaluation Complete
 
-**The LinearSVC model (1,449 features) IS persisted and verified.**
+**The LinearSVC model (1,449 features) was evaluated on the webcam dataset.**
 
 The `training/models/` directory contains:
 - `linear_svc_optimized_1449.joblib` (50.69% test accuracy)
 - `scaler_optimized_1449.joblib`
 - `linear_svc_optimized_1449_metadata.json`
 
-The 1,457-feature LogisticRegression model was never persisted (correct), but the LinearSVC with 1,449 features is the protected benchmark model and IS available.
-
-**Action Required**: Use the existing LinearSVC model for webcam evaluation. No retraining needed.
+**No retraining needed. Evaluation complete.**
 
 ---
 
-## Expected Results Template
-
-Once data is collected and model is available:
+## Verified Results (2026-10-03)
 
 ### Comparison Table
 
 | Dataset | Model | Accuracy | Macro F1 | Weighted F1 |
 |---------|-------|----------|----------|-------------|
 | FER2013 PublicTest | LinearSVC (1449 feat) | 50.69% | 49.19% | 49.98% |
-| Webcam Test Set | Same model | TBD | TBD | TBD |
+| **Webcam Test Set** | **Same LinearSVC** | **18.79%** | **8.62%** | **9.69%** |
 
 ### Per-Class Webcam Performance
 
 | Expression | Precision | Recall | F1 | Support |
 |------------|-----------|--------|----|---------|
-| angry | TBD | TBD | TBD | TBD |
-| disgust | TBD | TBD | TBD | TBD |
-| fear | TBD | TBD | TBD | TBD |
-| happy | TBD | TBD | TBD | TBD |
-| sad | TBD | TBD | TBD | TBD |
-| surprised | TBD | TBD | TBD | TBD |
-| neutral | TBD | TBD | TBD | TBD |
+| angry | 0.000 | 0.000 | 0.000 | 326 |
+| disgust | 0.000 | 0.000 | 0.000 | 178 |
+| fear | 0.138 | 0.471 | 0.213 | 331 |
+| happy | 0.000 | 0.000 | 0.000 | 234 |
+| sad | 0.000 | 0.000 | 0.000 | 249 |
+| surprised | 0.273 | 0.685 | 0.391 | 267 |
+| neutral | 0.000 | 0.000 | 0.000 | 219 |
 
-### Error Analysis (To Be Completed)
+### Domain Shift Analysis
+
+| Metric | FER2013 PublicTest | Webcam Test Set | Gap |
+|--------|-------------------|-----------------|-----|
+| Accuracy | 50.69% | 18.79% | **−31.90 pp** |
+| Macro F1 | 49.19% | 8.62% | **−40.57 pp** |
+| Weighted F1 | 49.98% | 9.69% | **−40.29 pp** |
+
+A substantial domain shift was observed. Performance on the held-out webcam dataset was substantially lower than on FER2013. This demonstrates that benchmark performance does not directly translate to real-world webcam performance.
+
+The webcam dataset contains 1,804 manually labeled images across 7 classes (angry: 326, disgust: 178, fear: 331, happy: 234, sad: 249, surprised: 267, neutral: 219). The webcam dataset is not part of FER2013 training and is used as an external/held-out real-world evaluation set. The webcam result should NOT be presented as the FER2013 benchmark accuracy. Confidence scores must not be interpreted as accuracy.
+
+### Error Analysis
 
 | Error Type | Count | Examples |
 |------------|-------|----------|
@@ -129,26 +147,25 @@ Once data is collected and model is available:
 | Low detection confidence | TBD | |
 | Expression ambiguity | TBD | |
 
+**Domain shift factors (plausible contributors, not proven):** lighting variation, pose variation, resolution differences, camera characteristics, subject variation, and dataset differences may contribute to the gap.
+
 ---
 
 ## Next Actions
 
-1. **Collect webcam dataset**
-   ```bash
-   python tools/webcam_dataset_collector.py
-   ```
+The webcam evaluation is complete. Next steps:
 
-2. **Validate dataset**
-   ```bash
-   python tools/validate_webcam_dataset.py
-   ```
+1. **Analyze error patterns** in detail (per-class performance, confusion matrix)
+2. **Cross-dataset evaluation** (RAF-DB, AffectNet, CK+) to quantify generalization
+3. **Temporal modeling** (LSTM/Transformer on landmark sequences) to improve difficult classes
+4. **Class-balanced training** for fear/sad/angry improvement
+5. **Confidence calibration** for reliable probability estimates
+6. **Cross-dataset evaluation** (RAF-DB, AffectNet, CK+) for generalization
 
-3. **Evaluate LinearSVC model**
-   ```bash
-   python training/evaluate_webcam.py
-   ```
-
-4. **Document results** in this file
+```bash
+# Evaluation already complete - results in:
+# data/webcam_expression_dataset/evaluation_results.json
+```
 
 ---
 

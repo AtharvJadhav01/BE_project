@@ -50,8 +50,8 @@ All modalities are synchronized via a shared monotonic timestamp generator and s
 
 | Feature | Status | Notes |
 |---------|--------|-------|
-| Webcam Dataset Collection | ❌ Not Started | Tool exists, no data collected |
-| Webcam Evaluation | ❌ Not Run | Tools exist, waiting for dataset |
+| Webcam Dataset Collection | ✅ Complete | 1,804 images collected across 7 classes |
+| Webcam Evaluation | ✅ Complete | 18.79% accuracy, 8.62% Macro F1, 9.69% Weighted F1 |
 | Cross-Dataset Evaluation | ❌ Not Started | RAF-DB, AffectNet, CK+ |
 | Temporal Modeling (LSTM/Transformer) | ❌ Not Started | Phase 3 future work |
 | Geometric Feature Ablation | ❌ Incomplete | Indexing issues prevented full ablation |
@@ -154,8 +154,8 @@ All modalities are synchronized via a shared monotonic timestamp generator and s
 | `docs/xgboost_experiment_report.md` | ✅ Current | 2026-10-01 | XGBoost results |
 | `docs/geometric_features_experiment_report.md` | ✅ Fixed | 2026-10-02 | Artifact status fixed |
 | `docs/cnn_fer2013_experiment_report.md` | ✅ Current | 2026-10-03 | CNN results |
-| `docs/real_world_face_validation.md` | ✅ Fixed | 2026-10-03 | Model reference fixed |
-| `docs/webcam_dataset_protocol.md` | ✅ Fixed | 2026-10-03 | Benchmark ref fixed |
+| `docs/real_world_face_validation.md` | ✅ Updated | 2026-10-03 | **Evaluation complete** (18.79% accuracy) |
+| `docs/webcam_dataset_protocol.md` | ✅ Updated | 2026-10-03 | Evaluation complete, results linked |
 | `docs/project_status.md` | ✅ Created | 2026-10-03 | This file |
 | `training/README.md` | ✅ Current | 2026-09-05 | Training docs |
 
@@ -262,7 +262,7 @@ src/
 | Geometric model not saved | Medium | Dataset exists, model trained but not persisted |
 | Geometric ablation incomplete | Medium | Feature indexing issues prevented group ablation |
 | No test suite execution | High | Tests exist but CI not configured |
-| No webcam dataset | High | Blocking real-world validation |
+| No webcam dataset | ~~High~~ Resolved | 1,804 images collected and evaluated |
 | CNN on expanded features | Medium | Not attempted; only raw pixels |
 | No temporal modeling | Medium | Single-frame only |
 | PySide6 LGPL compliance | Low | Need dynamic linking verification for distribution |

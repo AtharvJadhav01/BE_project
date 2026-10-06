@@ -39,6 +39,13 @@ htmlcov/
 pytest_cache/
 .coverage.*
 
+# Type checking / linting caches
+.mypy_cache/
+.ruff_cache/
+
+# Opencode
+.opencode/
+
 # Translations
 *.mo
 *.pot
