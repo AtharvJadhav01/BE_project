@@ -124,6 +124,29 @@ class FaceAnalysisPanel(QWidget):
         sep2.setStyleSheet("color: #dddddd;")
         layout.addWidget(sep2)
         
+        # ResNet-18 FER2013 Emotion (Image-based)
+        resnet_expr_title = QLabel("ResNet-18 Emotion (FER2013)")
+        resnet_expr_title.setFont(QFont("Segoe UI", 10, QFont.Weight.Bold))
+        resnet_expr_title.setStyleSheet("color: #0078d4;")
+        layout.addWidget(resnet_expr_title)
+        
+        self.resnet_expr_label = QLabel("ResNet Emotion: --")
+        self.resnet_expr_label.setFont(QFont("Segoe UI", 10, QFont.Weight.Bold))
+        self.resnet_expr_label.setAlignment(Qt.AlignmentFlag.AlignCenter)
+        layout.addWidget(self.resnet_expr_label)
+        
+        self.resnet_expr_conf_label = QLabel("ResNet Confidence: --")
+        self.resnet_expr_conf_label.setFont(QFont("Segoe UI", 9))
+        self.resnet_expr_conf_label.setAlignment(Qt.AlignmentFlag.AlignCenter)
+        layout.addWidget(self.resnet_expr_conf_label)
+        
+        # Separator
+        sep3 = QFrame()
+        sep3.setFrameShape(QFrame.Shape.HLine)
+        sep3.setFrameShadow(QFrame.Shadow.Sunken)
+        sep3.setStyleSheet("color: #dddddd;")
+        layout.addWidget(sep3)
+        
         # Separator
         sep = QFrame()
         sep.setFrameShape(QFrame.Shape.HLine)
@@ -189,6 +212,12 @@ class FaceAnalysisPanel(QWidget):
         self.expr_label.setText(f"Estimated Expression: {expression}")
         self.expr_conf_label.setText(f"Expression Confidence: {confidence:.0%}")
 
+    def update_resnet_emotion(self, emotion: str, confidence: float) -> None:
+        """Update ResNet-18 FER2013 emotion and confidence."""
+        self.resnet_expr_label.setText(f"ResNet Emotion: {emotion}")
+        self.resnet_expr_conf_label.setText(f"ResNet Confidence: {confidence:.0%}")
+        self.logger.debug("face_panel_resnet_update", emotion=emotion, confidence=f"{confidence:.0%}")
+
     def update_metrics(self, metrics: dict) -> None:
         """Update real-time facial metrics."""
         if "eye_openness_avg" in metrics:
@@ -222,6 +251,8 @@ class FaceAnalysisPanel(QWidget):
         self.update_face_detected(False)
         self.update_state("--", 0.0)
         self.update_baseline(False)
+        self.update_expression("--", 0.0)
+        self.update_resnet_emotion("--", 0.0)
         self.eye_openness_label.setText("Eye Openness: --")
         self.blink_rate_label.setText("Blink Rate: --")
         self.mouth_openness_label.setText("Mouth Openness: --")
@@ -710,7 +741,13 @@ class MainWindow(QMainWindow):
 
         # Register face capture
         if self.session_manager.config.camera.enabled and self.session_manager.config.face.enabled:
-            face_capture = FaceCapture(self.session_manager.config.face.__dict__)
+            face_config = self.session_manager.config.analysis.face
+            logger.info("resnet_emotion_config", 
+                       enabled=face_config.resnet_emotion_enabled,
+                       model_path=face_config.resnet_emotion_model_path,
+                       device=face_config.resnet_emotion_device,
+                       confidence_threshold=face_config.resnet_emotion_confidence_threshold)
+            face_capture = FaceCapture(face_config.__dict__)
             face_capture.set_unified_event_callback(
                 lambda event: self.session_manager._emit_event(event)
             )
@@ -1017,6 +1054,19 @@ class MainWindow(QMainWindow):
                 # Update metrics
                 norm_features = result.get("normalized_features", {})
                 self.face_analysis.update_metrics(norm_features)
+                
+                # Update ResNet emotion
+                resnet_emotion_est = result.get("resnet_emotion_estimate")
+                if resnet_emotion_est:
+                    emotion = resnet_emotion_est.get("emotion", "--")
+                    confidence = resnet_emotion_est.get("confidence", 0.0)
+                    if emotion == "unavailable" or confidence == 0.0:
+                        emotion = "--"
+                        confidence = 0.0
+                    self.face_analysis.update_resnet_emotion(emotion, confidence)
+                    self.logger.debug("resnet_gui_update", emotion=emotion, confidence=f"{confidence:.0%}")
+                else:
+                    self.face_analysis.update_resnet_emotion("--", 0.0)
                 
         except Exception as e:
             logger.error("face_analysis_poll_failed", error=str(e))

@@ -72,6 +72,11 @@ analysis:
     baseline_frames: 150
     expression_threshold: 0.3
     confidence_threshold: 0.5
+    # ResNet-18 FER2013 pretrained emotion classifier
+    resnet_emotion_enabled: true
+    resnet_emotion_model_path: "models/emotion/fer2013_emotion_resnet18_v2.pt"
+    resnet_emotion_device: "auto"
+    resnet_emotion_confidence_threshold: 0.5
 
   # Audio analysis
   audio:

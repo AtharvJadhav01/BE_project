@@ -10,6 +10,8 @@ import threading
 from pathlib import Path
 from typing import Any, Dict, List, Optional
 
+import numpy as np
+
 from core.events import Event, EventType, ModalityType, create_face_event
 from core.interfaces import FaceModalityInterface, ModalityStatus
 from core.logging import get_logger
@@ -25,6 +27,7 @@ from analysis.face.features import FaceFeatureExtractor
 from analysis.face.state import FaceStateEstimator
 from analysis.face.baseline import FaceBaselineManager
 from analysis.face.emotion_classifier import FaceEmotionClassifier, EmotionClassifierError
+from analysis.face.resnet_emotion import ResNetEmotionClassifier, ResNetEmotionError
 from analysis.face.state import EmotionSmoother
 from analysis.temporal import TemporalWindow
 from analysis.results import FeatureVector, StateEstimate, AnalysisResult
@@ -55,6 +58,8 @@ class FaceCapture(FaceModalityInterface):
         self._temporal_windows: Optional[Dict[str, TemporalWindow]] = None
         self._state_estimator: Optional[FaceStateEstimator] = None
         self._emotion_classifier: Optional[FaceEmotionClassifier] = None
+        self._resnet_emotion_classifier: Optional[ResNetEmotionClassifier] = None
+        self._resnet_emotion_enabled: bool = False
         self._analysis_storage: Optional[Any] = None  # Will be analysis storage writer
         
         # Session state
@@ -80,24 +85,45 @@ class FaceCapture(FaceModalityInterface):
         self._unified_event_callback = callback
 
     def _on_camera_frame(self, frame: CameraFrame) -> None:
-        """Callback for camera frames - runs face detection."""
+        """Callback for camera frames - runs face detection and analysis."""
         if not self._detector or not self._processor:
             return
         
         # Run face detection
         result = self._detector.process_frame(frame.frame)
         
+        # Log face detection at DEBUG level
+        if result.face_detected:
+            self.logger.debug("face_detected", bbox=result.bounding_box, confidence=result.detection_confidence)
+        else:
+            self.logger.debug("face_not_detected")
+        
         # Get timestamps
         timestamp_monotonic = frame.timestamp
         timestamp_wallclock = self._timestamp_generator.now_wallclock() if self._timestamp_generator else ""
         
-        # Process observation
+        # Run face analysis if enabled and we have a face
+        analysis_result = None
+        if (self._feature_extractor is not None and 
+            self._baseline_manager is not None and
+            self._state_estimator is not None and
+            result.face_detected):
+            
+            analysis_result = self._run_face_analysis(
+                result, frame.frame, timestamp_monotonic, timestamp_wallclock, frame.frame_index
+            )
+        
+        # Process observation (original detection data)
         self._processor.process_observation(
             result=result,
             frame_index=frame.frame_index,
             timestamp_monotonic=timestamp_monotonic,
             timestamp_wallclock=timestamp_wallclock
         )
+
+        # Store analysis results if we have them
+        if analysis_result is not None:
+            self._store_analysis_results(analysis_result, frame.frame_index)
 
     def _on_storage_write(self, observation) -> None:
         """Callback for writing observations to storage."""
@@ -395,6 +421,44 @@ class FaceCapture(FaceModalityInterface):
                     self.logger.warning("emotion_classifier_init_failed", error=str(e))
                     self._emotion_classifier = None
             
+            # Initialize ResNet-18 FER2013 emotion classifier if enabled
+            self._resnet_emotion_enabled = face_config.get("resnet_emotion_enabled", True)
+            self.logger.info("resnet_emotion_runtime_config", 
+                           enabled=self._resnet_emotion_enabled,
+                           model_path=face_config.get("resnet_emotion_model_path"),
+                           device=face_config.get("resnet_emotion_device", "auto"),
+                           confidence_threshold=face_config.get("resnet_emotion_confidence_threshold", 0.5))
+            if self._resnet_emotion_enabled:
+                try:
+                    model_path_str = face_config.get("resnet_emotion_model_path", "models/emotion/fer2013_emotion_resnet18_v2.pt")
+                    model_path = Path(model_path_str)
+                    if not model_path.is_absolute():
+                        # Resolve relative to project root (src/face/capture.py -> 3 parents = app_work)
+                        base_dir = Path(__file__).parent.parent.parent
+                        model_path = base_dir / model_path
+                    
+                    device = face_config.get("resnet_emotion_device", "auto")
+                    self.logger.info("resnet_emotion_initializing", model_path=str(model_path), device=device, enabled=True)
+                    self._resnet_emotion_classifier = ResNetEmotionClassifier(
+                        model_path=model_path,
+                        config=face_config,
+                        device=device,
+                    )
+                    if not self._resnet_emotion_classifier.is_ready():
+                        self.logger.warning(
+                            "resnet_emotion_classifier_not_ready",
+                            error=self._resnet_emotion_classifier.get_load_error()
+                        )
+                        self._resnet_emotion_classifier = None
+                    else:
+                        self.logger.info("resnet_emotion_classifier_ready", device=str(device))
+                except ResNetEmotionError as e:
+                    self.logger.warning("resnet_emotion_classifier_init_failed", error=str(e))
+                    self._resnet_emotion_classifier = None
+                except Exception as e:
+                    self.logger.warning("resnet_emotion_classifier_init_failed", error=str(e))
+                    self._resnet_emotion_classifier = None
+            
             # Initialize analysis storage
             self._setup_analysis_storage()
             
@@ -418,16 +482,19 @@ class FaceCapture(FaceModalityInterface):
             self._analysis_features_path = analysis_dir / "face_features.jsonl"
             self._analysis_states_path = analysis_dir / "face_states.jsonl"
             self._analysis_expressions_path = analysis_dir / "face_expressions.jsonl"
+            self._analysis_resnet_emotions_path = analysis_dir / "face_resnet_emotions.jsonl"
             
             # Open files for appending
             self._analysis_features_file = open(self._analysis_features_path, "ab")
             self._analysis_states_file = open(self._analysis_states_path, "ab")
             self._analysis_expressions_file = open(self._analysis_expressions_path, "ab")
+            self._analysis_resnet_emotions_file = open(self._analysis_resnet_emotions_path, "ab")
             
             self.logger.info("face_analysis_storage_setup", 
                            features_path=str(self._analysis_features_path),
                            states_path=str(self._analysis_states_path),
-                           expressions_path=str(self._analysis_expressions_path))
+                           expressions_path=str(self._analysis_expressions_path),
+                           resnet_emotions_path=str(self._analysis_resnet_emotions_path))
                            
         except Exception as e:
             self.logger.error("face_analysis_storage_setup_failed", error=str(e))
@@ -445,50 +512,70 @@ class FaceCapture(FaceModalityInterface):
             self.logger.error("face_analysis_start_failed", error=str(e))
             return False
 
-    def _on_camera_frame(self, frame: CameraFrame) -> None:
-        """Callback for camera frames - runs face detection and analysis."""
-        if not self._detector or not self._processor:
-            return
-        
-        # Run face detection
-        result = self._detector.process_frame(frame.frame)
-        
-        # Get timestamps
-        timestamp_monotonic = frame.timestamp
-        timestamp_wallclock = self._timestamp_generator.now_wallclock() if self._timestamp_generator else ""
-        
-        # Run face analysis if enabled and we have a face
-        analysis_result = None
-        if (self._feature_extractor is not None and 
-            self._baseline_manager is not None and
-            self._state_estimator is not None and
-            result.face_detected):
+    def _crop_face_for_resnet(self, frame: np.ndarray, bounding_box: Dict[str, int]) -> Optional[np.ndarray]:
+            """
+            Crop face from frame for ResNet-18 FER2013 model.
             
-            analysis_result = self._run_face_analysis(
-                result, timestamp_monotonic, timestamp_wallclock, frame.frame_index
-            )
-        
-        # Process observation (original detection data)
-        self._processor.process_observation(
-            result=result,
-            frame_index=frame.frame_index,
-            timestamp_monotonic=timestamp_monotonic,
-            timestamp_wallclock=timestamp_wallclock
-        )
-        
-        # Store analysis results if we have them
-        if analysis_result is not None:
-            self._store_analysis_results(analysis_result, frame.frame_index)
-
+            Matches the exact preprocessing from the pretrained repository:
+            - 15% margin around the face (FACE_MARGIN = 1.15)
+            - Convert to grayscale
+            - Resize to 48x48 (SRC_SIZE)
+            - Returns uint8 grayscale image
+            
+            Args:
+                frame: BGR frame from camera
+                bounding_box: Dict with x, y, width, height in pixels
+                
+            Returns:
+                48x48 grayscale face crop as uint8, or None if crop fails
+            """
+            try:
+                import cv2
+                FACE_MARGIN = 1.15
+                SRC_SIZE = 48
+                
+                # Convert to grayscale
+                gray = cv2.cvtColor(frame, cv2.COLOR_BGR2GRAY)
+                
+                x, y, w, h = bounding_box["x"], bounding_box["y"], bounding_box["width"], bounding_box["height"]
+                
+                # Calculate center and enlarged square crop
+                cx, cy = x + w / 2, y + h / 2
+                side = max(w, h) * FACE_MARGIN
+                x1 = int(round(cx - side / 2))
+                y1 = int(round(cy - side / 2))
+                x2 = int(round(cx + side / 2))
+                y2 = int(round(cy + side / 2))
+                
+                # Handle padding if crop goes outside frame
+                pad = max(0, -x1, -y1, x2 - gray.shape[1], y2 - gray.shape[0])
+                if pad > 0:
+                    gray = cv2.copyMakeBorder(gray, pad, pad, pad, pad, cv2.BORDER_REPLICATE)
+                    x1, y1, x2, y2 = x1 + pad, y1 + pad, x2 + pad, y2 + pad
+                
+                # Crop and resize
+                face = gray[y1:y2, x1:x2]
+                if face.size == 0:
+                    return None
+                    
+                face48 = cv2.resize(face, (SRC_SIZE, SRC_SIZE), interpolation=cv2.INTER_AREA)
+                return face48
+                
+            except Exception as e:
+                self.logger.warning("face_crop_for_resnet_failed", error=str(e))
+                return None
+    
     def _run_face_analysis(self, detection_result: FaceDetectionResult,
-                         timestamp_monotonic: float,
-                         timestamp_wallclock: str,
-                         frame_index: int) -> Optional[Dict[str, Any]]:
+                          frame: np.ndarray,
+                          timestamp_monotonic: float,
+                          timestamp_wallclock: str,
+                          frame_index: int) -> Optional[Dict[str, Any]]:
         """
         Run face analysis pipeline on detection results.
         
         Args:
             detection_result: Result from face detector
+            frame: Original BGR frame from camera
             timestamp_monotonic: Monotonic timestamp
             timestamp_wallclock: Wallclock timestamp
             frame_index: Frame index for this analysis
@@ -518,6 +605,56 @@ class FaceCapture(FaceModalityInterface):
             # Estimate facial state (rule-based)
             state_estimate = self._estimate_facial_state(normalized_features)
             
+            # ResNet-18 FER2013 emotion prediction (image-based)
+            resnet_emotion_estimate = None
+            if (self._resnet_emotion_enabled and 
+                self._resnet_emotion_classifier is not None and 
+                detection_result.face_detected and
+                detection_result.bounding_box is not None):
+                
+                try:
+                    # Crop face from frame using MediaPipe bounding box
+                    bbox = detection_result.bounding_box
+                    self.logger.debug("resnet_face_candidate", bbox=bbox)
+                    face_crop = self._crop_face_for_resnet(frame, bbox)
+                    if face_crop is not None:
+                        self.logger.debug("resnet_face_crop_created", width=face_crop.shape[1], height=face_crop.shape[0])
+                        # Run ResNet inference
+                        import time
+                        inf_start = time.perf_counter()
+                        resnet_result = self._resnet_emotion_classifier.predict(face_crop)
+                        inf_time_ms = (time.perf_counter() - inf_start) * 1000
+                        resnet_emotion_estimate = {
+                            "emotion": resnet_result["emotion"],
+                            "confidence": resnet_result["confidence"],
+                            "probabilities": resnet_result["probabilities"],
+                            "timestamp": timestamp_monotonic,
+                            "wallclock": timestamp_wallclock,
+                        }
+                        self.logger.info("resnet_inference_executed", emotion=resnet_result["emotion"], confidence=resnet_result["confidence"], inference_ms=inf_time_ms)
+                    else:
+                        self.logger.debug("resnet_face_crop_failed", bbox=bbox)
+                except ResNetEmotionError as e:
+                    self.logger.warning("resnet_emotion_prediction_failed", error=str(e))
+                    resnet_emotion_estimate = {
+                        "emotion": "unavailable",
+                        "confidence": 0.0,
+                        "probabilities": {},
+                        "timestamp": timestamp_monotonic,
+                        "wallclock": timestamp_wallclock,
+                        "error": str(e)
+                    }
+                except Exception as e:
+                    self.logger.warning("resnet_emotion_prediction_failed", error=str(e))
+                    resnet_emotion_estimate = {
+                        "emotion": "unavailable",
+                        "confidence": 0.0,
+                        "probabilities": {},
+                        "timestamp": timestamp_monotonic,
+                        "wallclock": timestamp_wallclock,
+                        "error": str(e)
+                    }
+            
             # Estimate expression (ML-based) if enabled and face detected
             expression_estimate = None
             if (self._emotion_enabled and 
@@ -526,7 +663,8 @@ class FaceCapture(FaceModalityInterface):
                 
                 # Add prediction to smoother
                 try:
-                    raw_probs = self._emotion_classifier.get_metadata().get("target_names", EMOTION_LABELS)
+                    metadata = self._emotion_classifier.get_metadata()
+                    raw_probs = metadata.get("target_names", [])
                     # Get the raw prediction first
                     result = self._emotion_classifier.predict(raw_features)
                     probas = result["probabilities"]
@@ -608,6 +746,7 @@ class FaceCapture(FaceModalityInterface):
                 "normalized_features": normalized_features,
                 "state_estimate": state_estimate,
                 "expression_estimate": expression_estimate,
+                "resnet_emotion_estimate": resnet_emotion_estimate,
                 "baseline_ready": self._is_baseline_ready(),
                 "analysis_timestamp": time.monotonic()
             }
@@ -779,6 +918,24 @@ class FaceCapture(FaceModalityInterface):
                     self._analysis_expressions_file.write(line)
                     self._analysis_expressions_file.flush()
             
+            # Store ResNet emotion estimate if available
+            resnet_emotion_estimate = analysis_result.get("resnet_emotion_estimate")
+            if resnet_emotion_estimate:
+                resnet_emotion_line = {
+                    "timestamp_monotonic": analysis_result["timestamp_monotonic"],
+                    "timestamp_wallclock": analysis_result["timestamp_wallclock"],
+                    "frame_index": frame_index,
+                    "emotion": resnet_emotion_estimate.get("emotion", "unavailable"),
+                    "confidence": resnet_emotion_estimate.get("confidence", 0.0),
+                    "probabilities": resnet_emotion_estimate.get("probabilities", {}),
+                    "baseline_ready": analysis_result["baseline_ready"]
+                }
+                if hasattr(self, '_analysis_resnet_emotions_file') and self._analysis_resnet_emotions_file:
+                    line = orjson.dumps(resnet_emotion_line) + b"\n"
+                    self._analysis_resnet_emotions_file.write(line)
+                    self._analysis_resnet_emotions_file.flush()
+                self.logger.debug("resnet_emotion_result_stored", emotion=resnet_emotion_estimate.get("emotion"), confidence=resnet_emotion_estimate.get("confidence"))
+            
             self._analysis_frame_count += 1
             self._last_analysis_timestamp = analysis_result["timestamp_monotonic"]
             # Store last analysis result for UI polling
@@ -797,6 +954,8 @@ class FaceCapture(FaceModalityInterface):
                 self._analysis_states_file.close()
             if hasattr(self, '_analysis_expressions_file') and self._analysis_expressions_file:
                 self._analysis_expressions_file.close()
+            if hasattr(self, '_analysis_resnet_emotions_file') and self._analysis_resnet_emotions_file:
+                self._analysis_resnet_emotions_file.close()
             
             self.logger.info("face_analysis_stopped", 
                            frames_processed=self._analysis_frame_count)
@@ -829,7 +988,10 @@ class FaceCapture(FaceModalityInterface):
             "frames_processed": getattr(self, '_analysis_frame_count', 0),
             "last_analysis_timestamp": getattr(self, '_last_analysis_timestamp', None),
             "features_file": getattr(self, '_analysis_features_path', None),
-            "states_file": getattr(self, '_analysis_states_path', None)
+            "states_file": getattr(self, '_analysis_states_path', None),
+            "resnet_emotion_enabled": self._resnet_emotion_enabled,
+            "resnet_emotion_classifier_ready": self._resnet_emotion_classifier is not None and self._resnet_emotion_classifier.is_ready(),
+            "resnet_emotions_file": getattr(self, '_analysis_resnet_emotions_path', None),
         }
         
         return stats

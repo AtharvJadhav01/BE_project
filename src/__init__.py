@@ -10,24 +10,24 @@ Provides reusable components for real-time human-state analysis:
 - Multimodal fusion for human-state estimation
 """
 
-from analysis.baseline import BaseBaselineManager
-from analysis.interfaces import (
+from .analysis.baseline import BaseBaselineManager
+from .analysis.interfaces import (
     AnalysisResult,
     BaselineManager,
     FeatureExtractor,
     StateEstimator,
 )
-from analysis.results import (
+from .analysis.results import (
     AnalysisResult as AnalysisResultModel,
 )
-from analysis.results import (
+from .analysis.results import (
     BaselineStatus,
     DataQuality,
     FeatureVector,
     StateEstimate,
 )
-from analysis.temporal import TemporalWindow
-from analysis.multimodal import (
+from .analysis.temporal import TemporalWindow
+from .analysis.multimodal import (
     MultimodalFusion,
     HumanStateEstimator,
     TemporalAligner,

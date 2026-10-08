@@ -80,6 +80,11 @@ class AnalysisFaceConfig:
     emotion_confidence_threshold: float = 0.5
     emotion_smoothing_window: float = 10.0
     emotion_smoothing_alpha: float = 0.5
+    # ResNet-18 FER2013 emotion classifier (pretrained)
+    resnet_emotion_enabled: bool = True
+    resnet_emotion_model_path: str = "models/emotion/fer2013_emotion_resnet18_v2.pt"
+    resnet_emotion_device: str = "auto"  # auto, cuda, cpu
+    resnet_emotion_confidence_threshold: float = 0.5
 
 
 @dataclass
