@@ -154,8 +154,181 @@ All modalities share a common monotonic timestamp generator for precise cross-mo
 | CNN (SimpleCNN) | `training/models/cnn_fer2013_best.pt` | ✅ |
 | CNN Metadata | `training/models/cnn_fer2013_metadata.json` | ✅ |
 | CNN Benchmark Split | `training/cnn_benchmark_split.json` | ✅ |
+| **ResNet-18 (FER2013)** | `models/emotion/fer2013_emotion_resnet18_v2.pt` | ✅ |
 
 All artifacts include metadata with hyperparameters, seeds, split info; reload verification passed for all.
+
+## ResNet-18 Emotion Recognition
+
+### 1. Overview
+
+The application includes a pretrained **ResNet-18** model fine-tuned on the **FER2013** dataset for image-based facial emotion recognition. This runs alongside the existing MediaPipe facial analysis pipeline (landmarks, blendshapes, Random Forest classifier), providing an additional emotion estimation path.
+
+**High-level flow:**
+
+```text
+Webcam (640×480 @ 15 FPS)
+    ↓
+MediaPipe FaceLandmarker → face detection + bounding box
+    ↓
+Face crop with 15% margin → grayscale → 48×48 resize
+    ↓
+ResNet-18 FER2013 inference (Flip TTA)
+    ↓
+Emotion prediction (7 classes) + probabilities
+    ↓
+GUI display (FaceAnalysisPanel) + session storage (face_resnet_emotions.jsonl)
+```
+
+The existing pipeline (27 MediaPipe features → Random Forest → `expression_estimate`) remains fully active. ResNet-18 provides a separate `resnet_emotion_estimate` based on raw face pixels.
+
+### 2. Model
+
+| Property | Value |
+|----------|-------|
+| **File** | `models/emotion/fer2013_emotion_resnet18_v2.pt` |
+| **Architecture** | ResNet-18 |
+| **timm architecture** | `resnet18.fb_swsl_ig1b_ft_in1k` |
+| **Parameter count** | ~11.2M |
+| **Classes (7)** | `angry`, `disgust`, `fear`, `happy`, `neutral`, `sad`, `surprise` |
+
+> The model is tracked using **Git LFS** (see `.gitattributes`). Users cloning the repository must have Git LFS installed so the actual model file is downloaded.
+
+### 3. Prerequisites
+
+- **Python 3.11+** — virtual environment recommended
+- **Git** — for cloning
+- **Git LFS** — required to download the model file
+- **Project dependencies** — see `requirements.txt`
+- **CUDA-capable GPU (optional)** — the implementation auto-detects CUDA; CPU fallback is supported
+
+### 4. Clone and Git LFS Setup
+
+```cmd
+git clone <repository-url>
+cd app_work
+git lfs install
+git lfs pull
+```
+
+Verify the model was downloaded:
+```cmd
+dir models\emotion\fer2013_emotion_resnet18_v2.pt
+```
+
+### 5. Python Environment Setup
+
+```cmd
+python -m venv .venv
+.venv\Scripts\activate
+pip install -r requirements.txt
+```
+
+### 6. Verify the ResNet Model
+
+Run the standalone verification script:
+
+```cmd
+python tools/verify_resnet_emotion.py --synthetic neutral
+```
+
+**What it checks:**
+- Model loads successfully from `models/emotion/fer2013_emotion_resnet18_v2.pt`
+- Architecture matches `resnet18.fb_swsl_ig1b_ft_in1k`
+- CUDA is detected (falls back to CPU if unavailable)
+- Preprocessing pipeline matches the source repository exactly
+- Inference produces valid probabilities summing to 1.0
+- All 7 emotion labels are present in output
+
+Optional flags:
+- `--image PATH` — test with a custom face image
+- `--device auto|cpu|cuda` — force device selection
+- `--benchmark` — run 100 inferences and report latency statistics
+
+### 7. Run the Application
+
+From the `app_work` directory:
+
+```cmd
+set PYTHONPATH=%CD%\src
+python -m src.main
+```
+
+**Expected behavior:**
+1. Application window opens with Face, Audio, Keyboard analysis panels
+2. Click **Start Session** → webcam initializes (640×480 @ 15 FPS)
+3. Face is detected via MediaPipe FaceLandmarker
+4. ResNet-18 inference runs on each detected face crop
+5. **ResNet-18 Emotion (FER2013)** panel updates in real time:
+   - Emotion label (e.g., `happy`, `neutral`, `surprise`)
+   - Confidence percentage
+6. Results stored in session directory under `analysis/face_resnet_emotions.jsonl`
+
+### 8. Configuration
+
+ResNet settings are in `config/config.yaml` under `analysis.face`:
+
+```yaml
+analysis:
+  face:
+    # ... existing settings ...
+    
+    # ResNet-18 FER2013 pretrained emotion classifier
+    resnet_emotion_enabled: true           # enable/disable ResNet pipeline
+    resnet_emotion_model_path: "models/emotion/fer2013_emotion_resnet18_v2.pt"
+    resnet_emotion_device: "auto"          # auto, cuda, cpu
+    resnet_emotion_confidence_threshold: 0.5
+```
+
+### 9. Output / Session Data
+
+Per session, ResNet results are written to:
+```
+data/sessions/<session_id>/analysis/face_resnet_emotions.jsonl
+```
+
+Each line is a JSON record:
+
+```json
+{
+  "timestamp_monotonic": 12345.678,
+  "timestamp_wallclock": "2026-10-08T00:00:00.000Z",
+  "frame_index": 42,
+  "emotion": "happy",
+  "confidence": 0.874,
+  "probabilities": {
+    "angry": 0.010, "disgust": 0.002, "fear": 0.020,
+    "happy": 0.874, "neutral": 0.030, "sad": 0.040, "surprise": 0.024
+  },
+  "baseline_ready": true
+}
+```
+
+> Note: Uses `surprise` (not `surprised`) to match the checkpoint exactly.
+
+### 10. Testing
+
+Run the unit test suite:
+
+```cmd
+pytest tests/unit -q
+```
+
+**Current verified result:** 293 tests passed (includes 20 ResNet-specific tests in `tests/unit/test_resnet_emotion.py`).
+
+### 11. Troubleshooting
+
+| Issue | Cause / Resolution |
+|-------|-------------------|
+| `Model file not found` | Git LFS not installed or `git lfs pull` not run. Re-run `git lfs install && git lfs pull`. |
+| `weights_only load failed` | PyTorch ≥2.6 changed default `weights_only=True`. The implementation handles this; ensure model file is intact. |
+| `CUDA not available` / inference slow | No NVIDIA GPU or drivers. CPU fallback is automatic. Install CUDA toolkit for GPU acceleration. |
+| Webcam not detected | Check `camera.device` in config (default `0`). Ensure no other app is using the camera. |
+| `ModuleNotFoundError` / import errors | Run from `app_work` directory with `set PYTHONPATH=%CD%\src` before `python -m src.main`. |
+| ResNet panel shows `--` / 0% | Face not detected, or `resnet_emotion_enabled: false` in config. Check logs for `resnet_emotion_initializing` / `resnet_inference_executed`. |
+
+For deeper technical details (preprocessing pipeline, benchmark comparisons, integration architecture), see:
+[`docs/resnet_emotion_integration.md`](docs/resnet_emotion_integration.md)
 
 ## Privacy
 
