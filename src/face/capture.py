@@ -26,9 +26,7 @@ from .storage import FaceStorage
 from analysis.face.features import FaceFeatureExtractor
 from analysis.face.state import FaceStateEstimator
 from analysis.face.baseline import FaceBaselineManager
-from analysis.face.emotion_classifier import FaceEmotionClassifier, EmotionClassifierError
 from analysis.face.resnet_emotion import ResNetEmotionClassifier, ResNetEmotionError
-from analysis.face.state import EmotionSmoother
 from analysis.temporal import TemporalWindow
 from analysis.results import FeatureVector, StateEstimate, AnalysisResult
 import orjson
@@ -57,7 +55,6 @@ class FaceCapture(FaceModalityInterface):
         self._baseline_manager: Optional[FaceBaselineManager] = None
         self._temporal_windows: Optional[Dict[str, TemporalWindow]] = None
         self._state_estimator: Optional[FaceStateEstimator] = None
-        self._emotion_classifier: Optional[FaceEmotionClassifier] = None
         self._resnet_emotion_classifier: Optional[ResNetEmotionClassifier] = None
         self._resnet_emotion_enabled: bool = False
         self._analysis_storage: Optional[Any] = None  # Will be analysis storage writer
@@ -72,10 +69,6 @@ class FaceCapture(FaceModalityInterface):
         self._last_analysis_result: Optional[Dict[str, Any]] = None
         self._analysis_frame_count = 0
         self._last_analysis_timestamp: Optional[float] = None
-        
-        # Emotion estimation state
-        self._emotion_enabled: bool = False
-        self._last_emotion_result: Optional[Dict[str, Any]] = None
         
         # Thread safety
         self._lock = threading.Lock()
@@ -316,35 +309,7 @@ class FaceCapture(FaceModalityInterface):
         self._baseline_manager = None
         self._temporal_windows = None
         self._state_estimator = None
-        self._emotion_classifier = None
         self._last_analysis_result = None
-        self._last_emotion_result = None
-        self._emotion_enabled = False
-
-    def set_emotion_enabled(self, enabled: bool) -> None:
-        """
-        Enable or disable emotion estimation at runtime.
-        
-        Args:
-            enabled: True to enable, False to disable
-        """
-        with self._lock:
-            self._emotion_enabled = enabled
-            if not enabled and self._emotion_classifier:
-                self._emotion_classifier.reset()
-            self.logger.info("emotion_estimation_toggled", enabled=enabled)
-
-    def is_emotion_enabled(self) -> bool:
-        """Check if emotion estimation is currently enabled."""
-        return self._emotion_enabled
-
-    def reset_emotion_classifier(self) -> None:
-        """Reset the emotion classifier state."""
-        with self._lock:
-            if self._emotion_classifier:
-                self._emotion_classifier.reset()
-            self._last_emotion_result = None
-            self.logger.info("emotion_classifier_reset")
 
     # Analysis methods
     def _initialize_analysis_components(self) -> None:
@@ -353,20 +318,6 @@ class FaceCapture(FaceModalityInterface):
             # Get face analysis config
             face_config = self.config.get("analysis", {}).get("face", {})
             analysis_config = self.config.get("analysis", {})
-            
-            # Check if emotion estimation is enabled
-            self._emotion_enabled = face_config.get("emotion_enabled", True)
-            
-            # Initialize emotion smoother
-            smoothing_window = face_config.get("emotion_smoothing_window", 5)
-            smoothing_alpha = face_config.get("emotion_smoothing_alpha", 0.3)
-            confidence_threshold = face_config.get("emotion_confidence_threshold", 0.5)
-            self._emotion_smoother = EmotionSmoother(
-                window_size=smoothing_window,
-                alpha=smoothing_alpha,
-                min_confidence=confidence_threshold,
-                enabled=self._emotion_enabled
-            )
             
             # Initialize feature extractor
             self._feature_extractor = FaceFeatureExtractor(
@@ -404,22 +355,6 @@ class FaceCapture(FaceModalityInterface):
                 "face_state", 
                 face_config
             )
-            
-            # Initialize emotion classifier if enabled
-            if self._emotion_enabled:
-                try:
-                    self._emotion_classifier = FaceEmotionClassifier(config=face_config)
-                    if not self._emotion_classifier.is_ready():
-                        self.logger.warning(
-                            "emotion_classifier_not_ready",
-                            error=self._emotion_classifier.get_load_error()
-                        )
-                        self._emotion_classifier = None
-                    else:
-                        self.logger.info("emotion_classifier_initialized")
-                except EmotionClassifierError as e:
-                    self.logger.warning("emotion_classifier_init_failed", error=str(e))
-                    self._emotion_classifier = None
             
             # Initialize ResNet-18 FER2013 emotion classifier if enabled
             self._resnet_emotion_enabled = face_config.get("resnet_emotion_enabled", True)
@@ -463,15 +398,15 @@ class FaceCapture(FaceModalityInterface):
             self._setup_analysis_storage()
             
             self.logger.info("face_analysis_components_initialized", 
-                           emotion_enabled=self._emotion_enabled,
-                           emotion_classifier_ready=self._emotion_classifier is not None)
+                           resnet_emotion_enabled=self._resnet_emotion_enabled,
+                           resnet_emotion_classifier_ready=self._resnet_emotion_classifier is not None and self._resnet_emotion_classifier.is_ready())
             
         except Exception as e:
             self.logger.error("face_analysis_init_failed", error=str(e))
             raise
 
     def _setup_analysis_storage(self) -> None:
-        """Set up analysis storage for facial features, states, and expressions."""
+        """Set up analysis storage for facial features, states, and ResNet emotions."""
         try:
             # Create analysis directory
             analysis_dir = self._session_dir / "analysis"
@@ -481,19 +416,16 @@ class FaceCapture(FaceModalityInterface):
             # In a full implementation, this would use async writing like FaceStorage
             self._analysis_features_path = analysis_dir / "face_features.jsonl"
             self._analysis_states_path = analysis_dir / "face_states.jsonl"
-            self._analysis_expressions_path = analysis_dir / "face_expressions.jsonl"
             self._analysis_resnet_emotions_path = analysis_dir / "face_resnet_emotions.jsonl"
             
             # Open files for appending
             self._analysis_features_file = open(self._analysis_features_path, "ab")
             self._analysis_states_file = open(self._analysis_states_path, "ab")
-            self._analysis_expressions_file = open(self._analysis_expressions_path, "ab")
             self._analysis_resnet_emotions_file = open(self._analysis_resnet_emotions_path, "ab")
             
             self.logger.info("face_analysis_storage_setup", 
                            features_path=str(self._analysis_features_path),
                            states_path=str(self._analysis_states_path),
-                           expressions_path=str(self._analysis_expressions_path),
                            resnet_emotions_path=str(self._analysis_resnet_emotions_path))
                            
         except Exception as e:
@@ -655,87 +587,6 @@ class FaceCapture(FaceModalityInterface):
                         "error": str(e)
                     }
             
-            # Estimate expression (ML-based) if enabled and face detected
-            expression_estimate = None
-            if (self._emotion_enabled and 
-                self._emotion_classifier is not None and 
-                detection_result.face_detected):
-                
-                # Add prediction to smoother
-                try:
-                    metadata = self._emotion_classifier.get_metadata()
-                    raw_probs = metadata.get("target_names", [])
-                    # Get the raw prediction first
-                    result = self._emotion_classifier.predict(raw_features)
-                    probas = result["probabilities"]
-                    # Convert to numpy array in correct order
-                    probs_array = np.array([probas[label] for label in raw_probs], dtype=np.float64)
-                    confidence = result["confidence"]
-                    self._emotion_smoother.add_prediction(probs_array, confidence)
-                    
-                    # Get smoothed result
-                    smoothed_expr, smoothed_conf = self._emotion_smoother.get_smoothed()
-                    
-                    if smoothed_expr is not None:
-                        expression_estimate = {
-                            "expression": smoothed_expr,
-                            "confidence": smoothed_conf,
-                            "probabilities": result["probabilities"],
-                            "timestamp": timestamp_monotonic,
-                            "wallclock": timestamp_wallclock,
-                        }
-                    else:
-                        # No valid smoothed prediction - check if we should show unavailable
-                        if not detection_result.face_detected:
-                            expression_estimate = {
-                                "expression": "unavailable",
-                                "confidence": 0.0,
-                                "probabilities": {},
-                                "timestamp": timestamp_monotonic,
-                                "wallclock": timestamp_wallclock,
-                                "reason": "no_face_detected"
-                            }
-                        else:
-                            # Classifier not confident enough, show unavailable
-                            expression_estimate = {
-                                "expression": "unavailable",
-                                "confidence": 0.0,
-                                "probabilities": {},
-                                "timestamp": timestamp_monotonic,
-                                "wallclock": timestamp_wallclock,
-                                "reason": "low_confidence"
-                            }
-                except Exception as e:
-                    self.logger.warning("emotion_smoothing_failed", error=str(e))
-                    # Fall back to raw prediction without smoothing
-                    expression_estimate = self._emotion_classifier.predict(raw_features)
-                try:
-                    expression_estimate = self._emotion_classifier.predict(
-                        raw_features,  # Use raw features for ML classifier (matching training)
-                        timestamp_monotonic
-                    )
-                    self._last_emotion_result = expression_estimate
-                except EmotionClassifierError as e:
-                    self.logger.warning("emotion_prediction_failed", error=str(e))
-                    expression_estimate = {
-                        "expression": "unavailable",
-                        "confidence": 0.0,
-                        "probabilities": {},
-                        "timestamp": timestamp_monotonic,
-                        "wallclock": timestamp_wallclock,
-                        "error": str(e)
-                    }
-            elif not detection_result.face_detected:
-                # No face detected - expression unavailable (not guessing)
-                expression_estimate = {
-                    "expression": "unavailable",
-                    "confidence": 0.0,
-                    "probabilities": {},
-                    "timestamp": timestamp_monotonic,
-                    "wallclock": timestamp_wallclock,
-                    "reason": "no_face_detected"
-                }
-            
             # Create analysis result
             analysis_result = {
                 "timestamp_monotonic": timestamp_monotonic,
@@ -745,14 +596,12 @@ class FaceCapture(FaceModalityInterface):
                 "window_stats": window_stats,
                 "normalized_features": normalized_features,
                 "state_estimate": state_estimate,
-                "expression_estimate": expression_estimate,
                 "resnet_emotion_estimate": resnet_emotion_estimate,
                 "baseline_ready": self._is_baseline_ready(),
                 "analysis_timestamp": time.monotonic()
             }
             
-            return analysis_result
-            
+            return analysis_result            
         except Exception as e:
             self.logger.error("face_analysis_pipeline_failed", error=str(e))
             return None
@@ -900,23 +749,6 @@ class FaceCapture(FaceModalityInterface):
             line = orjson.dumps(state_line) + b"\n"
             self._analysis_states_file.write(line)
             self._analysis_states_file.flush()
-            
-            # Store expression estimate if available
-            expr_estimate = analysis_result.get("expression_estimate")
-            if expr_estimate:
-                expr_line = {
-                    "timestamp_monotonic": analysis_result["timestamp_monotonic"],
-                    "timestamp_wallclock": analysis_result["timestamp_wallclock"],
-                    "frame_index": frame_index,
-                    "expression": expr_estimate.get("expression", "unavailable"),
-                    "confidence": expr_estimate.get("confidence", 0.0),
-                    "probabilities": expr_estimate.get("probabilities", {}),
-                    "baseline_ready": analysis_result["baseline_ready"]
-                }
-                if hasattr(self, '_analysis_expressions_file') and self._analysis_expressions_file:
-                    line = orjson.dumps(expr_line) + b"\n"
-                    self._analysis_expressions_file.write(line)
-                    self._analysis_expressions_file.flush()
             
             # Store ResNet emotion estimate if available
             resnet_emotion_estimate = analysis_result.get("resnet_emotion_estimate")

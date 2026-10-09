@@ -101,41 +101,18 @@ class FaceAnalysisPanel(QWidget):
         sep.setStyleSheet("color: #dddddd;")
         layout.addWidget(sep)
         
-        # Estimated Expression
-        expr_title = QLabel("Estimated Expression")
-        expr_title.setFont(QFont("Segoe UI", 10, QFont.Weight.Bold))
-        expr_title.setStyleSheet("color: #0078d4;")
-        layout.addWidget(expr_title)
-        
-        self.expr_label = QLabel("Estimated Expression: --")
-        self.expr_label.setFont(QFont("Segoe UI", 10, QFont.Weight.Bold))
-        self.expr_label.setAlignment(Qt.AlignmentFlag.AlignCenter)
-        layout.addWidget(self.expr_label)
-        
-        self.expr_conf_label = QLabel("Expression Confidence: --")
-        self.expr_conf_label.setFont(QFont("Segoe UI", 9))
-        self.expr_conf_label.setAlignment(Qt.AlignmentFlag.AlignCenter)
-        layout.addWidget(self.expr_conf_label)
-        
-        # Separator
-        sep2 = QFrame()
-        sep2.setFrameShape(QFrame.Shape.HLine)
-        sep2.setFrameShadow(QFrame.Shadow.Sunken)
-        sep2.setStyleSheet("color: #dddddd;")
-        layout.addWidget(sep2)
-        
         # ResNet-18 FER2013 Emotion (Image-based)
-        resnet_expr_title = QLabel("ResNet-18 Emotion (FER2013)")
+        resnet_expr_title = QLabel("Estimated Emotion")
         resnet_expr_title.setFont(QFont("Segoe UI", 10, QFont.Weight.Bold))
         resnet_expr_title.setStyleSheet("color: #0078d4;")
         layout.addWidget(resnet_expr_title)
         
-        self.resnet_expr_label = QLabel("ResNet Emotion: --")
+        self.resnet_expr_label = QLabel("Estimated Emotion: --")
         self.resnet_expr_label.setFont(QFont("Segoe UI", 10, QFont.Weight.Bold))
         self.resnet_expr_label.setAlignment(Qt.AlignmentFlag.AlignCenter)
         layout.addWidget(self.resnet_expr_label)
         
-        self.resnet_expr_conf_label = QLabel("ResNet Confidence: --")
+        self.resnet_expr_conf_label = QLabel("Estimated Confidence: --")
         self.resnet_expr_conf_label.setFont(QFont("Segoe UI", 9))
         self.resnet_expr_conf_label.setAlignment(Qt.AlignmentFlag.AlignCenter)
         layout.addWidget(self.resnet_expr_conf_label)
@@ -207,11 +184,6 @@ class FaceAnalysisPanel(QWidget):
         self.state_label.setText(f"State: {state}")
         self.confidence_label.setText(f"Confidence: {confidence:.0%}")
 
-    def update_expression(self, expression: str, confidence: float) -> None:
-        """Update estimated expression and confidence."""
-        self.expr_label.setText(f"Estimated Expression: {expression}")
-        self.expr_conf_label.setText(f"Expression Confidence: {confidence:.0%}")
-
     def update_resnet_emotion(self, emotion: str, confidence: float) -> None:
         """Update ResNet-18 FER2013 emotion and confidence."""
         self.resnet_expr_label.setText(f"ResNet Emotion: {emotion}")
@@ -251,7 +223,6 @@ class FaceAnalysisPanel(QWidget):
         self.update_face_detected(False)
         self.update_state("--", 0.0)
         self.update_baseline(False)
-        self.update_expression("--", 0.0)
         self.update_resnet_emotion("--", 0.0)
         self.eye_openness_label.setText("Eye Openness: --")
         self.blink_rate_label.setText("Blink Rate: --")
@@ -1034,23 +1005,7 @@ class MainWindow(QMainWindow):
                         state_est.get("confidence", 0.0)
                     )
                 
-                # Update estimated expression
-                expr_est = result.get("expression_estimate")
-                if expr_est:
-                    expr_value = expr_est.get("expression", "--")
-                    expr_confidence = expr_est.get("confidence", 0.0)
-                    # Show "--" when expression is "unavailable" (no face) or confidence is 0
-                    if expr_value == "unavailable" or expr_confidence == 0.0:
-                        expr_value = "--"
-                        expr_confidence = 0.0
-                    self.face_analysis.update_expression(
-                        expr_value, expr_confidence
-                    )
-                else:
-                    # No expression estimate (emotion disabled, classifier unavailable, 
-                    # or no face detected before baseline ready)
-                    self.face_analysis.update_expression("--", 0.0)
-                
+
                 # Update metrics
                 norm_features = result.get("normalized_features", {})
                 self.face_analysis.update_metrics(norm_features)

@@ -71,15 +71,10 @@ class UIConfig:
 @dataclass
 class AnalysisFaceConfig:
     enabled: bool = True
-    emotion_enabled: bool = True
     window_size_sec: float = 2.0
     update_interval_ms: int = 200
     baseline_frames: int = 150
-    expression_threshold: float = 0.3
     confidence_threshold: float = 0.5
-    emotion_confidence_threshold: float = 0.5
-    emotion_smoothing_window: float = 10.0
-    emotion_smoothing_alpha: float = 0.5
     # ResNet-18 FER2013 emotion classifier (pretrained)
     resnet_emotion_enabled: bool = True
     resnet_emotion_model_path: str = "models/emotion/fer2013_emotion_resnet18_v2.pt"
