@@ -307,5 +307,341 @@ class TestMainWindow:
 # Need imports
 import tempfile
 import shutil
+import numpy as np
 from pathlib import Path
 from unittest.mock import patch, MagicMock
+
+
+class TestCameraPreviewWidget:
+    """Tests for CameraPreviewWidget."""
+
+    def test_creation(self, qapp):
+        """Test CameraPreviewWidget creation and default state."""
+        from ui.main_window import CameraPreviewWidget
+        
+        widget = CameraPreviewWidget()
+        assert widget is not None
+        assert widget.width() == 160
+        assert widget.height() == 120
+        assert widget.text() == "Camera is off"
+        assert widget.pixmap().isNull()
+
+    def test_update_frame(self, qapp):
+        """Test updating preview with a valid frame."""
+        from ui.main_window import CameraPreviewWidget
+        
+        widget = CameraPreviewWidget()
+        widget.show()
+        
+        # Create a test frame (BGR format)
+        frame = np.zeros((480, 640, 3), dtype=np.uint8)
+        frame[:, :, 0] = 255  # Blue channel
+        frame[:, :, 1] = 128  # Green channel
+        frame[:, :, 2] = 64   # Red channel
+        
+        widget.update_frame(frame)
+        
+        # Verify pixmap was set
+        assert not widget.pixmap().isNull()
+        assert widget.pixmap().width() <= 160
+        assert widget.pixmap().height() <= 120
+
+    def test_clear(self, qapp):
+        """Test clearing preview restores placeholder."""
+        from ui.main_window import CameraPreviewWidget
+        
+        widget = CameraPreviewWidget()
+        widget.show()
+        
+        # Set a frame
+        frame = np.zeros((480, 640, 3), dtype=np.uint8)
+        widget.update_frame(frame)
+        assert not widget.pixmap().isNull()
+        
+        # Clear
+        widget.clear()
+        
+        # Verify placeholder is shown
+        assert widget.text() == "Camera is off"
+        assert widget.pixmap().isNull()
+
+    def test_update_frame_handles_invalid_input(self, qapp):
+        """Test update_frame handles invalid input gracefully."""
+        from ui.main_window import CameraPreviewWidget
+        
+        widget = CameraPreviewWidget()
+        widget.show()
+        
+        # Should not crash on None or empty array
+        widget.update_frame(None)
+        widget.update_frame(np.array([]))
+        
+        # Placeholder should still be shown
+        assert widget.text() == "Camera is off"
+
+
+class TestPreviewFrameEmitter:
+    """Tests for PreviewFrameEmitter signal emitter."""
+
+    def test_signal_emission(self, qapp):
+        """Test frame_ready signal can be emitted and connected."""
+        from ui.main_window import PreviewFrameEmitter
+        
+        emitter = PreviewFrameEmitter()
+        received_frames = []
+        
+        def on_frame(frame):
+            received_frames.append(frame)
+        
+        emitter.frame_ready.connect(on_frame)
+        
+        # Emit a test frame
+        test_frame = np.zeros((480, 640, 3), dtype=np.uint8)
+        emitter.frame_ready.emit(test_frame)
+        
+        assert len(received_frames) == 1
+        assert np.array_equal(received_frames[0], test_frame)
+
+
+class TestMainWindowPreviewIntegration:
+    """Integration tests for camera preview in MainWindow."""
+
+    def test_preview_widget_exists_after_init(self, qapp):
+        """Test MainWindow creates camera preview widget."""
+        import sys
+        sys.path.insert(0, str(Path(__file__).parent.parent.parent / "src"))
+        
+        from ui.main_window import MainWindow
+        from core.config import get_default_config
+        import ui.main_window as main_window_module
+        
+        original_load_config = main_window_module.load_config
+        
+        def mock_load_config(path):
+            config = get_default_config()
+            config.storage.output_directory = "/tmp/test_sessions"
+            return config
+        
+        main_window_module.load_config = mock_load_config
+        
+        try:
+            window = MainWindow()
+            assert hasattr(window, 'camera_preview')
+            assert window.camera_preview is not None
+            assert not window.camera_preview.isVisible()  # Hidden by default
+        finally:
+            main_window_module.load_config = original_load_config
+            window.close()
+
+    def test_preview_hidden_at_startup(self, qapp):
+        """Test preview is hidden at application startup (camera off)."""
+        import sys
+        sys.path.insert(0, str(Path(__file__).parent.parent.parent / "src"))
+        
+        from ui.main_window import MainWindow
+        from core.config import get_default_config
+        import ui.main_window as main_window_module
+        
+        original_load_config = main_window_module.load_config
+        
+        def mock_load_config(path):
+            config = get_default_config()
+            config.storage.output_directory = "/tmp/test_sessions"
+            return config
+        
+        main_window_module.load_config = mock_load_config
+        
+        try:
+            window = MainWindow()
+            assert not window.camera_preview.isVisible()
+            assert window.camera_preview.text() == "Camera is off"
+        finally:
+            main_window_module.load_config = original_load_config
+            window.close()
+
+    def test_setup_camera_preview_shows_widget(self, qapp):
+        """Test _setup_camera_preview makes preview visible."""
+        import sys
+        sys.path.insert(0, str(Path(__file__).parent.parent.parent / "src"))
+        
+        from ui.main_window import MainWindow
+        from core.config import get_default_config
+        import ui.main_window as main_window_module
+        
+        original_load_config = main_window_module.load_config
+        
+        def mock_load_config(path):
+            config = get_default_config()
+            config.storage.output_directory = "/tmp/test_sessions"
+            return config
+        
+        main_window_module.load_config = mock_load_config
+        
+        try:
+            window = MainWindow()
+            window.show()  # Need to show for geometry calculations
+            
+            # Mock face capture with set_preview_callback
+            mock_face_capture = MagicMock()
+            window.session_manager._modalities["face"] = mock_face_capture
+            
+            window._setup_camera_preview()
+            
+            # Preview should be visible
+            assert window.camera_preview.isVisible()
+            # Face capture should have preview callback set
+            mock_face_capture.set_preview_callback.assert_called_once()
+        finally:
+            main_window_module.load_config = original_load_config
+            window.close()
+
+    def test_cleanup_camera_preview_hides_widget(self, qapp):
+        """Test _cleanup_camera_preview hides preview and clears callback."""
+        import sys
+        sys.path.insert(0, str(Path(__file__).parent.parent.parent / "src"))
+        
+        from ui.main_window import MainWindow
+        from core.config import get_default_config
+        import ui.main_window as main_window_module
+        
+        original_load_config = main_window_module.load_config
+        
+        def mock_load_config(path):
+            config = get_default_config()
+            config.storage.output_directory = "/tmp/test_sessions"
+            return config
+        
+        main_window_module.load_config = mock_load_config
+        
+        try:
+            window = MainWindow()
+            window.show()
+            
+            # Mock face capture with set_preview_callback
+            mock_face_capture = MagicMock()
+            window.session_manager._modalities["face"] = mock_face_capture
+            
+            # Set up preview first
+            window._setup_camera_preview()
+            assert window.camera_preview.isVisible()
+            
+            # Clean up
+            window._cleanup_camera_preview()
+            
+            # Preview should be hidden and cleared
+            assert not window.camera_preview.isVisible()
+            assert window.camera_preview.text() == "Camera is off"
+            # Callback should be cleared (called with None)
+            assert mock_face_capture.set_preview_callback.call_count == 2
+            mock_face_capture.set_preview_callback.assert_called_with(None)
+        finally:
+            main_window_module.load_config = original_load_config
+            window.close()
+
+    def test_on_preview_frame_ready_updates_widget(self, qapp):
+        """Test _on_preview_frame_ready slot updates preview widget."""
+        import sys
+        sys.path.insert(0, str(Path(__file__).parent.parent.parent / "src"))
+        
+        from ui.main_window import MainWindow
+        from core.config import get_default_config
+        import ui.main_window as main_window_module
+        
+        original_load_config = main_window_module.load_config
+        
+        def mock_load_config(path):
+            config = get_default_config()
+            config.storage.output_directory = "/tmp/test_sessions"
+            return config
+        
+        main_window_module.load_config = mock_load_config
+        
+        try:
+            window = MainWindow()
+            window.show()
+            
+            # Create test frame
+            test_frame = np.zeros((480, 640, 3), dtype=np.uint8)
+            test_frame[:, :, 0] = 255  # Blue
+            
+            # Call slot directly
+            window._on_preview_frame_ready(test_frame)
+            
+            # Preview should show frame
+            assert not window.camera_preview.pixmap().isNull()
+        finally:
+            main_window_module.load_config = original_load_config
+            window.close()
+
+    def test_on_preview_frame_ready_handles_invalid_input(self, qapp):
+        """Test _on_preview_frame_ready handles invalid input gracefully."""
+        import sys
+        sys.path.insert(0, str(Path(__file__).parent.parent.parent / "src"))
+        
+        from ui.main_window import MainWindow
+        from core.config import get_default_config
+        import ui.main_window as main_window_module
+        
+        original_load_config = main_window_module.load_config
+        
+        def mock_load_config(path):
+            config = get_default_config()
+            config.storage.output_directory = "/tmp/test_sessions"
+            return config
+        
+        main_window_module.load_config = mock_load_config
+        
+        try:
+            window = MainWindow()
+            window.show()
+            
+            # Should not crash on invalid input
+            window._on_preview_frame_ready(None)
+            window._on_preview_frame_ready("not a frame")
+            window._on_preview_frame_ready(np.array([]))
+            
+            # Placeholder should remain
+            assert window.camera_preview.text() == "Camera is off"
+        finally:
+            main_window_module.load_config = original_load_config
+            window.close()
+
+    def test_resize_event_repositions_preview(self, qapp):
+        """Test resizeEvent repositions preview widget."""
+        import sys
+        sys.path.insert(0, str(Path(__file__).parent.parent.parent / "src"))
+        
+        from ui.main_window import MainWindow
+        from core.config import get_default_config
+        from PySide6.QtGui import QResizeEvent
+        from PySide6.QtCore import QSize
+        import ui.main_window as main_window_module
+        
+        original_load_config = main_window_module.load_config
+        
+        def mock_load_config(path):
+            config = get_default_config()
+            config.storage.output_directory = "/tmp/test_sessions"
+            return config
+        
+        main_window_module.load_config = mock_load_config
+        
+        try:
+            window = MainWindow()
+            window.show()
+            
+            # Mock face capture
+            mock_face_capture = MagicMock()
+            window.session_manager._modalities["face"] = mock_face_capture
+            
+            window._setup_camera_preview()
+            initial_pos = window.camera_preview.pos()
+            
+            # Simulate resize event with proper QResizeEvent
+            resize_event = QResizeEvent(QSize(1000, 800), QSize(800, 600))
+            window.resizeEvent(resize_event)
+            
+            assert window.camera_preview.isVisible()
+        finally:
+            main_window_module.load_config = original_load_config
+            window.close()

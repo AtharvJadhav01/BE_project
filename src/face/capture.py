@@ -65,6 +65,9 @@ class FaceCapture(FaceModalityInterface):
         self._timestamp_generator: Optional[TimestampGenerator] = None
         self._unified_event_callback: Optional[callable] = None
         
+        # Preview callback (for live camera preview in UI)
+        self._preview_callback: Optional[callable] = None
+        
         # Analysis state
         self._last_analysis_result: Optional[Dict[str, Any]] = None
         self._analysis_frame_count = 0
@@ -76,6 +79,18 @@ class FaceCapture(FaceModalityInterface):
     def set_unified_event_callback(self, callback: callable) -> None:
         """Set callback for unified event pipeline."""
         self._unified_event_callback = callback
+
+    def set_preview_callback(self, callback: Optional[callable]) -> None:
+        """Set callback for camera preview frames.
+        
+        The callback will be invoked from the camera capture thread with a copy
+        of the raw BGR frame. The callback should be thread-safe or use a 
+        thread-safe mechanism (e.g., Qt signal) to deliver frames to the GUI thread.
+        
+        Args:
+            callback: Callable that accepts a numpy array (BGR frame), or None to disable.
+        """
+        self._preview_callback = callback
 
     def _on_camera_frame(self, frame: CameraFrame) -> None:
         """Callback for camera frames - runs face detection and analysis."""
@@ -90,6 +105,14 @@ class FaceCapture(FaceModalityInterface):
             self.logger.debug("face_detected", bbox=result.bounding_box, confidence=result.detection_confidence)
         else:
             self.logger.debug("face_not_detected")
+        
+        # Send frame to preview callback (raw frame, no overlays)
+        if self._preview_callback is not None:
+            try:
+                # Pass a copy to avoid threading issues with the frame buffer
+                self._preview_callback(frame.frame.copy())
+            except Exception as e:
+                self.logger.warning("preview_callback_failed", error=str(e))
         
         # Get timestamps
         timestamp_monotonic = frame.timestamp
@@ -303,6 +326,7 @@ class FaceCapture(FaceModalityInterface):
         self._session_id = None
         self._session_dir = None
         self._timestamp_generator = None
+        self._preview_callback = None
         
         # Clear analysis components
         self._feature_extractor = None

@@ -6,6 +6,7 @@ import sys
 import time
 from pathlib import Path
 from typing import Optional
+import numpy as np
 
 from PySide6.QtWidgets import (
     QApplication,
@@ -38,6 +39,8 @@ from PySide6.QtGui import (
     QPalette,
     QIcon,
     QTextCursor,
+    QImage,
+    QPixmap,
 )
 
 from core.config import load_config
@@ -55,6 +58,67 @@ from ui.panels import (
 )
 
 logger = get_logger(__name__)
+
+
+class PreviewFrameEmitter(QObject):
+    """Thread-safe emitter for preview frames from camera capture thread to GUI thread."""
+    frame_ready = Signal(object)  # numpy array (BGR frame)
+
+
+class CameraPreviewWidget(QLabel):
+    """Compact camera preview widget for bottom-right corner."""
+    
+    def __init__(self, parent: Optional[QWidget] = None):
+        super().__init__(parent)
+        self.setFixedSize(160, 120)  # 4:3 aspect ratio, compact size
+        self.setAlignment(Qt.AlignmentFlag.AlignCenter)
+        self.setStyleSheet("""
+            QLabel {
+                border: 1px solid #cccccc;
+                border-radius: 4px;
+                background-color: #f0f0f0;
+                color: #666666;
+            }
+        """)
+        self.setText("Camera is off")
+        self.setFont(QFont("Segoe UI", 8))
+        self._placeholder_text = "Camera is off"
+        self._pixmap: Optional[QPixmap] = None
+        
+    def update_frame(self, frame: np.ndarray) -> None:
+        """Update preview with a new BGR frame from camera.
+        
+        Args:
+            frame: BGR numpy array from OpenCV
+        """
+        try:
+            # Convert BGR to RGB
+            rgb_frame = frame[:, :, ::-1].copy()
+            h, w, ch = rgb_frame.shape
+            bytes_per_line = ch * w
+            
+            # Create QImage
+            q_image = QImage(rgb_frame.data, w, h, bytes_per_line, QImage.Format.Format_RGB888)
+            
+            # Scale to fit widget while preserving aspect ratio
+            pixmap = QPixmap.fromImage(q_image)
+            scaled_pixmap = pixmap.scaled(
+                self.size(),
+                Qt.AspectRatioMode.KeepAspectRatio,
+                Qt.TransformationMode.SmoothTransformation
+            )
+            
+            self.setPixmap(scaled_pixmap)
+            self._pixmap = scaled_pixmap
+            
+        except Exception as e:
+            logger.warning("preview_frame_update_failed", error=str(e))
+    
+    def clear(self) -> None:
+        """Clear preview and show placeholder."""
+        self.clear_pixmap = True
+        self.setPixmap(QPixmap())
+        self.setText(self._placeholder_text)
 
 
 class FaceAnalysisPanel(QWidget):
@@ -673,6 +737,10 @@ class MainWindow(QMainWindow):
         # Register modalities
         self._register_modalities()
 
+        # Preview frame emitter (thread-safe bridge from camera thread to GUI thread)
+        self._preview_emitter = PreviewFrameEmitter()
+        self._preview_emitter.frame_ready.connect(self._on_preview_frame_ready)
+
         # Initialize UI
         self._init_ui()
 
@@ -836,6 +904,10 @@ class MainWindow(QMainWindow):
 
         # Set splitter sizes
         splitter.setSizes([400, 250, 300])
+
+        # Camera preview widget (bottom-right corner)
+        self.camera_preview = CameraPreviewWidget(self)
+        self.camera_preview.hide()  # Hidden until session starts
 
         # Status bar at bottom
         self.statusBar().showMessage("Ready")
@@ -1147,6 +1219,10 @@ class MainWindow(QMainWindow):
             self._face_analysis_timer.start()
             self._audio_analysis_timer.start()
             self._keyboard_analysis_timer.start()
+            
+            # Set up camera preview
+            self._setup_camera_preview()
+            
             self.log_panel.append_log("INFO", "UI", "Session started")
 
     def _on_pause_session(self) -> None:
@@ -1167,6 +1243,7 @@ class MainWindow(QMainWindow):
         """Handle stop session button."""
         result = self.session_manager.stop_session()
         if result:
+            self._cleanup_camera_preview()
             self._state_worker.stop()
             self._duration_timer.stop()
             self._face_analysis_timer.stop()
@@ -1179,6 +1256,47 @@ class MainWindow(QMainWindow):
             self.explanation_panel.update_explanation("")
             self.multimodal_contribution.clear()
             self.log_panel.append_log("INFO", "UI", "Session stopped")
+
+    def _setup_camera_preview(self) -> None:
+        """Set up camera preview when session starts."""
+        face_capture = self.session_manager.modalities.get("face")
+        if face_capture and hasattr(face_capture, 'set_preview_callback'):
+            # Connect preview callback to emit frames via thread-safe emitter
+            face_capture.set_preview_callback(self._preview_emitter.frame_ready.emit)
+        
+        # Position and show preview widget
+        self._position_preview_widget()
+        self.camera_preview.show()
+        self.camera_preview.raise_()
+
+    def _cleanup_camera_preview(self) -> None:
+        """Clean up camera preview when session stops."""
+        face_capture = self.session_manager.modalities.get("face")
+        if face_capture and hasattr(face_capture, 'set_preview_callback'):
+            face_capture.set_preview_callback(None)
+        
+        self.camera_preview.clear()
+        self.camera_preview.hide()
+
+    def _position_preview_widget(self) -> None:
+        """Position preview widget at bottom-right of main window."""
+        if self.camera_preview and self.centralWidget():
+            # Position at bottom-right with small margin
+            margin = 12
+            x = self.centralWidget().width() - self.camera_preview.width() - margin
+            y = self.centralWidget().height() - self.camera_preview.height() - margin - self.statusBar().height()
+            self.camera_preview.move(x, y)
+
+    @Slot(object)
+    def _on_preview_frame_ready(self, frame: object) -> None:
+        """Handle preview frame from camera thread (runs on GUI thread via signal)."""
+        if isinstance(frame, np.ndarray) and frame.size > 0:
+            self.camera_preview.update_frame(frame)
+
+    def resizeEvent(self, event) -> None:
+        """Handle window resize to reposition preview widget."""
+        super().resizeEvent(event)
+        self._position_preview_widget()
 
     def closeEvent(self, event) -> None:
         """Handle window close event."""
@@ -1197,10 +1315,6 @@ class MainWindow(QMainWindow):
                 event.ignore()
         else:
             event.accept()
-
-    def closeEvent(self, event) -> None:
-        """Handle window close."""
-        super().closeEvent(event)
 
 
 def main():

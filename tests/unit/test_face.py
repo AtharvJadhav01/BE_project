@@ -611,6 +611,180 @@ class TestFaceIntegration:
                     assert face_features_file.exists()
 
 
+class TestFaceCapturePreview:
+    """Tests for FaceCapture preview callback functionality."""
+
+    @pytest.fixture
+    def config(self):
+        """Test configuration."""
+        return {
+            "enabled": True,
+            "detection_model": "mediapipe",
+            "landmark_model": "mediapipe",
+            "refine_landmarks": True,
+            "min_detection_confidence": 0.5,
+            "min_tracking_confidence": 0.5,
+            "camera": {
+                "enabled": True,
+                "fps": 15,
+                "resolution": [640, 480],
+                "device": 0,
+            },
+            "storage": {
+                "output_directory": "data/sessions"
+            }
+        }
+
+    @pytest.fixture
+    def capture(self, config):
+        """Create face capture instance."""
+        return FaceCapture(config)
+
+    def test_set_preview_callback(self, capture):
+        """Test setting and clearing preview callback."""
+        callback = MagicMock()
+        
+        # Set callback
+        capture.set_preview_callback(callback)
+        assert capture._preview_callback == callback
+        
+        # Clear callback
+        capture.set_preview_callback(None)
+        assert capture._preview_callback is None
+
+    def test_preview_callback_called_on_camera_frame(self, capture, temp_dir):
+        """Test preview callback is invoked with frame copy."""
+        config = capture.config.copy()
+        config["camera"]["enabled"] = True
+        config["storage"]["output_directory"] = str(temp_dir)
+        
+        preview_frames = []
+        def preview_callback(frame):
+            preview_frames.append(frame)
+        
+        with patch('face.capture.FaceCamera.check_camera_availability') as mock_check:
+            mock_check.return_value = True
+            
+            with patch('cv2.VideoCapture') as mock_cv_cap:
+                mock_cap = MagicMock()
+                mock_cap.isOpened.return_value = True
+                # Return a test frame
+                test_frame = np.zeros((480, 640, 3), dtype=np.uint8)
+                test_frame[:, :, 0] = 255  # Blue
+                mock_cap.read.return_value = (True, test_frame)
+                mock_cap.get.return_value = 15.0
+                mock_cv_cap.return_value = mock_cap
+                
+                with patch('mediapipe.tasks.python.vision.FaceLandmarker') as mock_face_landmarker:
+                    mock_landmarker = MagicMock()
+                    mock_landmarker.detect_async = MagicMock()
+                    mock_landmarker.close = MagicMock()
+                    mock_face_landmarker.create_from_options.return_value = mock_landmarker
+                    
+                    def mock_detect_async(mp_image, timestamp_ms):
+                        import time
+                        time.sleep(0.001)
+                    mock_landmarker.detect_async.side_effect = mock_detect_async
+                    
+                    unified_callback = MagicMock()
+                    capture.set_unified_event_callback(unified_callback)
+                    capture.set_preview_callback(preview_callback)
+                    
+                    capture.start("test-session", temp_dir)
+                    
+                    # Wait for capture loop to process at least one frame
+                    time.sleep(0.5)
+                    
+                    capture.stop()
+        
+        # Verify preview callback was called with frame copies
+        assert len(preview_frames) > 0
+        for frame in preview_frames:
+            assert isinstance(frame, np.ndarray)
+            assert frame.shape == (480, 640, 3)
+            # Verify it's a copy (not the same object)
+            assert frame is not test_frame
+
+    def test_preview_callback_cleared_on_stop(self, capture, temp_dir):
+        """Test preview callback is cleared when capture stops."""
+        config = capture.config.copy()
+        config["camera"]["enabled"] = True
+        config["storage"]["output_directory"] = str(temp_dir)
+        
+        with patch('face.capture.FaceCamera.check_camera_availability') as mock_check:
+            mock_check.return_value = True
+            
+            with patch('cv2.VideoCapture') as mock_cv_cap:
+                mock_cap = MagicMock()
+                mock_cap.isOpened.return_value = True
+                mock_cap.read.return_value = (True, np.zeros((480, 640, 3), dtype=np.uint8))
+                mock_cap.get.return_value = 15.0
+                mock_cv_cap.return_value = mock_cap
+                
+                with patch('mediapipe.tasks.python.vision.FaceLandmarker') as mock_face_landmarker:
+                    mock_landmarker = MagicMock()
+                    mock_landmarker.detect_async = MagicMock()
+                    mock_landmarker.close = MagicMock()
+                    mock_face_landmarker.create_from_options.return_value = mock_landmarker
+                    
+                    def mock_detect_async(mp_image, timestamp_ms):
+                        import time
+                        time.sleep(0.001)
+                    mock_landmarker.detect_async.side_effect = mock_detect_async
+                    
+                    unified_callback = MagicMock()
+                    capture.set_unified_event_callback(unified_callback)
+                    capture.set_preview_callback(MagicMock())
+                    
+                    capture.start("test-session", temp_dir)
+                    capture.stop()
+        
+        # Callback should be cleared after stop
+        assert capture._preview_callback is None
+
+    def test_preview_callback_error_handled_gracefully(self, capture, temp_dir):
+        """Test preview callback errors don't crash capture."""
+        config = capture.config.copy()
+        config["camera"]["enabled"] = True
+        config["storage"]["output_directory"] = str(temp_dir)
+        
+        def failing_callback(frame):
+            raise RuntimeError("Preview callback failed")
+        
+        with patch('face.capture.FaceCamera.check_camera_availability') as mock_check:
+            mock_check.return_value = True
+            
+            with patch('cv2.VideoCapture') as mock_cv_cap:
+                mock_cap = MagicMock()
+                mock_cap.isOpened.return_value = True
+                mock_cap.read.return_value = (True, np.zeros((480, 640, 3), dtype=np.uint8))
+                mock_cap.get.return_value = 15.0
+                mock_cv_cap.return_value = mock_cap
+                
+                with patch('mediapipe.tasks.python.vision.FaceLandmarker') as mock_face_landmarker:
+                    mock_landmarker = MagicMock()
+                    mock_landmarker.detect_async = MagicMock()
+                    mock_landmarker.close = MagicMock()
+                    mock_face_landmarker.create_from_options.return_value = mock_landmarker
+                    
+                    def mock_detect_async(mp_image, timestamp_ms):
+                        import time
+                        time.sleep(0.001)
+                    mock_landmarker.detect_async.side_effect = mock_detect_async
+                    
+                    unified_callback = MagicMock()
+                    capture.set_unified_event_callback(unified_callback)
+                    capture.set_preview_callback(failing_callback)
+                    
+                    # Should not raise exception
+                    capture.start("test-session", temp_dir)
+                    time.sleep(0.3)
+                    capture.stop()
+        
+        # Capture should still be in stopped state (not error)
+        assert capture.status.value == "stopped"
+
+
 # Need temp_dir fixture
 @pytest.fixture
 def temp_dir():
